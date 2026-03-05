@@ -21,7 +21,7 @@ try {
   console.log('🚀 Начинаем чистую сборку для Chromium...');
 
   const distDir = path.join(__dirname, '..', 'dist');
-  const targetDir = path.join(distDir, 'chromium');
+  const targetDir = path.join(distDir, 'SERP');
 
   // Пути к мусору, который оставляет Angular и esbuild
   const angularTrash = path.join(distDir, 'digital-zen-serp');
@@ -46,14 +46,12 @@ try {
   const angularFiles = path.join(angularTrash, 'browser');
   if (fs.existsSync(angularFiles)) {
     copyDir(angularFiles, targetDir);
-    console.log('✅ UI скопирован в chromium');
   }
 
   // 5. Переносим background.js в chromium
   const bgFile = path.join(distDir, 'browser', 'background.js');
   if (fs.existsSync(bgFile)) {
     fs.copyFileSync(bgFile, path.join(targetDir, 'background.js'));
-    console.log('✅ background.js скопирован в chromium');
   }
 
   // 6. УДАЛЯЕМ ВЕСЬ МУСОР (оставляем только chromium)
@@ -68,8 +66,6 @@ try {
     if (manifest.background?.type) delete manifest.background.type;
     fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   }
-
-  console.log('\n✨ ГОТОВО! В папке dist остался ТОЛЬКО chromium.');
 } catch (error) {
   console.error('\n❌ Ошибка:', error.message);
   process.exit(1);

@@ -1,0 +1,96 @@
+<ng-template #icon let-iconHref="href">
+  <svg class="dz-icon" aria-hidden="true" focusable="false">
+    <use [attr.href]="iconHref"></use>
+  </svg>
+</ng-template>
+
+<div class="bar">
+  <span class="hint hint--xl">Выберите девайс</span>
+
+  <ul class="dz-list dz-list--horizontal">
+    <li>
+      <button
+        class="dz-button"
+        [class.dz-button--activated]="selectedDevice() === 'mobile'"
+        (click)="selectedDevice.set('mobile')"
+      >
+        <div class="font-xxl">📱</div>
+      </button>
+    </li>
+
+    <li>
+      <button
+        class="dz-button"
+        [class.dz-button--activated]="selectedDevice() === 'desktop'"
+        (click)="selectedDevice.set('desktop')"
+      >
+        <div class="font-xxl">🖥️</div>
+      </button>
+    </li>
+  </ul>
+</div>
+
+<div>
+  <div class="bar">
+    <span class="hint hint--md">Заголовок</span>
+    <span class="hint hint--md">Бар качества</span>
+  </div>
+  <input class="dz-input" />
+</div>
+
+<div>
+  <div class="bar">
+    <span class="hint hint--md">Постоянная ссылка</span>
+    <span class="hint hint--md">Бар качества</span>
+  </div>
+  <input class="dz-input" />
+</div>
+
+<div>
+  <div class="bar">
+    <span class="hint hint--md">Описание</span>
+
+    <span class="hint hint--md">Бар качества</span>
+  </div>
+
+  <textarea class="dz-input dz-input--textarea"></textarea>
+</div>
+
+<div class="search-bar skeleton">
+  <div class="text-center full">
+    <small class="hint">Я буду красивой поисковой строкой, если нужно</small>
+  </div>
+</div>
+
+<div class="search-types">
+  <ul class="dz-list dz-list--horizontal">
+    @for (i of [].constructor(6); track $index) {
+      <li class="dz-list__item dz-box dz-box--fit skeleton font-xxs">&nbsp;</li>
+    }
+  </ul>
+</div>
+
+<div class="search-results">
+  <ul class="dz-list dz-list--horizontal">
+    <li class="dz-list__item dz-box shadow">
+      <div class="dz-box text-center">
+        <small class="hint">Здесь показать, как будет выглядеть</small>
+      </div>
+      <div class="dz-box"></div>
+      <div class="dz-box"></div>
+      <div class="dz-box"></div>
+      <div class="dz-box"></div>
+      <div class="dz-box"></div>
+    </li>
+    @for (i of [].constructor(2); track $index) {
+      <li class="dz-list__item dz-box skeleton">
+        <div class="dz-box"></div>
+        <div class="dz-box"></div>
+        <div class="dz-box"></div>
+        <div class="dz-box"></div>
+        <div class="dz-box"></div>
+        <div class="dz-box"></div>
+      </li>
+    }
+  </ul>
+</div>

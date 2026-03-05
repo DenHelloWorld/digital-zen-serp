@@ -1,0 +1,35 @@
+:root {
+  --app-width: 100vw;
+  --app-height: 100vh;
+
+  /* Основные размеры (по сетке Google) */
+  --serp-max-width: 652px; /* Ширина текстового блока выдачи */
+  --serp-content-padding: 20px;
+
+  /* Цвета ссылок (Заголовки) */
+  --google-link: #1a0dab; /* Тот самый синий */
+  --google-link-visited: #609; /* Посещенная ссылка */
+  --google-link-hover: #1a0dab; /* Обычно остается таким же, но с подчеркиванием */
+
+  /* Текст и описание */
+  --google-text: #4d5156; /* Серый для описания (Snippet) */
+  --google-title: #1a0dab; /* Цвет заголовка */
+  --google-url: #202124; /* Цвет URL / Навигации над заголовком */
+  --google-icon-color: #1f1f1f;
+
+  /* Фон и границы */
+  --google-bg: #ffffff;
+  --google-border: #dbdbdb; /* Граница карточек / инпутов */
+  --google-hover-bg: #f8f9fa; /* Фон при ховере на подсказки */
+
+  /* Шрифты (Google использует Roboto или Arial) */
+  --google-font-family: 'arial', sans-serif;
+  --google-font-size-title: 20px;
+  --google-font-size-text: 14px;
+  --google-font-size-url: 14px;
+
+  /* Специфические фишки */
+  --google-result-gap: 28px; /* Отступ между результатами */
+
+  --google-search-bar-radius: 26px;
+}

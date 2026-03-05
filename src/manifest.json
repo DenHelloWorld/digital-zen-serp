@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Digital Zen SERP",
+  "version": "1.0.1",
+  "description": "Serp",
+  "permissions": [
+    "alarms",
+    "declarativeNetRequest",
+    "storage",
+    "unlimitedStorage",
+    "activeTab",
+    "identity",
+    "scripting",
+    "sidePanel"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "side_panel": { "default_path": "index.html" },
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}

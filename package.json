@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "lint": "ng lint",
     "format": "npx prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:prod": "node scripts/build-dual.js --all"
   },
   "private": true,
   "packageManager": "npm@11.7.0",

@@ -1,0 +1,75 @@
+/// <reference types="chrome"/>
+import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
+import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
+import { logger } from '../modules/comon/helpers/logger';
+
+/**
+ * @class BackgroundService
+ * @description The main service class that manages the extension's background tasks and data persistence.
+ */
+export class BackgroundService {
+  readonly #logger = logger.createLogger('BackgroundService');
+
+  constructor() {
+    this.initializeListeners();
+  }
+
+  /**
+   *  Initialization of messages and events
+   *  */
+  private initializeListeners(): void {
+    let operationQueue: Promise<void> = Promise.resolve();
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      const safeSendResponse = (response?: unknown) => {
+        try {
+          sendResponse(response);
+        } catch (sendError) {
+          this.#logger.error('sendResponse failed:', sendError);
+        }
+      };
+      /**
+       * sidePanel.open() requires a direct user gesture to function.
+       * It must be called SYNCHRONOUSLY (outside the promise queue),
+       * otherwise Chrome will treat the user gesture as expired.
+       */
+      if (message.command === CHROME_COMMAND_ENUM.OPEN_SIDE_PANEL_APP) {
+        const targetWindowId = message.windowId || sender.tab?.windowId;
+        const options = targetWindowId
+          ? { windowId: targetWindowId }
+          : { windowId: chrome.windows.WINDOW_ID_CURRENT };
+
+        chrome.sidePanel
+          .open(options)
+          .then(() => safeSendResponse({ success: true }))
+          .catch(err => {
+            this.#logger.error('SidePanel gesture error:', err);
+            safeSendResponse({ success: false });
+          });
+        return true;
+      }
+
+      operationQueue = operationQueue.then(async () => {
+        try {
+          switch (message.command as ChromeCommandType) {
+            default:
+              safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.UNKNOWN_COMMAND });
+          }
+        } catch (error) {
+          this.#logger.error(`Error handling message ${message.command}:`, error);
+          safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.GENERIC_ERROR });
+        }
+      });
+
+      return true;
+    });
+
+    chrome.runtime.onInstalled.addListener(() => {
+      this.#logger.info('App initialized via onInstalled');
+
+      chrome.sidePanel
+        .setPanelBehavior({ openPanelOnActionClick: true })
+        .catch(error => this.#logger.error('Error setting panel behavior:', error));
+    });
+  }
+}

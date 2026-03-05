@@ -1,7 +1,23 @@
 {
   "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
   "singleQuote": true,
+  "quoteProps": "as-needed",
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+  "plugins": ["prettier-plugin-organize-attributes", "@trivago/prettier-plugin-sort-imports"],
   "overrides": [
+    {
+      "files": "*.ts",
+      "options": {
+        "parser": "typescript"
+      }
+    },
     {
       "files": "*.html",
       "options": {

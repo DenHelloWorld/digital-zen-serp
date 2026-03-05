@@ -1,0 +1,6 @@
+{
+  "*.{ts,html}": ["eslint --max-warnings=0", "prettier --check"],
+  "*.scss": "prettier --check",
+  "*.ts": "bash -c 'tsc -p tsconfig.app.json --noEmit'",
+  "docs/**/*": []
+}

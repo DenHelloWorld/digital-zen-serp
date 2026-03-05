@@ -1,0 +1,20 @@
+npx --no -- commitlint --edit $1 || {
+  echo ""
+  echo "❌ Commit message validation failed!"
+  echo ""
+  echo "📝 Required format: <type>(<scope>): <description>"
+  echo ""
+  echo "✅ Valid types:"
+  echo "   feat, fix, chore, refactor, style, docs, perf, test"
+  echo ""
+  echo "✅ Valid scopes (required):"
+  echo "   core, common, focus, auth, menu"
+  echo ""
+  echo "📖 Examples:"
+  echo "   feat(core): add new authentication feature"
+  echo "   fix(common): resolve navigation bug"
+  echo "   chore(focus): update dependencies"
+  echo ""
+  exit 1
+}
+

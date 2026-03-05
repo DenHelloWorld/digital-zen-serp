@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+output/
+build/
+
+# Logs
+*.log
+
+# Environment files
+.env*
+
+# IDE files
+.vscode/
+.idea/
+
+# Git
+.git/
+
+# TypeScript build
+*.tsbuildinfo
+
+# Browser extensions
+/dist/
+
+# Documentation (format only with npm run format:docs)
+docs/

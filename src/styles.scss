@@ -1,1 +1,110 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'digital-zen-pack/style.css';
+
+/* Box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Сброс базовых элементов */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* Наследование шрифтов */
+html,
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+}
+
+/* Сброс стилей для списка */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Сброс стилей для медиа */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Сброс стилей для формы */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  margin: 0;
+}
+
+/* Устранение стилей кнопок */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Устранение жирности у strong и b */
+b,
+strong {
+  font-weight: inherit;
+}
+
+/* Устранение отступов у заголовков */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Устранение подчеркивания у ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Стили скролл-бара */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(120, 120, 120, 0.6);
+  border-radius: 8px;
+  border: 0 solid transparent;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+img {
+  &.dz-icon {
+    object-fit: contain;
+  }
+}

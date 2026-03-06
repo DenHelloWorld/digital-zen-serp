@@ -11,26 +11,4 @@
     justify-content: space-between;
     gap: var(--spacing);
   }
-
-  .search-bar {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    min-width: 50vw;
-    min-height: 50px;
-    border-radius: var(--google-search-bar-radius);
-    padding: var(--spacing);
-  }
-
-  .search-types {
-    padding: var(--spacing) 0;
-    border-bottom: 1px solid var(--google-border);
-
-    .dz-list {
-      &__item {
-        width: 6rem;
-        color: transparent;
-      }
-    }
-  }
 }

@@ -10,50 +10,25 @@
   <ul class="dz-list dz-list--horizontal">
     <li>
       <button
-        class="dz-button"
-        [class.dz-button--activated]="selectedDevice() === 'mobile'"
-        (click)="selectedDevice.set('mobile')"
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'desktop'"
+        (click)="selectedDevice.set('desktop')"
+        type="button"
       >
-        <div class="font-xxl">📱</div>
+        <span class="font-medium">🖥️ Desktop</span>
       </button>
     </li>
-
     <li>
       <button
-        class="dz-button"
-        [class.dz-button--activated]="selectedDevice() === 'desktop'"
-        (click)="selectedDevice.set('desktop')"
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'mobile'"
+        (click)="selectedDevice.set('mobile')"
+        type="button"
       >
-        <div class="font-xxl">🖥️</div>
+        <span class="font-medium">📱 Mobile</span>
       </button>
     </li>
   </ul>
-</div>
-
-<div>
-  <div class="bar">
-    <span class="hint hint--md">Заголовок</span>
-    <span class="hint hint--md">Бар качества</span>
-  </div>
-  <input class="dz-input" />
-</div>
-
-<div>
-  <div class="bar">
-    <span class="hint hint--md">Постоянная ссылка</span>
-    <span class="hint hint--md">Бар качества</span>
-  </div>
-  <input class="dz-input" />
-</div>
-
-<div>
-  <div class="bar">
-    <span class="hint hint--md">Описание</span>
-
-    <span class="hint hint--md">Бар качества</span>
-  </div>
-
-  <textarea class="dz-input dz-input--textarea"></textarea>
 </div>
 
 <div class="search-bar skeleton">
@@ -70,27 +45,159 @@
   </ul>
 </div>
 
-<div class="search-results">
-  <ul class="dz-list dz-list--horizontal">
-    <li class="dz-list__item dz-box shadow">
-      <div class="dz-box text-center">
-        <small class="hint">Здесь показать, как будет выглядеть</small>
+<div
+  class="search-results mt-6 flex justify-center bg-gray-50 p-2 rounded-xl border border-dashed border-gray-300"
+>
+  <div
+    class="bg-white shadow-lg border border-gray-200 p-4 rounded-lg transition-all duration-500 ease-in-out overflow-hidden"
+    [class.w-[650px]]="selectedDevice() === 'desktop'"
+    [class.w-[375px]]="selectedDevice() === 'mobile'"
+  >
+    <div class="flex items-center gap-3 mb-1.5">
+      <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-[10px] font-bold text-gray-400">G</span>
       </div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-    </li>
-    @for (i of [].constructor(2); track $index) {
-      <li class="dz-list__item dz-box skeleton">
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-      </li>
-    }
-  </ul>
+      <div class="flex flex-col min-w-0">
+        <span class="text-[14px] text-[#202124] leading-tight truncate">Ваш Сайт</span>
+        <span class="text-[12px] text-[#4d5156] truncate">
+          {{ link() || 'https://your-site.com/example-page' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-1">
+      <h3
+        class="text-[#1a0dab] hover:underline cursor-pointer font-medium leading-[1.3] transition-all"
+        [class.text-[20px]]="selectedDevice() === 'desktop'"
+        [class.text-[18px]]="selectedDevice() === 'mobile'"
+        style="
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        "
+      >
+        {{ title() || 'Введите заголовок страницы...' }}
+      </h3>
+    </div>
+
+    <div class="mt-2">
+      <p
+        class="text-[14px] leading-[1.58] text-[#4d5156] transition-all"
+        [style.-webkit-line-clamp]="selectedDevice() === 'desktop' ? 2 : 3"
+        style="display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden"
+      >
+        {{ description() || 'Введите описание страницы, чтобы увидеть предпросмотр...' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="bar flex justify-between items-center">
+    <span class="hint hint--md">Заголовок</span>
+
+    <!-- quality bar -->
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-gray-400 tabular-nums">
+        {{ title().length }} симв. ({{ titleWidthPx() }}px /
+        {{ selectedDevice() === 'desktop' ? 580 : 560 }}px)
+      </span>
+
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let stats = titleSegments();
+
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < stats.count ? stats.color : 'bg-gray-200'"
+          ></div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+  >
+    <input class="outline-none bg-transparent h-full w-full" [(ngModel)]="title" type="text" />
+  </div>
+
+  <div class="text-[10px] text-gray-400 mt-1">
+    Это то, что появится в первой строке, когда эта запись отобразится в результатах поиска.
+  </div>
+</div>
+
+<div>
+  <div class="bar flex justify-between items-center">
+    <span class="hint hint--md">Постоянная ссылка</span>
+
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-gray-400 tabular-nums">
+        {{ link().length }} / {{ selectedDevice() === 'desktop' ? 75 : 50 }}
+      </span>
+
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let lStats = linkSegments();
+
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < lStats.count ? lStats.color : 'bg-gray-200'"
+          ></div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+  >
+    <input class="outline-none bg-transparent h-full w-full" [(ngModel)]="link" type="text" />
+  </div>
+
+  @if (link() === '/') {
+    <div class="text-[10px] text-gray-400 mt-1">
+      Изменение постоянной ссылки главной страницы невозможно.
+    </div>
+  }
+</div>
+
+<div>
+  <div class="bar flex justify-between items-center">
+    <span class="hint hint--md">Описание</span>
+
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-gray-400 tabular-nums">
+        {{ description().length }} симв. ({{ descriptionWidthPx() }}px /
+        {{ selectedDevice() === 'desktop' ? 920 : 750 }}px)
+      </span>
+
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let dStats = descriptionSegments();
+
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < dStats.count ? dStats.color : 'bg-gray-200'"
+          ></div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="w-full min-h-9 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1 transition-all"
+  >
+    <textarea
+      class="outline-none bg-transparent w-full resize-none overflow-hidden leading-tight"
+      [(ngModel)]="description"
+      (input)="adjustHeight($event)"
+      rows="2"
+    ></textarea>
+  </div>
+
+  <div class="text-[10px] text-gray-400 mt-1">
+    Это то, что будет отображаться как описание, когда эта запись отобразится в результатах поиска.
+  </div>
 </div>

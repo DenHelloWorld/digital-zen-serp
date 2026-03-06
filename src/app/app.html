@@ -1,1 +1,26 @@
+<header class="w-full">
+  <div class="flex bg-gray-500/5 text-sm w-full">
+    <div class="flex-1">
+      <a
+        class="block w-full cursor-pointer py-2 border-y border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLink="/google-serp"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        Основные
+      </a>
+    </div>
+
+    <div class="flex-1">
+      <a
+        class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        routerLink="/social"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        Соцсети
+      </a>
+    </div>
+  </div>
+</header>
+
 <router-outlet />

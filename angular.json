@@ -32,7 +32,7 @@
               },
               "src/manifest.json"
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/tailwind.css", "src/styles.scss"]
           },
           "configurations": {
             "production": {

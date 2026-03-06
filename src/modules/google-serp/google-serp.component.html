@@ -4,93 +4,236 @@
   </svg>
 </ng-template>
 
-<div class="bar">
-  <span class="hint hint--xl">Выберите девайс</span>
+<div class="w-full bg-white pb-1 border-b border-gray-200 flex px-5 gap-1 flex-wrap">
+  <!--Поисковая строка-->
+  <div class="flex-1">
+    <div class="relative w-full">
+      <div
+        class="flex items-center w-full h-[46px] px-4 bg-white border border-gray-200 rounded-full hover:shadow-md focus-within:shadow-md transition-shadow"
+      >
+        <div class="flex items-center justify-center shrink-0 mr-2">
+          <svg focusable="false" viewBox="0 0 24 24" width="20" height="20">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            ></path>
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            ></path>
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"
+            ></path>
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            ></path>
+          </svg>
+        </div>
 
+        <input
+          class="flex-1 min-w-0 outline-none text-[16px] text-gray-900 bg-transparent px-2"
+          [ngModel]="title()"
+          (ngModelChange)="title.set($event)"
+          type="text"
+          placeholder="Поиск в Google или введите URL"
+        />
+
+        @if (title()) {
+          <button
+            class="flex items-center justify-center w-10 h-10 text-gray-500 hover:text-black shrink-0"
+            (click)="title.set('')"
+          >
+            <svg focusable="false" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+              ></path>
+            </svg>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!--Выбор девайса-->
   <ul class="dz-list dz-list--horizontal">
     <li>
       <button
-        class="dz-button"
-        [class.dz-button--activated]="selectedDevice() === 'mobile'"
-        (click)="selectedDevice.set('mobile')"
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'desktop'"
+        (click)="selectedDevice.set('desktop')"
+        type="button"
       >
-        <div class="font-xxl">📱</div>
+        <span class="font-medium">🖥️</span>
       </button>
     </li>
-
     <li>
       <button
-        class="dz-button"
-        [class.dz-button--activated]="selectedDevice() === 'desktop'"
-        (click)="selectedDevice.set('desktop')"
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'mobile'"
+        (click)="selectedDevice.set('mobile')"
+        type="button"
       >
-        <div class="font-xxl">🖥️</div>
+        <span class="font-medium">📱</span>
       </button>
     </li>
   </ul>
 </div>
 
-<div>
-  <div class="bar">
+<!--Визуализатор-->
+<div class="flex bg-gray-50 p-1.5 rounded-xl">
+  <div
+    class="bg-white w-full flex-1 shadow-lg p-3.5 rounded-lg transition-all duration-500 ease-in-out overflow-hidden"
+    [style.max-width.px]="selectedDevice() === 'desktop' ? 712 : 375"
+  >
+    <div class="flex items-center gap-3 mb-1.5">
+      <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center shrink-0">
+        <span class="text-[10px] font-bold text-gray-400">G</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-[14px] text-[#202124] leading-tight truncate">Ваш Сайт</span>
+        <span class="text-[12px] text-[#4d5156] truncate">
+          {{ link() || 'https://your-site.com/example-page' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mt-1">
+      <h3
+        class="text-[#1a0dab] hover:underline cursor-pointer font-medium leading-[1.3] transition-all"
+        [style.font-size.px]="selectedDevice() === 'desktop' ? 18 : 20"
+        style="
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        "
+      >
+        {{ title() || 'Введите заголовок страницы...' }}
+      </h3>
+    </div>
+
+    <div class="mt-2">
+      <p
+        class="text-[14px] leading-[1.58] text-[#4d5156] transition-all"
+        [style.-webkit-line-clamp]="selectedDevice() === 'desktop' ? 2 : 3"
+        style="display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden"
+      >
+        {{ description() || 'Введите описание страницы, чтобы увидеть предпросмотр...' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!--Заголовок-->
+<div class="px-5">
+  <div class="flex justify-between items-center gap-1 flex-wrap">
     <span class="hint hint--md">Заголовок</span>
-    <span class="hint hint--md">Бар качества</span>
+
+    <!-- quality bar -->
+    <div class="flex items-center gap-1 flex-wrap">
+      <span class="text-xs text-gray-400 tabular-nums">
+        {{ title().length }} симв. ({{ titleWidthPx() }}px /
+        {{ selectedDevice() === 'desktop' ? 580 : 560 }}px)
+      </span>
+
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let stats = titleSegments();
+
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < stats.count ? stats.color : 'bg-gray-200'"
+          ></div>
+        }
+      </div>
+    </div>
   </div>
-  <input class="dz-input" />
+
+  <div
+    class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+  >
+    <input class="outline-none bg-transparent h-full w-full" [(ngModel)]="title" type="text" />
+  </div>
+
+  <div class="text-[10px] text-gray-400 mt-1">
+    Это то, что появится в первой строке, когда эта запись отобразится в результатах поиска.
+  </div>
 </div>
 
-<div>
-  <div class="bar">
+<!--Постоянная ссылка-->
+<div class="px-5">
+  <div class="flex justify-between items-center w-full gap-1 flex-wrap">
     <span class="hint hint--md">Постоянная ссылка</span>
-    <span class="hint hint--md">Бар качества</span>
+
+    <div class="flex items-center gap-1 flex-wrap">
+      <span class="text-xs text-gray-400 tabular-nums">
+        {{ link().length }} / {{ selectedDevice() === 'desktop' ? 75 : 50 }}
+      </span>
+
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let lStats = linkSegments();
+
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < lStats.count ? lStats.color : 'bg-gray-200'"
+          ></div>
+        }
+      </div>
+    </div>
   </div>
-  <input class="dz-input" />
+
+  <div
+    class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+  >
+    <input class="outline-none bg-transparent h-full w-full" [(ngModel)]="link" type="text" />
+  </div>
+
+  @if (link() === '/') {
+    <div class="text-[10px] text-gray-400 mt-1">
+      Изменение постоянной ссылки главной страницы невозможно.
+    </div>
+  }
 </div>
 
-<div>
-  <div class="bar">
+<!--Описание-->
+<div class="px-5">
+  <div class="flex justify-between items-center w-full gap-1 flex-wrap">
     <span class="hint hint--md">Описание</span>
 
-    <span class="hint hint--md">Бар качества</span>
-  </div>
+    <div class="flex items-center gap-1 flex-wrap">
+      <span class="text-xs text-gray-400 tabular-nums no-wrap">
+        {{ description().length }} симв. ({{ descriptionWidthPx() }}px /
+        {{ selectedDevice() === 'desktop' ? 920 : 750 }}px)
+      </span>
 
-  <textarea class="dz-input dz-input--textarea"></textarea>
-</div>
+      <div class="flex gap-0.5 h-1.5 w-24">
+        @let dStats = descriptionSegments();
 
-<div class="search-bar skeleton">
-  <div class="text-center full">
-    <small class="hint">Я буду красивой поисковой строкой, если нужно</small>
-  </div>
-</div>
-
-<div class="search-types">
-  <ul class="dz-list dz-list--horizontal">
-    @for (i of [].constructor(6); track $index) {
-      <li class="dz-list__item dz-box dz-box--fit skeleton font-xxs">&nbsp;</li>
-    }
-  </ul>
-</div>
-
-<div class="search-results">
-  <ul class="dz-list dz-list--horizontal">
-    <li class="dz-list__item dz-box shadow">
-      <div class="dz-box text-center">
-        <small class="hint">Здесь показать, как будет выглядеть</small>
+        @for (i of [0, 1, 2, 3, 4]; track i) {
+          <div
+            class="flex-1 rounded-sm transition-colors duration-300"
+            [class]="i < dStats.count ? dStats.color : 'bg-gray-200'"
+          ></div>
+        }
       </div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-      <div class="dz-box"></div>
-    </li>
-    @for (i of [].constructor(2); track $index) {
-      <li class="dz-list__item dz-box skeleton">
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-        <div class="dz-box"></div>
-      </li>
-    }
-  </ul>
+    </div>
+  </div>
+
+  <div
+    class="w-full min-h-9 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1 transition-all"
+  >
+    <textarea
+      class="outline-none bg-transparent w-full resize-none overflow-hidden leading-tight"
+      [(ngModel)]="description"
+      (input)="adjustHeight($event)"
+      rows="2"
+    ></textarea>
+  </div>
+
+  <div class="text-[10px] text-gray-400 mt-1">
+    Это то, что будет отображаться как описание, когда эта запись отобразится в результатах поиска.
+  </div>
 </div>

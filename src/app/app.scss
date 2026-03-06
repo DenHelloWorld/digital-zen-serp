@@ -6,4 +6,11 @@
   align-items: center;
   position: relative;
   background-color: var(--google-bg);
+
+  header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background-color: var(--google-bg);
+  }
 }

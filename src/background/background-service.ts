@@ -1,6 +1,7 @@
 /// <reference types="chrome"/>
 import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
+import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
 import { logger } from '../modules/comon/helpers/logger';
 import { ScraperService } from './scrapper-service';
 
@@ -57,8 +58,12 @@ export class BackgroundService {
             case CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB: {
               const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-              if (!tab?.id) {
-                safeSendResponse({ success: false, error: 'NO_ACTIVE_TAB' });
+              if (!tab?.id || !isHttpUrl(tab.url)) {
+                this.#logger.warn('Scraping skipped: Invalid or restricted URL', tab?.url);
+                safeSendResponse({
+                  success: false,
+                  error: 'INVALID_PAGE_PROTOCOL',
+                });
                 break;
               }
 
@@ -89,7 +94,6 @@ export class BackgroundService {
 
               const metadata = this.#scraper.extractMetadata(html, url);
 
-              this.#logger.info('Metadata extracted for:', url, metadata);
               safeSendResponse({ success: true, data: metadata });
               break;
             }

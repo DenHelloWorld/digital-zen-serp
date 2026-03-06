@@ -1,6 +1,6 @@
 import { ICONS } from '../comon/constants/icons.const';
-import { CHROME_COMMAND_ENUM } from '../comon/enums/chrome-command.enum';
-import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { ScrapStore } from '../comon/stores/scrap.store';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 
 @Component({
   selector: 'dz-google-serp',
@@ -15,12 +15,9 @@ import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/cor
 export class GoogleSerpComponent implements OnInit {
   protected readonly selectedDevice = signal<'desktop' | 'mobile'>('desktop');
   protected readonly icons = ICONS;
+  protected readonly store = inject(ScrapStore);
 
   public ngOnInit(): void {
-    if (chrome.runtime) {
-      chrome.runtime.sendMessage({
-        command: CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB,
-      });
-    }
+    this.store.scrapCurrentTab();
   }
 }

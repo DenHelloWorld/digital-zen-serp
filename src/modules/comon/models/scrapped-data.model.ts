@@ -1,4 +1,4 @@
-export interface ScrapedMetadata {
+export interface ScrapedData {
   title: string | null;
   description: string | null;
   image: string | null;

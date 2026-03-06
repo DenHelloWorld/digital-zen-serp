@@ -1,5 +1,5 @@
 import { logger } from '../modules/comon/helpers/logger';
-import { ScrapedMetadata } from '../modules/comon/models/scrapped-metadata.model';
+import { ScrapedData } from '../modules/comon/models/scrapped-data.model';
 import { parseHTML } from 'linkedom';
 
 interface JsonLdPerson {
@@ -102,7 +102,7 @@ export class ScraperService {
   ];
 
   // --- ОСНОВНОЙ МЕТОД ---
-  public extractMetadata(html: string, url: string): ScrapedMetadata {
+  public extractMetadata(html: string, url: string): ScrapedData {
     try {
       const { document: doc } = parseHTML(html);
       const linkedData = this.#getJsonLd(doc);

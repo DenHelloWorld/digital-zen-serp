@@ -97,6 +97,13 @@ export class BackgroundService {
               safeSendResponse({ success: true, data: metadata });
               break;
             }
+            default: {
+              this.#logger.warn('Unknown command received:', message.command);
+              safeSendResponse({
+                success: false,
+                error: FOCUS_ERROR_ENUM.GENERIC_ERROR,
+              });
+            }
           }
         } catch (error) {
           this.#logger.error(`Error handling message ${message.command}:`, error);

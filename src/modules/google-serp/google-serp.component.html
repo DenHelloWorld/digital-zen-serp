@@ -4,36 +4,10 @@
   </svg>
 </ng-template>
 
-<div class="bar">
-  <span class="hint hint--xl">Выберите девайс</span>
-
-  <ul class="dz-list dz-list--horizontal">
-    <li>
-      <button
-        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
-        [attr.data-active]="selectedDevice() === 'desktop'"
-        (click)="selectedDevice.set('desktop')"
-        type="button"
-      >
-        <span class="font-medium">🖥️ Desktop</span>
-      </button>
-    </li>
-    <li>
-      <button
-        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
-        [attr.data-active]="selectedDevice() === 'mobile'"
-        (click)="selectedDevice.set('mobile')"
-        type="button"
-      >
-        <span class="font-medium">📱 Mobile</span>
-      </button>
-    </li>
-  </ul>
-</div>
-
-<div class="w-full bg-white pt-6 border-b border-gray-200">
-  <div class="w-full px-4">
-    <div class="relative w-full max-w-[692px] mb-4">
+<div class="w-full bg-white pb-1 border-b border-gray-200 flex px-5 gap-1 flex-wrap">
+  <!--Поисковая строка-->
+  <div class="flex-1">
+    <div class="relative w-full">
       <div
         class="flex items-center w-full h-[46px] px-4 bg-white border border-gray-200 rounded-full hover:shadow-md focus-within:shadow-md transition-shadow"
       >
@@ -81,18 +55,40 @@
       </div>
     </div>
   </div>
+
+  <!--Выбор девайса-->
+  <ul class="dz-list dz-list--horizontal">
+    <li>
+      <button
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'desktop'"
+        (click)="selectedDevice.set('desktop')"
+        type="button"
+      >
+        <span class="font-medium">🖥️</span>
+      </button>
+    </li>
+    <li>
+      <button
+        class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+        [attr.data-active]="selectedDevice() === 'mobile'"
+        (click)="selectedDevice.set('mobile')"
+        type="button"
+      >
+        <span class="font-medium">📱</span>
+      </button>
+    </li>
+  </ul>
 </div>
 
-<div
-  class="search-results flex justify-center bg-gray-50 p-2 rounded-xl border border-dashed border-gray-300"
->
+<!--Визуализатор-->
+<div class="flex bg-gray-50 p-1.5 rounded-xl">
   <div
-    class="bg-white shadow-lg border border-gray-200 p-4 rounded-lg transition-all duration-500 ease-in-out overflow-hidden"
-    [class.w-[650px]]="selectedDevice() === 'desktop'"
-    [class.w-[375px]]="selectedDevice() === 'mobile'"
+    class="bg-white w-full flex-1 shadow-lg p-3.5 rounded-lg transition-all duration-500 ease-in-out overflow-hidden"
+    [style.max-width.px]="selectedDevice() === 'desktop' ? 712 : 375"
   >
     <div class="flex items-center gap-3 mb-1.5">
-      <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+      <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center shrink-0">
         <span class="text-[10px] font-bold text-gray-400">G</span>
       </div>
       <div class="flex flex-col min-w-0">
@@ -106,8 +102,7 @@
     <div class="mt-1">
       <h3
         class="text-[#1a0dab] hover:underline cursor-pointer font-medium leading-[1.3] transition-all"
-        [class.text-[20px]]="selectedDevice() === 'desktop'"
-        [class.text-[18px]]="selectedDevice() === 'mobile'"
+        [style.font-size.px]="selectedDevice() === 'desktop' ? 18 : 20"
         style="
           display: -webkit-box;
           -webkit-line-clamp: 2;
@@ -131,12 +126,13 @@
   </div>
 </div>
 
-<div>
-  <div class="bar flex justify-between items-center">
+<!--Заголовок-->
+<div class="px-5">
+  <div class="flex justify-between items-center gap-1 flex-wrap">
     <span class="hint hint--md">Заголовок</span>
 
     <!-- quality bar -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1 flex-wrap">
       <span class="text-xs text-gray-400 tabular-nums">
         {{ title().length }} симв. ({{ titleWidthPx() }}px /
         {{ selectedDevice() === 'desktop' ? 580 : 560 }}px)
@@ -166,11 +162,12 @@
   </div>
 </div>
 
-<div>
-  <div class="bar flex justify-between items-center">
+<!--Постоянная ссылка-->
+<div class="px-5">
+  <div class="flex justify-between items-center w-full gap-1 flex-wrap">
     <span class="hint hint--md">Постоянная ссылка</span>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1 flex-wrap">
       <span class="text-xs text-gray-400 tabular-nums">
         {{ link().length }} / {{ selectedDevice() === 'desktop' ? 75 : 50 }}
       </span>
@@ -201,12 +198,13 @@
   }
 </div>
 
-<div>
-  <div class="bar flex justify-between items-center">
+<!--Описание-->
+<div class="px-5">
+  <div class="flex justify-between items-center w-full gap-1 flex-wrap">
     <span class="hint hint--md">Описание</span>
 
-    <div class="flex items-center gap-3">
-      <span class="text-xs text-gray-400 tabular-nums">
+    <div class="flex items-center gap-1 flex-wrap">
+      <span class="text-xs text-gray-400 tabular-nums no-wrap">
         {{ description().length }} симв. ({{ descriptionWidthPx() }}px /
         {{ selectedDevice() === 'desktop' ? 920 : 750 }}px)
       </span>

@@ -2,6 +2,7 @@
 import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
 import { logger } from '../modules/comon/helpers/logger';
+import { ScraperService } from './scrapper-service';
 
 /**
  * @class BackgroundService
@@ -9,6 +10,7 @@ import { logger } from '../modules/comon/helpers/logger';
  */
 export class BackgroundService {
   readonly #logger = logger.createLogger('BackgroundService');
+  readonly #scraper = new ScraperService();
 
   constructor() {
     this.initializeListeners();
@@ -52,8 +54,45 @@ export class BackgroundService {
       operationQueue = operationQueue.then(async () => {
         try {
           switch (message.command as ChromeCommandType) {
-            default:
-              safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.UNKNOWN_COMMAND });
+            case CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB: {
+              const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+              if (!tab?.id) {
+                safeSendResponse({ success: false, error: 'NO_ACTIVE_TAB' });
+                break;
+              }
+
+              interface InjectionResult {
+                html: string;
+                url: string;
+              }
+
+              const injectionResults = await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                func: () => {
+                  return {
+                    html: document.documentElement.outerHTML,
+                    url: window.location.href,
+                  };
+                },
+              });
+
+              const result = injectionResults[0]?.result as InjectionResult | undefined;
+
+              if (!result) {
+                this.#logger.error('Failed to get result from injected script');
+                safeSendResponse({ success: false, error: 'INJECTION_FAILED' });
+                return;
+              }
+
+              const { html, url } = result;
+
+              const metadata = this.#scraper.extractMetadata(html, url);
+
+              this.#logger.info('Metadata extracted for:', url, metadata);
+              safeSendResponse({ success: true, data: metadata });
+              break;
+            }
           }
         } catch (error) {
           this.#logger.error(`Error handling message ${message.command}:`, error);

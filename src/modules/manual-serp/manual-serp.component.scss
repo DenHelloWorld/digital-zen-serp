@@ -1,0 +1,9 @@
+:host {
+  padding: var(--spacing);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--spacing);
+  width: 100%;
+  max-width: calc(var(--google-container-width) + var(--spacing) + var(--spacing));
+}

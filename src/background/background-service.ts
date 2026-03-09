@@ -97,6 +97,22 @@ export class BackgroundService {
               safeSendResponse({ success: true, data: metadata });
               break;
             }
+            case CHROME_COMMAND_ENUM.GET_ACTIVE_TAB: {
+              const tab = await this.getActiveTab();
+
+              safeSendResponse({
+                success: true,
+                tab: tab
+                  ? {
+                      id: tab.id,
+                      url: tab.url,
+                      title: tab.title,
+                      favIconUrl: tab.favIconUrl,
+                    }
+                  : null,
+              });
+              break;
+            }
             default: {
               this.#logger.warn('Unknown command received:', message.command);
               safeSendResponse({
@@ -121,5 +137,14 @@ export class BackgroundService {
         .setPanelBehavior({ openPanelOnActionClick: true })
         .catch(error => this.#logger.error('Error setting panel behavior:', error));
     });
+  }
+
+  private async getActiveTab(): Promise<chrome.tabs.Tab | null> {
+    const tabs = await chrome.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+
+    return tabs.length ? tabs[0] : null;
   }
 }

@@ -53,6 +53,8 @@ export class ScraperService {
     // Добавь проверку бренда из JSON-LD (часто там имя автора/компании)
     (_, linkedData) => linkedData.brand?.name,
 
+    doc => doc.querySelector('meta[name="og:site_name"]')?.getAttribute('content'),
+    doc => doc.querySelector('meta[property="og:site_name"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[name="author"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="article:author"]')?.getAttribute('content'),
 

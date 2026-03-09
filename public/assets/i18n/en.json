@@ -1,0 +1,23 @@
+{
+  "serp": {
+    "placeholder": "Search Google or type a URL",
+    "your_site": "Your Site",
+    "default_link": "https://your-site.com/example-page",
+    "default_title": "Enter page title...",
+    "default_description": "Enter page description to see preview...",
+    "title_label": "Title",
+    "title_hint": "This is what will appear in the first line when this entry is displayed in search results.",
+    "link_label": "Permalink",
+    "link_error_home": "Changing the home page permalink is not possible.",
+    "description_label": "Description",
+    "description_hint": "This is what will be displayed as the description when this entry appears in search results.",
+    "symbols": "chars",
+    "px": "px"
+  },
+  "nav": {
+    "main": "Main",
+    "social": "Social",
+    "language": "Language",
+    "current_site": "Current site"
+  }
+}

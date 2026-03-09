@@ -8,7 +8,14 @@ export const routes: Routes = [
   {
     path: 'google-serp',
     loadComponent: () =>
-      import('../modules/google-serp/google-serp.component').then(m => m.GoogleSerpComponent),
+      import('../modules/manual-serp/manual-serp.component').then(m => m.ManualSerpComponent),
+  },
+  {
+    path: 'current-site',
+    loadComponent: () =>
+      import('../modules/current-tab-serp/current-tab-serp.component').then(
+        m => m.CurrentTabSerpComponent
+      ),
   },
   {
     path: 'social',

@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslocoDirective } from '@jsverse/transloco';
 
 const SERP_LIMITS = {
   desktop: {
@@ -29,7 +30,7 @@ const SERP_LIMITS = {
 
 @Component({
   selector: 'dz-google-serp',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslocoDirective],
   templateUrl: './google-serp.component.html',
   styleUrl: './google-serp.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

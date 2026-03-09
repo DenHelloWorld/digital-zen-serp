@@ -1,5 +1,5 @@
+import { CHAR_LIMITS } from '../comon/constants/char-limits.const';
 import { ICONS } from '../comon/constants/icons.const';
-import { ScrapStore } from '../comon/stores/scrap.store';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,12 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 import { startWith, switchMap } from 'rxjs';
 
-const CHAR_LIMITS = {
-  title: 60,
-  link: 75,
-  description: 160,
-};
-
 @Component({
   selector: 'dz-manual-serp',
   imports: [FormsModule, TranslocoDirective],
@@ -31,17 +25,16 @@ const CHAR_LIMITS = {
   },
 })
 export class ManualSerpComponent implements OnInit {
+  readonly #destroyRef = inject(DestroyRef);
+  protected readonly transloco = inject(TranslocoService);
+
   protected readonly selectedDevice = signal<'desktop' | 'mobile'>('desktop');
   protected readonly icons = ICONS;
-  protected readonly store = inject(ScrapStore);
   protected readonly title = signal('');
   protected readonly link = signal('');
   protected readonly description = signal('');
   protected readonly siteNameEdited = signal(false);
   protected readonly siteName = signal('');
-  protected readonly transloco = inject(TranslocoService);
-  readonly #destroyRef = inject(DestroyRef);
-  protected readonly charLimits = CHAR_LIMITS;
 
   protected readonly descriptionSegments = computed(() => {
     const len = this.description().length;
@@ -50,7 +43,6 @@ export class ManualSerpComponent implements OnInit {
       color: this.getDescriptionColor(len),
     };
   });
-
   protected readonly titleSegments = computed(() => {
     const len = this.title().length;
     return {
@@ -58,7 +50,6 @@ export class ManualSerpComponent implements OnInit {
       color: this.getTitleColor(len),
     };
   });
-
   protected readonly linkSegments = computed(() => {
     const len = this.link().length;
     return {
@@ -66,7 +57,6 @@ export class ManualSerpComponent implements OnInit {
       color: this.getLinkColor(len),
     };
   });
-
   protected readonly titlePreview = computed(() =>
     this.truncateText(this.title(), CHAR_LIMITS.title)
   );
@@ -74,6 +64,8 @@ export class ManualSerpComponent implements OnInit {
   protected readonly descriptionPreview = computed(() =>
     this.truncateText(this.description(), CHAR_LIMITS.description)
   );
+
+  protected readonly charLimits = CHAR_LIMITS;
 
   public ngOnInit(): void {
     this.transloco.langChanges$

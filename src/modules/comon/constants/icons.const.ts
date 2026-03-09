@@ -12,6 +12,7 @@
 export const ICONS = Object.freeze({
   MIC: '#icon-mic',
   SEARCH: '#icon-search',
+  GLOBE: '#icon-globe',
 } as const);
 
 /**

@@ -1,8 +1,10 @@
 export enum CHROME_COMMAND_ENUM {
   OPEN_SIDE_PANEL_APP = 'openSidePanel',
   SCRAP_CURRENT_TAB = 'scrapCurrentTab',
+  GET_ACTIVE_TAB = 'getActiveTab',
 }
 
 export type ChromeCommandType =
   | CHROME_COMMAND_ENUM.OPEN_SIDE_PANEL_APP
+  | CHROME_COMMAND_ENUM.GET_ACTIVE_TAB
   | CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB;

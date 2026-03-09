@@ -12,7 +12,10 @@ export const routes: Routes = [
   },
   {
     path: 'current-site',
-    component: PlaceholderComponent,
+    loadComponent: () =>
+      import('../modules/current-tab-serp/current-tab-serp.component').then(
+        m => m.CurrentTabSerpComponent
+      ),
   },
   {
     path: 'social',

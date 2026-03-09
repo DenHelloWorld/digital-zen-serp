@@ -1,18 +1,34 @@
 <ng-container *transloco="let t">
   <header class="w-full">
-    <div class="flex justify-end px-5 py-2 text-xs gap-3 text-gray-500">
-      <div class="flex gap-1">
-        @for (lang of languages; track lang.code) {
-          <button
-            class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
-            [attr.data-active]="activeLang() === lang.code"
-            [attr.aria-label]="lang.label"
-            (click)="setLang(lang.code)"
-            type="button"
+    <div class="flex items-center justify-between px-5 py-2 text-xs text-gray-500">
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-8 w-8 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-green-500 font-semibold text-white"
+        >
+          RA
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-900"
+            >Red Alert</span
           >
-            <span class="text-[18px] leading-none" aria-hidden="true">{{ lang.flag }}</span>
-          </button>
-        }
+          <span class="text-[10px] uppercase tracking-[0.3em] text-gray-500">SERP</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 text-xs text-gray-500 uppercase tracking-[0.2em]">
+        <span>{{ t('nav.language') }}</span>
+        <div class="flex gap-1">
+          @for (lang of languages; track lang.code) {
+            <button
+              class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+              [attr.data-active]="activeLang() === lang.code"
+              [attr.aria-label]="lang.label"
+              (click)="setLang(lang.code)"
+              type="button"
+            >
+              <span class="text-[18px] leading-none" aria-hidden="true">{{ lang.flag }}</span>
+            </button>
+          }
+        </div>
       </div>
     </div>
 

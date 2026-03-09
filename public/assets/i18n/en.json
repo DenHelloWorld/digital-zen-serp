@@ -17,6 +17,7 @@
   "nav": {
     "main": "Main",
     "social": "Social",
-    "language": "Language"
+    "language": "Language",
+    "current_site": "Current site"
   }
 }

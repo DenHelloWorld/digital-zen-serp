@@ -17,6 +17,7 @@
   "nav": {
     "main": "Основные",
     "social": "Соцсети",
-    "language": "Язык"
+    "language": "Язык",
+    "current_site": "Текущий сайт"
   }
 }

@@ -34,9 +34,9 @@
 
           <input
             class="flex-1 min-w-0 outline-none text-[16px] text-gray-900 bg-transparent px-2"
-            [ngModel]="title()"
+            [ngModel]="siteName()"
             [placeholder]="t('serp.placeholder')"
-            (ngModelChange)="title.set($event)"
+            (ngModelChange)="siteName.set($event); siteNameEdited.set(true)"
             type="text"
           />
 
@@ -92,11 +92,13 @@
           <span class="text-[10px] font-bold text-gray-400">G</span>
         </div>
         <div class="flex flex-col min-w-0">
-          <span class="text-[14px] text-[#202124] leading-tight truncate">{{
-            t('serp.your_site')
-          }}</span>
-          <span class="text-[12px] text-[#4d5156] truncate">
-            {{ link() || t('serp.default_link') }}
+          <span
+            class="text-[14px] text-[#202124] leading-tight overflow-hidden whitespace-nowrap text-ellipsis block"
+          >
+            {{ siteName() || t('serp.your_site') }}
+          </span>
+          <span class="text-[12px] text-[#4d5156]" style="overflow-wrap: anywhere">
+            {{ linkPreview() || t('serp.default_link') }}
           </span>
         </div>
       </div>
@@ -105,24 +107,18 @@
         <h3
           class="text-[#1a0dab] hover:underline cursor-pointer font-medium leading-[1.3] transition-all"
           [style.font-size.px]="selectedDevice() === 'desktop' ? 18 : 20"
-          style="
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          "
+          style="white-space: normal; overflow-wrap: anywhere"
         >
-          {{ title() || t('serp.default_title') }}
+          {{ titlePreview() || t('serp.default_title') }}
         </h3>
       </div>
 
       <div class="mt-2">
         <p
           class="text-[14px] leading-[1.58] text-[#4d5156] transition-all"
-          [style.-webkit-line-clamp]="selectedDevice() === 'desktop' ? 2 : 3"
-          style="display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden"
+          style="white-space: normal; overflow-wrap: anywhere; word-break: break-word"
         >
-          {{ description() || t('serp.default_description') }}
+          {{ descriptionPreview() || t('serp.default_description') }}
         </p>
       </div>
     </div>
@@ -136,8 +132,7 @@
       <!-- quality bar -->
       <div class="flex items-center gap-1 flex-wrap">
         <span class="text-xs text-gray-400 tabular-nums">
-          {{ title().length }} {{ t('serp.symbols') }} ({{ titleWidthPx() }}{{ t('serp.px') }} /
-          {{ selectedDevice() === 'desktop' ? 580 : 560 }}{{ t('serp.px') }})
+          {{ title().length }} / {{ charLimits.title }} {{ t('serp.symbols') }}
         </span>
 
         <div class="flex gap-0.5 h-1.5 w-24">
@@ -171,7 +166,7 @@
 
       <div class="flex items-center gap-1 flex-wrap">
         <span class="text-xs text-gray-400 tabular-nums">
-          {{ link().length }} / {{ selectedDevice() === 'desktop' ? 75 : 50 }}
+          {{ link().length }} / {{ charLimits.link }} {{ t('serp.symbols') }}
         </span>
 
         <div class="flex gap-0.5 h-1.5 w-24">
@@ -207,8 +202,7 @@
 
       <div class="flex items-center gap-1 flex-wrap">
         <span class="text-xs text-gray-400 tabular-nums no-wrap">
-          {{ description().length }} {{ t('serp.symbols') }} ({{ descriptionWidthPx()
-          }}{{ t('serp.px') }} / {{ selectedDevice() === 'desktop' ? 920 : 750 }}{{ t('serp.px') }})
+          {{ description().length }} / {{ charLimits.description }} {{ t('serp.symbols') }}
         </span>
 
         <div class="flex gap-0.5 h-1.5 w-24">

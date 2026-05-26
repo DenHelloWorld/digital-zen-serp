@@ -1,9 +1,7 @@
 import { ROUTES } from '../modules/comon/constants/routes.const';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'dz-root',
@@ -15,23 +13,28 @@ import { filter, map } from 'rxjs';
 export class App {
   readonly #router = inject(Router);
   readonly #transloco = inject(TranslocoService);
+  readonly #destroyRef = inject(DestroyRef);
 
-  protected readonly currentUrl = toSignal(
-    this.#router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(event => (event as NavigationEnd).urlAfterRedirects)
-    ),
-    { initialValue: this.#router.url }
-  );
+  protected readonly currentUrl = signal(this.#router.url);
+  protected readonly activeLang = signal(this.#transloco.getActiveLang());
 
   protected readonly routes = ROUTES;
   protected readonly languages = [
     { code: 'en', flag: '🇺🇸', label: 'English' },
     { code: 'ru', flag: '🇷🇺', label: 'Русский' },
   ] as const;
-  protected readonly activeLang = toSignal(this.#transloco.langChanges$, {
-    initialValue: this.#transloco.getActiveLang(),
-  });
+
+  constructor() {
+    const routerSub = this.#router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentUrl.set(event.urlAfterRedirects);
+      }
+    });
+    this.#destroyRef.onDestroy(() => routerSub.unsubscribe());
+
+    const langSub = this.#transloco.langChanges$.subscribe(lang => this.activeLang.set(lang));
+    this.#destroyRef.onDestroy(() => langSub.unsubscribe());
+  }
 
   protected setLang(lang: string) {
     if (lang === this.activeLang()) return;

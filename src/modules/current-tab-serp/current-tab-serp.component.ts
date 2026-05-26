@@ -6,14 +6,7 @@ import { FaviconHelper } from '../comon/helpers/favicon.helper';
 import { isHttpUrl } from '../comon/helpers/is-http-url.helper';
 import { GooglePreviewStore } from '../comon/stores/google-preview.store';
 import { NgTemplateOutlet } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslocoDirective } from '@jsverse/transloco';
 
@@ -27,7 +20,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
       'dz-current-tab-serp p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
-export class CurrentTabSerpComponent implements OnInit {
+export class CurrentTabSerpComponent {
   protected readonly store = inject(GooglePreviewStore);
 
   protected readonly currentTabPreview = computed(() => this.store.currentTabPreview());
@@ -82,11 +75,6 @@ export class CurrentTabSerpComponent implements OnInit {
   protected readonly charLimits = CHAR_LIMITS;
   protected readonly icons = ICONS;
   protected readonly isHttpUrl = isHttpUrl;
-
-  public ngOnInit(): void {
-    this.store.getActiveTab();
-    this.store.loadPreview();
-  }
 
   private truncateText(value: string, limit: number): string {
     if (!value) return '';

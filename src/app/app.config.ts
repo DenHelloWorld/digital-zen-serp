@@ -1,6 +1,5 @@
 import { TranslocoHttpLoader } from '../modules/comon/services/transloco.service';
 import { routes } from './app.routes';
-import { provideHttpClient } from '@angular/common/http';
 import {
   ApplicationConfig,
   isDevMode,
@@ -15,7 +14,6 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes, withHashLocation()),
-    provideHttpClient(),
     provideTransloco({
       config: {
         availableLangs: ['ru', 'en'],

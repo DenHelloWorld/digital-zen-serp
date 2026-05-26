@@ -1,144 +1,110 @@
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
 import { GooglePreviewData } from '../models/google-preview-data.model';
-import { effect, inject } from '@angular/core';
-import {
-  getState,
-  patchState,
-  signalStore,
-  withHooks,
-  withMethods,
-  withState,
-} from '@ngrx/signals';
+import { Injectable, signal, inject } from '@angular/core';
 
-export interface GooglePreviewState {
-  activeTab: chrome.tabs.Tab | null;
-  currentTabPreview: GooglePreviewData | null;
-  isTabLoading: boolean;
-  isPreviewLoading: boolean;
-  tabError: string | null;
-  previewError: string | null;
-}
+@Injectable({ providedIn: 'root' })
+export class GooglePreviewStore {
+  readonly #activeTab = signal<chrome.tabs.Tab | null>(null);
+  readonly #currentTabPreview = signal<GooglePreviewData | null>(null);
+  readonly #isTabLoading = signal(false);
+  readonly #isPreviewLoading = signal(false);
+  readonly #tabError = signal<string | null>(null);
+  readonly #previewError = signal<string | null>(null);
 
-const initialState: GooglePreviewState = {
-  activeTab: null,
-  currentTabPreview: null,
-  isTabLoading: false,
-  isPreviewLoading: false,
-  tabError: null,
-  previewError: null,
-};
+  readonly activeTab = this.#activeTab.asReadonly();
+  readonly currentTabPreview = this.#currentTabPreview.asReadonly();
+  readonly isTabLoading = this.#isTabLoading.asReadonly();
+  readonly isPreviewLoading = this.#isPreviewLoading.asReadonly();
+  readonly tabError = this.#tabError.asReadonly();
+  readonly previewError = this.#previewError.asReadonly();
 
-export const GooglePreviewStore = signalStore(
-  { providedIn: 'root' },
-  withState(initialState),
-  withMethods(store => {
-    const isChrome = inject(IS_CHROME_EXTENSION);
+  readonly #isChrome = inject(IS_CHROME_EXTENSION);
 
-    effect(() => {
-      console.info('[GooglePreviewStore]', getState(store));
+  constructor() {
+    this.#listenToTabChanges();
+    this.getActiveTab();
+    this.loadPreview();
+  }
+
+  async loadPreview(): Promise<void> {
+    this.#isPreviewLoading.set(true);
+    this.#previewError.set(null);
+
+    if (!this.#isChrome) {
+      this.#isPreviewLoading.set(false);
+      this.#previewError.set('CHROME_RUNTIME_NOT_FOUND');
+      return;
+    }
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        command: CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB,
+      });
+
+      if (response?.success) {
+        this.#currentTabPreview.set(response.data);
+      } else {
+        this.#previewError.set(response?.error || 'UNKNOWN_ERROR');
+      }
+    } catch (err) {
+      this.#previewError.set('MESSAGE_SENDING_FAILED');
+      console.error('[GooglePreviewStore]', err);
+    } finally {
+      this.#isPreviewLoading.set(false);
+    }
+  }
+
+  async getActiveTab() {
+    this.#isTabLoading.set(true);
+    this.#tabError.set(null);
+
+    if (!this.#isChrome) {
+      this.#isTabLoading.set(false);
+      this.#tabError.set('CHROME_RUNTIME_NOT_FOUND');
+      return;
+    }
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        command: CHROME_COMMAND_ENUM.GET_ACTIVE_TAB,
+      });
+
+      if (response?.success) {
+        this.#activeTab.set(response.tab);
+      } else {
+        this.#tabError.set(response?.error || 'UNKNOWN_ERROR');
+      }
+    } catch (err) {
+      this.#tabError.set('MESSAGE_SENDING_FAILED');
+      console.error('[GooglePreviewStore]', err);
+    } finally {
+      this.#isTabLoading.set(false);
+    }
+  }
+
+  #listenToTabChanges(): void {
+    if (!this.#isChrome) return;
+
+    chrome.tabs.onActivated.addListener(() => {
+      this.getActiveTab();
+      this.loadPreview();
     });
 
-    return {
-      async loadPreview(): Promise<void> {
-        patchState(store, { isPreviewLoading: true, previewError: null });
+    chrome.tabs.onUpdated.addListener((_, changeInfo, tab) => {
+      if (changeInfo.status === 'complete' && tab.active) {
+        this.getActiveTab();
+        this.loadPreview();
+      }
+    });
+  }
 
-        if (!isChrome) {
-          patchState(store, {
-            isPreviewLoading: false,
-            previewError: 'CHROME_RUNTIME_NOT_FOUND',
-          });
-          return;
-        }
-
-        try {
-          const response = await chrome.runtime.sendMessage({
-            command: CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB,
-          });
-
-          if (response?.success) {
-            patchState(store, {
-              currentTabPreview: response.data,
-              isPreviewLoading: false,
-            });
-          } else {
-            patchState(store, {
-              isPreviewLoading: false,
-              previewError: response?.error || 'UNKNOWN_ERROR',
-            });
-          }
-        } catch (err) {
-          patchState(store, {
-            isPreviewLoading: false,
-            previewError: 'MESSAGE_SENDING_FAILED',
-          });
-          console.error('[GooglePreviewStore]', err);
-        }
-      },
-
-      async getActiveTab() {
-        patchState(store, { isTabLoading: true, tabError: null });
-
-        if (!isChrome) {
-          patchState(store, {
-            isTabLoading: false,
-            tabError: 'CHROME_RUNTIME_NOT_FOUND',
-          });
-          return;
-        }
-
-        try {
-          const response = await chrome.runtime.sendMessage({
-            command: CHROME_COMMAND_ENUM.GET_ACTIVE_TAB,
-          });
-
-          if (response?.success) {
-            patchState(store, {
-              activeTab: response.tab,
-              isTabLoading: false,
-            });
-          } else {
-            patchState(store, {
-              isTabLoading: false,
-              tabError: response?.error || 'UNKNOWN_ERROR',
-            });
-          }
-        } catch (err) {
-          patchState(store, {
-            isTabLoading: false,
-            tabError: 'MESSAGE_SENDING_FAILED',
-          });
-          console.error('[GooglePreviewStore]', err);
-        }
-      },
-
-      async listenToTabChanges() {
-        if (!isChrome) {
-          return;
-        }
-
-        chrome.tabs.onActivated.addListener(() => {
-          this.getActiveTab();
-          this.loadPreview();
-        });
-
-        chrome.tabs.onUpdated.addListener((_, changeInfo, tab) => {
-          if (changeInfo.status === 'complete' && tab.active) {
-            this.getActiveTab();
-            this.loadPreview();
-          }
-        });
-      },
-
-      reset(): void {
-        patchState(store, initialState);
-      },
-    };
-  }),
-
-  withHooks({
-    onInit(store) {
-      store.listenToTabChanges();
-    },
-  })
-);
+  reset(): void {
+    this.#activeTab.set(null);
+    this.#currentTabPreview.set(null);
+    this.#isTabLoading.set(false);
+    this.#isPreviewLoading.set(false);
+    this.#tabError.set(null);
+    this.#previewError.set(null);
+  }
+}

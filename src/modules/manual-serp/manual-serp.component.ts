@@ -9,10 +9,8 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'dz-manual-serp',
@@ -68,17 +66,18 @@ export class ManualSerpComponent implements OnInit {
   protected readonly charLimits = CHAR_LIMITS;
 
   public ngOnInit(): void {
-    this.transloco.langChanges$
-      .pipe(
-        startWith(this.transloco.getActiveLang()),
-        switchMap(lang => this.transloco.selectTranslate('serp.your_site', {}, lang)),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe(value => {
+    const setDefaultSiteName = (lang: string) => {
+      this.transloco.selectTranslate('serp.your_site', {}, lang).subscribe(value => {
         if (!this.siteNameEdited()) {
           this.siteName.set(value);
         }
       });
+    };
+
+    setDefaultSiteName(this.transloco.getActiveLang());
+
+    const sub = this.transloco.langChanges$.subscribe(lang => setDefaultSiteName(lang));
+    this.#destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
   protected adjustHeight(event: Event): void {

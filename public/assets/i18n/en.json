@@ -18,6 +18,7 @@
     "main": "Main",
     "social": "Social",
     "language": "Language",
-    "current_site": "Current site"
+    "current_site": "Current site",
+    "seo_audit": "SEO Audit"
   }
 }

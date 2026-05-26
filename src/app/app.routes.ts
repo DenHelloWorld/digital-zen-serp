@@ -1,3 +1,4 @@
+import { ROUTES } from '../modules/comon/constants/routes.const';
 import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 
@@ -6,23 +7,27 @@ class PlaceholderComponent {}
 
 export const routes: Routes = [
   {
-    path: 'google-serp',
+    path: ROUTES.GOOGLE_SERP,
     loadComponent: () =>
       import('../modules/manual-serp/manual-serp.component').then(m => m.ManualSerpComponent),
   },
   {
-    path: 'current-site',
+    path: ROUTES.CURRENT_SITE,
     loadComponent: () =>
       import('../modules/current-tab-serp/current-tab-serp.component').then(
         m => m.CurrentTabSerpComponent
       ),
   },
   {
-    path: 'social',
+    path: ROUTES.SOCIAL,
+    component: PlaceholderComponent,
+  },
+  {
+    path: ROUTES.SEO_AUDIT,
     component: PlaceholderComponent,
   },
   {
     path: '**',
-    redirectTo: 'google-serp',
+    redirectTo: ROUTES.GOOGLE_SERP,
   },
 ];

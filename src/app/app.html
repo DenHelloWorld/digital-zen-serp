@@ -1,6 +1,6 @@
 <ng-container *transloco="let t">
   <header class="w-full">
-    <div class="flex items-center justify-between p-[var(--spacing)] text-xs text-gray-500">
+    <div class="flex items-center justify-between p-1 text-xs text-gray-500">
       <a
         class="dz-icon-box dz-icon-box--lg"
         href="https://www.linkedin.com/company/csmpoint"
@@ -31,36 +31,35 @@
     </div>
 
     <div class="flex bg-gray-500/5 text-sm w-full">
-      <div class="flex-1">
-        <a
-          class="block w-full cursor-pointer py-2 border-y border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-          routerLink="/current-site"
-          routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-        >
-          {{ t('nav.current_site') }}
-        </a>
-      </div>
-
-      <div class="flex-1">
-        <a
-          class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-          [routerLinkActiveOptions]="{ exact: true }"
-          routerLink="/google-serp"
-          routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-        >
-          {{ t('nav.main') }}
-        </a>
-      </div>
-
-      <div class="flex-1">
-        <a
-          class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-          routerLink="/social"
-          routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-        >
-          {{ t('nav.social') }}
-        </a>
-      </div>
+      <a
+        class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline flex-1"
+        [routerLink]="routes.SEO_AUDIT"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        {{ t('nav.seo_audit') }}
+      </a>
+      <a
+        class="flex-1 block w-full cursor-pointer py-2 border-y border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        [routerLink]="routes.CURRENT_SITE"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        {{ t('nav.current_site') }}
+      </a>
+      <a
+        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="routes.GOOGLE_SERP"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        {{ t('nav.main') }}
+      </a>
+      <a
+        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        [routerLink]="routes.SOCIAL"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        {{ t('nav.social') }}
+      </a>
     </div>
   </header>
 </ng-container>

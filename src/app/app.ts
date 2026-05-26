@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ROUTES } from '../modules/comon/constants/routes.const';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
@@ -23,7 +24,7 @@ export class App {
     { initialValue: this.#router.url }
   );
 
-  protected readonly isGoogleSerp = computed(() => this.currentUrl()?.includes('google-serp'));
+  protected readonly routes = ROUTES;
   protected readonly languages = [
     { code: 'en', flag: '🇺🇸', label: 'English' },
     { code: 'ru', flag: '🇷🇺', label: 'Русский' },

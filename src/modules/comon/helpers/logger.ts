@@ -1,7 +1,4 @@
-import { UniversalLogger } from 'digital-zen-pack/helpers';
-
 /**
- * Global logger instance
- * Can be used directly in both Angular and background contexts
+ * Global logger — direct console wrapper
  */
-export const logger = new UniversalLogger();
+export const logger = console;

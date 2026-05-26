@@ -9,19 +9,17 @@ import {
   OnInit,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
-import { startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'dz-manual-serp',
   imports: [FormsModule, TranslocoDirective],
   templateUrl: './manual-serp.component.html',
-  styleUrl: './manual-serp.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'dz-manual-serp',
+    class:
+      'dz-manual-serp p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
 export class ManualSerpComponent implements OnInit {
@@ -68,17 +66,16 @@ export class ManualSerpComponent implements OnInit {
   protected readonly charLimits = CHAR_LIMITS;
 
   public ngOnInit(): void {
-    this.transloco.langChanges$
-      .pipe(
-        startWith(this.transloco.getActiveLang()),
-        switchMap(lang => this.transloco.selectTranslate('serp.your_site', {}, lang)),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe(value => {
-        if (!this.siteNameEdited()) {
-          this.siteName.set(value);
-        }
-      });
+    const setDefaultSiteName = (lang: string) => {
+      if (!this.siteNameEdited()) {
+        this.siteName.set(this.transloco.translate('serp.your_site', {}, lang));
+      }
+    };
+
+    setDefaultSiteName(this.transloco.getActiveLang());
+
+    const sub = this.transloco.langChanges$.subscribe(lang => setDefaultSiteName(lang));
+    this.#destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
   protected adjustHeight(event: Event): void {

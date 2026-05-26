@@ -1,5 +1,4 @@
-import { logger } from '../modules/comon/helpers/logger';
-import { ScrapedData } from '../modules/comon/models/scrapped-data.model';
+import { GooglePreviewData } from '../modules/comon/models/google-preview-data.model';
 import { parseHTML } from 'linkedom';
 
 interface JsonLdPerson {
@@ -23,9 +22,7 @@ interface JsonLdData {
 
 type MetadataRule = (doc: Document, linkedData: JsonLdData) => string | null | undefined;
 
-export class ScraperService {
-  readonly #logger = logger.createLogger('ScraperService');
-
+export class GooglePreviewService {
   readonly #TITLE_RULES: MetadataRule[] = [
     doc => doc.querySelector('meta[property="og:title"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content'),
@@ -50,7 +47,6 @@ export class ScraperService {
 
   readonly #AUTHOR_RULES: MetadataRule[] = [
     (_, linkedData) => this.#parseJsonLdAuthor(linkedData),
-    // Добавь проверку бренда из JSON-LD (часто там имя автора/компании)
     (_, linkedData) => linkedData.brand?.name,
 
     doc => doc.querySelector('meta[name="og:site_name"]')?.getAttribute('content'),
@@ -58,53 +54,42 @@ export class ScraperService {
     doc => doc.querySelector('meta[name="author"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="article:author"]')?.getAttribute('content'),
 
-    // Microdata (очень часто на сайтах)
     doc => doc.querySelector('[itemprop*="author" i] [itemprop="name"]')?.textContent,
     doc => doc.querySelector('[itemprop*="author" i]')?.textContent,
 
-    // Стандартная ссылка на автора
     doc => doc.querySelector('[rel="author"]')?.textContent,
 
-    // Специфические классы (то, что у тебя было .author-name, но шире)
     doc => doc.querySelector('.author-name')?.textContent,
     doc => doc.querySelector('a[class*="author" i]')?.textContent,
     doc => doc.querySelector('[class*="author" i] a')?.textContent,
     doc => doc.querySelector('a[href*="/author/" i]')?.textContent,
 
-    // Byline (подпись под статьей)
     doc => doc.querySelector('[class*="byline" i]')?.textContent,
   ];
 
   readonly #IMAGE_RULES: MetadataRule[] = [
-    // 1. Open Graph (все варианты)
     doc => doc.querySelector('meta[property="og:image:secure_url"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="og:image:url"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="og:image"]')?.getAttribute('content'),
 
-    // 2. Twitter (все варианты, включая :src)
     doc => doc.querySelector('meta[name="twitter:image:src"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="twitter:image:src"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[name="twitter:image"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[property="twitter:image"]')?.getAttribute('content'),
 
-    // 3. Schema.org и JSON-LD
     doc => doc.querySelector('meta[itemprop="image"]')?.getAttribute('content'),
     (_, linkedData) => this.#parseJsonLdImage(linkedData),
 
-    // 4. Специфические теги
     doc => doc.querySelector('link[rel="image_src"]')?.getAttribute('href'),
 
-    // 5. Контентные картинки (DOM)
     doc => doc.querySelector('article img[src]')?.getAttribute('src'),
     doc => doc.querySelector('#content img[src]')?.getAttribute('src'),
     doc => doc.querySelector('img[alt*="author" i]')?.getAttribute('src'),
 
-    // 6. Последний шанс: любая картинка, которая не скрыта для скринридеров
     doc => doc.querySelector('img[src]:not([aria-hidden="true"])')?.getAttribute('src'),
   ];
 
-  // --- ОСНОВНОЙ МЕТОД ---
-  public extractMetadata(html: string, url: string): ScrapedData {
+  public extractMetadata(html: string, url: string): GooglePreviewData {
     try {
       const { document: doc } = parseHTML(html);
       const linkedData = this.#getJsonLd(doc);
@@ -126,12 +111,11 @@ export class ScraperService {
         image: this.#formatImg(image, baseUrl),
       };
     } catch (error) {
-      this.#logger.error(`Scraping failed for ${url}`, error);
+      console.error('[GooglePreviewService]', `Preview failed for ${url}`, error);
       throw error;
     }
   }
 
-  // --- ДВИЖОК РЕЗОЛВЕРА ---
   #resolve(doc: Document, linkedData: JsonLdData, rules: MetadataRule[]): string | null {
     for (const rule of rules) {
       const result = rule(doc, linkedData);
@@ -140,7 +124,6 @@ export class ScraperService {
     return null;
   }
 
-  // --- ПАРСЕРЫ ---
   #getJsonLd(doc: Document): JsonLdData {
     try {
       const script = doc.querySelector('script[type="application/ld+json"]');
@@ -187,7 +170,6 @@ export class ScraperService {
     return imageData.url || null;
   }
 
-  // --- УТИЛИТЫ ---
   #dribbleSplit(raw: string): { author: string | null; description: string | null } {
     if (!raw.includes(' | ')) return { author: null, description: raw };
     const parts = raw.split(' | ').map(p => p.trim());

@@ -2,16 +2,16 @@
 import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
 import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
-import { logger } from '../modules/comon/helpers/logger';
-import { ScraperService } from './scrapper-service';
+import { GooglePreviewService } from './google-preview.service';
+import { SeoAuditService } from './seo-audit.service';
 
 /**
  * @class BackgroundService
  * @description The main service class that manages the extension's background tasks and data persistence.
  */
 export class BackgroundService {
-  readonly #logger = logger.createLogger('BackgroundService');
-  readonly #scraper = new ScraperService();
+  readonly #googlePreview = new GooglePreviewService();
+  readonly #seoAudit = new SeoAuditService();
 
   constructor() {
     this.initializeListeners();
@@ -28,7 +28,7 @@ export class BackgroundService {
         try {
           sendResponse(response);
         } catch (sendError) {
-          this.#logger.error('sendResponse failed:', sendError);
+          console.error('[BackgroundService]', 'sendResponse failed:', sendError);
         }
       };
       /**
@@ -46,7 +46,7 @@ export class BackgroundService {
           .open(options)
           .then(() => safeSendResponse({ success: true }))
           .catch(err => {
-            this.#logger.error('SidePanel gesture error:', err);
+            console.error('[BackgroundService]', 'SidePanel gesture error:', err);
             safeSendResponse({ success: false });
           });
         return true;
@@ -59,7 +59,11 @@ export class BackgroundService {
               const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
               if (!tab?.id || !isHttpUrl(tab.url)) {
-                this.#logger.warn('Scraping skipped: Invalid or restricted URL', tab?.url);
+                console.warn(
+                  '[BackgroundService]',
+                  'Scraping skipped: Invalid or restricted URL',
+                  tab?.url
+                );
                 safeSendResponse({
                   success: false,
                   error: 'INVALID_PAGE_PROTOCOL',
@@ -85,14 +89,14 @@ export class BackgroundService {
               const result = injectionResults[0]?.result as InjectionResult | undefined;
 
               if (!result) {
-                this.#logger.error('Failed to get result from injected script');
+                console.error('[BackgroundService]', 'Failed to get result from injected script');
                 safeSendResponse({ success: false, error: 'INJECTION_FAILED' });
                 return;
               }
 
               const { html, url } = result;
 
-              const metadata = this.#scraper.extractMetadata(html, url);
+              const metadata = this.#googlePreview.extractMetadata(html, url);
 
               safeSendResponse({ success: true, data: metadata });
               break;
@@ -113,8 +117,27 @@ export class BackgroundService {
               });
               break;
             }
+            case CHROME_COMMAND_ENUM.BASE_SEO_AUDIT: {
+              const [activeTab] = await chrome.tabs.query({
+                active: true,
+                currentWindow: true,
+              });
+
+              if (!activeTab?.url || !activeTab.id || !isHttpUrl(activeTab.url)) {
+                safeSendResponse({
+                  success: false,
+                  error: 'INVALID_PAGE_PROTOCOL',
+                });
+                break;
+              }
+
+              const auditData = await this.#seoAudit.audit(activeTab.url, activeTab.id);
+
+              safeSendResponse({ success: true, data: auditData });
+              break;
+            }
             default: {
-              this.#logger.warn('Unknown command received:', message.command);
+              console.warn('[BackgroundService]', 'Unknown command received:', message.command);
               safeSendResponse({
                 success: false,
                 error: FOCUS_ERROR_ENUM.GENERIC_ERROR,
@@ -122,7 +145,7 @@ export class BackgroundService {
             }
           }
         } catch (error) {
-          this.#logger.error(`Error handling message ${message.command}:`, error);
+          console.error('[BackgroundService]', `Error handling message ${message.command}:`, error);
           safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.GENERIC_ERROR });
         }
       });
@@ -131,11 +154,13 @@ export class BackgroundService {
     });
 
     chrome.runtime.onInstalled.addListener(() => {
-      this.#logger.info('App initialized via onInstalled');
+      console.info('[BackgroundService]', 'App initialized via onInstalled');
 
       chrome.sidePanel
         .setPanelBehavior({ openPanelOnActionClick: true })
-        .catch(error => this.#logger.error('Error setting panel behavior:', error));
+        .catch(error =>
+          console.error('[BackgroundService]', 'Error setting panel behavior:', error)
+        );
     });
   }
 

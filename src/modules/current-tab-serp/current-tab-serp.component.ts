@@ -21,10 +21,10 @@ import { TranslocoDirective } from '@jsverse/transloco';
   selector: 'dz-current-tab-serp',
   imports: [TranslocoDirective, ReactiveFormsModule, NgTemplateOutlet],
   templateUrl: './current-tab-serp.component.html',
-  styleUrl: './current-tab-serp.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'dz-current-tab-serp',
+    class:
+      'dz-current-tab-serp p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
 export class CurrentTabSerpComponent implements OnInit {

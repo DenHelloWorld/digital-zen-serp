@@ -1,4 +1,3 @@
-import { logger } from '../modules/comon/helpers/logger';
 import { ScrapedData } from '../modules/comon/models/scrapped-data.model';
 import { parseHTML } from 'linkedom';
 
@@ -24,8 +23,6 @@ interface JsonLdData {
 type MetadataRule = (doc: Document, linkedData: JsonLdData) => string | null | undefined;
 
 export class ScraperService {
-  readonly #logger = logger.createLogger('ScraperService');
-
   readonly #TITLE_RULES: MetadataRule[] = [
     doc => doc.querySelector('meta[property="og:title"]')?.getAttribute('content'),
     doc => doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content'),
@@ -126,7 +123,7 @@ export class ScraperService {
         image: this.#formatImg(image, baseUrl),
       };
     } catch (error) {
-      this.#logger.error(`Scraping failed for ${url}`, error);
+      console.error('[ScraperService]', `Scraping failed for ${url}`, error);
       throw error;
     }
   }

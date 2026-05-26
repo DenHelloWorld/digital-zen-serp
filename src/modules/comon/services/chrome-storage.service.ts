@@ -1,5 +1,4 @@
 import { ChromeStorageKeyType } from '../enums/chrome-storage-key.enum';
-import { logger } from '../helpers/logger';
 import { Injectable } from '@angular/core';
 
 /**
@@ -17,8 +16,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ChromeStorageService {
-  /** @guideline DZ_11 - Universal Logger usage */
-  readonly #logger = logger.createLogger('ChromeStorageService');
   /**
    * Writes data to chrome.storage.local.
    *
@@ -30,7 +27,7 @@ export class ChromeStorageService {
     if (this.#isChromeStorageAvailable()) {
       chrome.storage.local.set({ [key]: value }, () => {
         if (chrome.runtime.lastError) {
-          this.#logger.error('Error saving data:', chrome.runtime.lastError);
+          console.error('[ChromeStorageService]', 'Error saving data:', chrome.runtime.lastError);
         }
         if (callback) {
           callback();
@@ -49,7 +46,7 @@ export class ChromeStorageService {
     if (this.#isChromeStorageAvailable()) {
       chrome.storage.local.get(key, result => {
         if (chrome.runtime.lastError) {
-          this.#logger.error('Error reading data:', chrome.runtime.lastError);
+          console.error('[ChromeStorageService]', 'Error reading data:', chrome.runtime.lastError);
           callback(null);
         } else {
           callback((result[key] as T) || null);
@@ -71,7 +68,11 @@ export class ChromeStorageService {
     if (this.#isChromeStorageAvailable()) {
       chrome.storage.local.get(keys, result => {
         if (chrome.runtime.lastError) {
-          this.#logger.error('Error reading multiple keys:', chrome.runtime.lastError);
+          console.error(
+            '[ChromeStorageService]',
+            'Error reading multiple keys:',
+            chrome.runtime.lastError
+          );
           callback(null);
         } else {
           callback(result as T);
@@ -90,7 +91,7 @@ export class ChromeStorageService {
     if (this.#isChromeStorageAvailable()) {
       chrome.storage.local.remove(key as string, () => {
         if (chrome.runtime.lastError) {
-          this.#logger.error('Error removing data:', chrome.runtime.lastError);
+          console.error('[ChromeStorageService]', 'Error removing data:', chrome.runtime.lastError);
         }
         if (callback) {
           callback();

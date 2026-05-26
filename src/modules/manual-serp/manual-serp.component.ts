@@ -18,10 +18,10 @@ import { startWith, switchMap } from 'rxjs';
   selector: 'dz-manual-serp',
   imports: [FormsModule, TranslocoDirective],
   templateUrl: './manual-serp.component.html',
-  styleUrl: './manual-serp.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'dz-manual-serp',
+    class:
+      'dz-manual-serp p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
 export class ManualSerpComponent implements OnInit {

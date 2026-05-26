@@ -1,6 +1,5 @@
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { logger } from '../helpers/logger';
 import { ScrapedData } from '../models/scrapped-data.model';
 import { effect, inject } from '@angular/core';
 import {
@@ -35,10 +34,9 @@ export const ScrapStore = signalStore(
   withState(initialState),
   withMethods(store => {
     const isChrome = inject(IS_CHROME_EXTENSION);
-    const scrapStoreLogger = logger.createLogger('[ScrapStore]');
 
     effect(() => {
-      scrapStoreLogger.info(getState(store));
+      console.info('[ScrapStore]', getState(store));
     });
 
     return {
@@ -74,7 +72,7 @@ export const ScrapStore = signalStore(
             isScrapLoading: false,
             scrapError: 'MESSAGE_SENDING_FAILED',
           });
-          scrapStoreLogger.error(err);
+          console.error('[ScrapStore]', err);
         }
       },
 
@@ -110,7 +108,7 @@ export const ScrapStore = signalStore(
             isTabLoading: false,
             tabError: 'MESSAGE_SENDING_FAILED',
           });
-          scrapStoreLogger.error(err);
+          console.error('[ScrapStore]', err);
         }
       },
 

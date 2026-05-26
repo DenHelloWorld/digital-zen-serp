@@ -1,4 +1,4 @@
-export interface ScrapedData {
+export interface GooglePreviewData {
   title: string | null;
   description: string | null;
   image: string | null;

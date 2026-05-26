@@ -1,6 +1,6 @@
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { ScrapedData } from '../models/scrapped-data.model';
+import { GooglePreviewData } from '../models/google-preview-data.model';
 import { effect, inject } from '@angular/core';
 import {
   getState,
@@ -11,42 +11,42 @@ import {
   withState,
 } from '@ngrx/signals';
 
-export interface ScrapState {
+export interface GooglePreviewState {
   activeTab: chrome.tabs.Tab | null;
-  currentTabScrap: ScrapedData | null;
+  currentTabPreview: GooglePreviewData | null;
   isTabLoading: boolean;
-  isScrapLoading: boolean;
+  isPreviewLoading: boolean;
   tabError: string | null;
-  scrapError: string | null;
+  previewError: string | null;
 }
 
-const initialState: ScrapState = {
+const initialState: GooglePreviewState = {
   activeTab: null,
-  currentTabScrap: null,
+  currentTabPreview: null,
   isTabLoading: false,
-  isScrapLoading: false,
+  isPreviewLoading: false,
   tabError: null,
-  scrapError: null,
+  previewError: null,
 };
 
-export const ScrapStore = signalStore(
+export const GooglePreviewStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods(store => {
     const isChrome = inject(IS_CHROME_EXTENSION);
 
     effect(() => {
-      console.info('[ScrapStore]', getState(store));
+      console.info('[GooglePreviewStore]', getState(store));
     });
 
     return {
-      async scrapCurrentTab(): Promise<void> {
-        patchState(store, { isScrapLoading: true, scrapError: null });
+      async loadPreview(): Promise<void> {
+        patchState(store, { isPreviewLoading: true, previewError: null });
 
         if (!isChrome) {
           patchState(store, {
-            isScrapLoading: false,
-            scrapError: 'CHROME_RUNTIME_NOT_FOUND',
+            isPreviewLoading: false,
+            previewError: 'CHROME_RUNTIME_NOT_FOUND',
           });
           return;
         }
@@ -58,21 +58,21 @@ export const ScrapStore = signalStore(
 
           if (response?.success) {
             patchState(store, {
-              currentTabScrap: response.data,
-              isScrapLoading: false,
+              currentTabPreview: response.data,
+              isPreviewLoading: false,
             });
           } else {
             patchState(store, {
-              isScrapLoading: false,
-              scrapError: response?.error || 'UNKNOWN_ERROR',
+              isPreviewLoading: false,
+              previewError: response?.error || 'UNKNOWN_ERROR',
             });
           }
         } catch (err) {
           patchState(store, {
-            isScrapLoading: false,
-            scrapError: 'MESSAGE_SENDING_FAILED',
+            isPreviewLoading: false,
+            previewError: 'MESSAGE_SENDING_FAILED',
           });
-          console.error('[ScrapStore]', err);
+          console.error('[GooglePreviewStore]', err);
         }
       },
 
@@ -108,14 +108,10 @@ export const ScrapStore = signalStore(
             isTabLoading: false,
             tabError: 'MESSAGE_SENDING_FAILED',
           });
-          console.error('[ScrapStore]', err);
+          console.error('[GooglePreviewStore]', err);
         }
       },
 
-      /**
-       * Listen to Chrome tab changes (activation and URL updates)
-       * to keep #activeTab signal in sync.
-       */
       async listenToTabChanges() {
         if (!isChrome) {
           return;
@@ -123,13 +119,13 @@ export const ScrapStore = signalStore(
 
         chrome.tabs.onActivated.addListener(() => {
           this.getActiveTab();
-          this.scrapCurrentTab();
+          this.loadPreview();
         });
 
         chrome.tabs.onUpdated.addListener((_, changeInfo, tab) => {
           if (changeInfo.status === 'complete' && tab.active) {
             this.getActiveTab();
-            this.scrapCurrentTab();
+            this.loadPreview();
           }
         });
       },

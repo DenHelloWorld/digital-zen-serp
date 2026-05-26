@@ -2,14 +2,14 @@
 import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
 import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
-import { ScraperService } from './scrapper-service';
+import { GooglePreviewService } from './google-preview.service';
 
 /**
  * @class BackgroundService
  * @description The main service class that manages the extension's background tasks and data persistence.
  */
 export class BackgroundService {
-  readonly #scraper = new ScraperService();
+  readonly #googlePreview = new GooglePreviewService();
 
   constructor() {
     this.initializeListeners();
@@ -94,7 +94,7 @@ export class BackgroundService {
 
               const { html, url } = result;
 
-              const metadata = this.#scraper.extractMetadata(html, url);
+              const metadata = this.#googlePreview.extractMetadata(html, url);
 
               safeSendResponse({ success: true, data: metadata });
               break;

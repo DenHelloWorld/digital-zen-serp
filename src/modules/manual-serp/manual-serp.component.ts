@@ -67,11 +67,9 @@ export class ManualSerpComponent implements OnInit {
 
   public ngOnInit(): void {
     const setDefaultSiteName = (lang: string) => {
-      this.transloco.selectTranslate('serp.your_site', {}, lang).subscribe(value => {
-        if (!this.siteNameEdited()) {
-          this.siteName.set(value);
-        }
-      });
+      if (!this.siteNameEdited()) {
+        this.siteName.set(this.transloco.translate('serp.your_site', {}, lang));
+      }
     };
 
     setDefaultSiteName(this.transloco.getActiveLang());

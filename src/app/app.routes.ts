@@ -24,7 +24,10 @@ export const routes: Routes = [
   },
   {
     path: ROUTES.SEO_AUDIT,
-    component: PlaceholderComponent,
+    loadComponent: () =>
+      import('../modules/base-seo-audit/base-seo-audit.component').then(
+        m => m.BaseSeoAuditComponent
+      ),
   },
   {
     path: '**',

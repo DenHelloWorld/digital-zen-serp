@@ -3,6 +3,7 @@ import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/c
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
 import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
 import { GooglePreviewService } from './google-preview.service';
+import { SeoAuditService } from './seo-audit.service';
 
 /**
  * @class BackgroundService
@@ -10,6 +11,7 @@ import { GooglePreviewService } from './google-preview.service';
  */
 export class BackgroundService {
   readonly #googlePreview = new GooglePreviewService();
+  readonly #seoAudit = new SeoAuditService();
 
   constructor() {
     this.initializeListeners();
@@ -113,6 +115,25 @@ export class BackgroundService {
                     }
                   : null,
               });
+              break;
+            }
+            case CHROME_COMMAND_ENUM.BASE_SEO_AUDIT: {
+              const [activeTab] = await chrome.tabs.query({
+                active: true,
+                currentWindow: true,
+              });
+
+              if (!activeTab?.url || !activeTab.id || !isHttpUrl(activeTab.url)) {
+                safeSendResponse({
+                  success: false,
+                  error: 'INVALID_PAGE_PROTOCOL',
+                });
+                break;
+              }
+
+              const auditData = await this.#seoAudit.audit(activeTab.url, activeTab.id);
+
+              safeSendResponse({ success: true, data: auditData });
               break;
             }
             default: {

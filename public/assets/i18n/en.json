@@ -14,6 +14,17 @@
     "symbols": "chars",
     "px": "px"
   },
+  "seoAudit": {
+    "title": "SEO Audit",
+    "url": "URL",
+    "status": "Status",
+    "lang": "Language",
+    "published": "Published",
+    "updated": "Updated",
+    "loading": "Analyzing page...",
+    "error": "Failed to load audit data",
+    "not_found": "Not found"
+  },
   "nav": {
     "main": "Main",
     "social": "Social",

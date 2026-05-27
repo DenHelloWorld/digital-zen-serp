@@ -9,7 +9,7 @@ interface JsonLdData {
 
 export class SeoAuditService {
   async audit(url: string, tabId: number): Promise<SeoAuditData> {
-    // Получаем HTML из контекста вкладки (с куками, JS, авторизацией)
+    /** Grab full HTML from the tab context (cookies, JS, auth included) */
     const results = await chrome.scripting.executeScript({
       target: { tabId },
       func: () => document.documentElement.outerHTML,
@@ -21,7 +21,7 @@ export class SeoAuditService {
       throw new Error('INJECTION_FAILED');
     }
 
-    // Пытаемся получить реальный HTTP-статус через HEAD-запрос
+    /** Try to get the real HTTP status via HEAD request */
     const status = await this.#fetchStatus(url);
 
     const { document: doc } = parseHTML(html);
@@ -45,7 +45,7 @@ export class SeoAuditService {
       const response = await fetch(url, { method: 'HEAD' });
       return response.status;
     } catch {
-      // HEAD-запрос может не сработать (CORS, сетевые ошибки и т.д.)
+      /** HEAD request may fail (CORS, network errors, etc.) */
       return 0;
     }
   }

@@ -42,7 +42,7 @@ export class BaseSeoAuditComponent {
   #listenToTabChanges(): void {
     if (!this.#isChrome) return;
 
-    // первый вызов при монтировании
+    /** First call on component mount */
     this.store.loadAudit();
 
     const onActivated = () => this.store.loadAudit();

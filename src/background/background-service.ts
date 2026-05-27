@@ -1,6 +1,11 @@
 /// <reference types="chrome"/>
-import { CHROME_COMMAND_ENUM, ChromeCommandType } from '../modules/comon/enums/chrome-command.enum';
+import {
+  CHROME_COMMAND_ENUM,
+  CHROME_KEEPALIVE_PORT,
+  ChromeCommandType,
+} from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
+import { applyHeadingHighlights } from '../modules/comon/helpers/heading-highlighter.helper';
 import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
 import { GooglePreviewService } from './google-preview.service';
 import { SeoAuditService } from './seo-audit.service';
@@ -12,6 +17,8 @@ import { SeoAuditService } from './seo-audit.service';
 export class BackgroundService {
   readonly #googlePreview = new GooglePreviewService();
   readonly #seoAudit = new SeoAuditService();
+  readonly #keepalivePorts = new Set<chrome.runtime.Port>();
+  readonly #highlightedTabs = new Set<number>();
 
   constructor() {
     this.initializeListeners();
@@ -136,6 +143,48 @@ export class BackgroundService {
               safeSendResponse({ success: true, data: auditData });
               break;
             }
+            case CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS: {
+              const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+              if (!tab?.id) {
+                safeSendResponse({ success: false, error: 'NO_ACTIVE_TAB' });
+                break;
+              }
+
+              if (!isHttpUrl(tab.url)) {
+                safeSendResponse({ success: false, error: 'INVALID_PAGE_PROTOCOL' });
+                break;
+              }
+
+              const config = (
+                message as { payload: { enabled: boolean; selectedTags: Record<string, boolean> } }
+              ).payload;
+
+              if (config.enabled) {
+                this.#highlightedTabs.add(tab.id);
+              } else {
+                this.#highlightedTabs.delete(tab.id);
+              }
+
+              try {
+                const injectionResults = await chrome.scripting.executeScript({
+                  target: { tabId: tab.id },
+                  func: applyHeadingHighlights,
+                  args: [config],
+                });
+
+                const result = injectionResults[0]?.result as { headingsFound: number } | undefined;
+
+                safeSendResponse({
+                  success: true,
+                  headingsFound: result?.headingsFound ?? 0,
+                });
+              } catch (err) {
+                console.error('[BackgroundService]', 'HighlightHeaders injection failed:', err);
+                safeSendResponse({ success: false, error: 'INJECTION_FAILED' });
+              }
+              break;
+            }
             default: {
               console.warn('[BackgroundService]', 'Unknown command received:', message.command);
               safeSendResponse({
@@ -151,6 +200,17 @@ export class BackgroundService {
       });
 
       return true;
+    });
+
+    chrome.runtime.onConnect.addListener(port => {
+      if (port.name !== CHROME_KEEPALIVE_PORT) return;
+      this.#keepalivePorts.add(port);
+      port.onDisconnect.addListener(() => {
+        this.#keepalivePorts.delete(port);
+        if (this.#keepalivePorts.size === 0) {
+          this.#cleanupHeadings();
+        }
+      });
     });
 
     chrome.runtime.onInstalled.addListener(() => {
@@ -171,5 +231,23 @@ export class BackgroundService {
     });
 
     return tabs.length ? tabs[0] : null;
+  }
+
+  #cleanupHeadings(): void {
+    if (this.#highlightedTabs.size === 0) return;
+
+    for (const tabId of this.#highlightedTabs) {
+      chrome.scripting
+        .executeScript({
+          target: { tabId },
+          func: applyHeadingHighlights,
+          args: [{ enabled: false, selectedTags: {} }],
+        })
+        .catch(() => {
+          /* empty */
+        });
+    }
+
+    this.#highlightedTabs.clear();
   }
 }

@@ -30,6 +30,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: ROUTES.HEADINGS,
+    loadComponent: () =>
+      import('../modules/headings/headings.component').then(m => m.HeadingsComponent),
+  },
+  {
     path: '**',
     redirectTo: ROUTES.GOOGLE_SERP,
   },

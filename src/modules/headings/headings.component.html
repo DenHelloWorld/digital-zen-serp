@@ -1,0 +1,109 @@
+<ng-container *transloco="let t">
+  <!-- Title + refresh button -->
+  <div class="flex items-center justify-between w-full">
+    <span class="text-sm font-bold text-gray-900">{{ t('headings.title') }}</span>
+    <button
+      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="isLoading()"
+      (click)="refresh()"
+      type="button"
+    >
+      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+    </button>
+  </div>
+
+  <!-- Error -->
+  @if (error(); as err) {
+    <div
+      class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+    >
+      <span class="font-medium">{{ t('headings.error') }}</span>
+      <span class="text-xs text-red-400">{{ err }}</span>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
+      <span class="text-2xl">🔍</span>
+      <span class="text-sm">{{ t('headings.loading') }}</span>
+    </div>
+  }
+
+  <!-- No headings found -->
+  @if (isReady() && headingsData()!.length === 0) {
+    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
+      <span class="text-2xl">📭</span>
+      <span class="text-sm">{{ t('headings.none_found') }}</span>
+    </div>
+  }
+
+  <!-- Headings list -->
+  @if (isReady() && headingsData()!.length > 0) {
+    <!-- Summary bar -->
+    <div class="flex items-center gap-2 text-xs text-gray-500 w-full">
+      <span
+        >{{ t('headings.total') }}: <strong>{{ headingsData()!.length }}</strong></span
+      >
+      @if (store.hasErrors()) {
+        <span class="text-red-500">⚠ {{ t('headings.has_errors') }}</span>
+      }
+    </div>
+
+    <!-- List -->
+    <div class="flex flex-col gap-1 w-full justify-center">
+      @for (h of headingsData()!; track h.id) {
+        <div
+          class="flex items-center gap-1 p-1 rounded border transition-all w-full"
+          [class.border-red-200]="h.errors.length > 0"
+          [class.bg-red-50]="h.errors.length > 0"
+          [class.border-gray-100]="h.errors.length === 0"
+          [class.bg-white]="h.errors.length === 0"
+        >
+          <!-- Nesting indicator: squares, one per level — gray normally, red on error -->
+          <div class="flex gap-1 shrink-0">
+            @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+              @if (i <= h.nestingLevel) {
+                <span
+                  class="inline-block w-4 h-4 rounded-sm border"
+                  [class.bg-gray-200]="h.errors.length === 0"
+                  [class.border-gray-400]="h.errors.length === 0"
+                  [class.bg-red-200]="h.errors.length > 0"
+                  [class.border-red-500]="h.errors.length > 0"
+                ></span>
+              }
+            }
+          </div>
+
+          <!-- Tag name badge -->
+          <span
+            class="text-[11px] font-bold rounded px-1 leading-4 shrink-0 text-white inline-flex items-center justify-center"
+            [style.background-color]="tagColors[h.tagName.toLowerCase()] || '#6b7280'"
+          >
+            {{ h.tagName }}
+          </span>
+
+          <!-- Text — wraps naturally -->
+          @if (h.text.length > 0) {
+            <span class="text-sm text-gray-800 break-words whitespace-pre-wrap min-w-0 flex-1">{{
+              h.text
+            }}</span>
+          }
+
+          <!-- Error badges with human-readable text -->
+          @if (h.errors.length > 0) {
+            <div class="flex items-center gap-1 shrink-0">
+              @for (errType of h.errors; track errType) {
+                <span
+                  class="text-[10px] text-red-600 font-medium border border-red-200 bg-red-50 rounded px-1 leading-4"
+                >
+                  {{ t('headings.error_' + errType.toLowerCase()) }}
+                </span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</ng-container>

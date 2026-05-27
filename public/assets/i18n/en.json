@@ -31,11 +31,24 @@
     "select_tag_warning": "Select at least one heading tag",
     "no_headings_error": "No headings found on this page"
   },
+  "headings": {
+    "title": "Page Headings",
+    "error": "Failed to load headings",
+    "loading": "Parsing page headings...",
+    "none_found": "No headings found on this page",
+    "total": "Total",
+    "has_errors": "Some headings have issues",
+    "empty_text": "(empty)",
+    "error_empty_text": "Empty heading",
+    "error_duplicate_text": "Duplicate text",
+    "error_level_gap": "Skipped level"
+  },
   "nav": {
     "main": "Main",
     "social": "Social",
     "language": "Language",
     "current_site": "Current site",
-    "seo_audit": "SEO Audit"
+    "seo_audit": "SEO Audit",
+    "headings": "Headings"
   }
 }

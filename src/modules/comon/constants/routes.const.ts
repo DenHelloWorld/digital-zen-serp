@@ -3,6 +3,7 @@ export const ROUTES = Object.freeze({
   CURRENT_SITE: 'current-site',
   SOCIAL: 'social',
   SEO_AUDIT: 'seoAudit',
+  HEADINGS: 'headings',
 } as const);
 
 /**

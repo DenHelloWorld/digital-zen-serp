@@ -6,7 +6,9 @@ import {
 } from '../modules/comon/enums/chrome-command.enum';
 import { FOCUS_ERROR_ENUM } from '../modules/comon/enums/focus-error.enum';
 import { applyHeadingHighlights } from '../modules/comon/helpers/heading-highlighter.helper';
+import { parsePageHeadings } from '../modules/comon/helpers/heading-parser.helper';
 import { isHttpUrl } from '../modules/comon/helpers/is-http-url.helper';
+import type { HeadingData } from '../modules/comon/models/heading-data.model';
 import { GooglePreviewService } from './google-preview.service';
 import { SeoAuditService } from './seo-audit.service';
 
@@ -181,6 +183,35 @@ export class BackgroundService {
                 });
               } catch (err) {
                 console.error('[BackgroundService]', 'HighlightHeaders injection failed:', err);
+                safeSendResponse({ success: false, error: 'INJECTION_FAILED' });
+              }
+              break;
+            }
+            case CHROME_COMMAND_ENUM.PARSE_HEADINGS: {
+              const [activeTab] = await chrome.tabs.query({
+                active: true,
+                currentWindow: true,
+              });
+
+              if (!activeTab?.id || !activeTab.url || !isHttpUrl(activeTab.url)) {
+                safeSendResponse({ success: false, error: 'INVALID_PAGE_PROTOCOL' });
+                break;
+              }
+
+              try {
+                const injectionResults = await chrome.scripting.executeScript({
+                  target: { tabId: activeTab.id },
+                  func: parsePageHeadings,
+                });
+
+                const headings = injectionResults[0]?.result as HeadingData[] | undefined;
+
+                safeSendResponse({
+                  success: true,
+                  data: headings ?? [],
+                });
+              } catch (err) {
+                console.error('[BackgroundService]', 'ParseHeadings injection failed:', err);
                 safeSendResponse({ success: false, error: 'INJECTION_FAILED' });
               }
               break;

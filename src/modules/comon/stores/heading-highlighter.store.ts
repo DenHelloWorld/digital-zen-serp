@@ -1,7 +1,8 @@
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
 import { HEADING_TAGS, HIGHLIGHTER_STATUS_CONFIG } from '../helpers/heading-highlighter.helper';
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { TabActivityService } from '../services/tab-activity.service';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
 
 function defaultSelectedTags(): Record<string, boolean> {
   return Object.fromEntries(HEADING_TAGS.map(t => [t, true]));
@@ -38,6 +39,14 @@ export class HeadingHighlighterStore {
   readonly statusColor = computed(() => HIGHLIGHTER_STATUS_CONFIG[this.status()]);
 
   readonly #isChrome = inject(IS_CHROME_EXTENSION);
+  readonly #tabActivity = inject(TabActivityService);
+
+  constructor() {
+    effect(() => {
+      this.#tabActivity.activeTab();
+      this.reapply();
+    });
+  }
 
   async #applyConfig(): Promise<void> {
     if (!this.#isChrome) return;

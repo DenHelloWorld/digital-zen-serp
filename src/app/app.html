@@ -1,14 +1,8 @@
 <ng-container *transloco="let t">
   <header class="w-full">
     <div class="flex items-center justify-between p-1 text-xs text-gray-500">
-      <a
-        class="flex gap-1 items-center"
-        href="https://www.linkedin.com/company/csmpoint"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img class="w-6" src="logo.png" alt="logo" />
-        <span class="text-3xl">Logo</span>
+      <a href="https://www.linkedin.com/company/csmpoint" target="_blank" rel="noopener noreferrer">
+        <img class="w-7" src="logo.jpg" alt="logo" />
       </a>
       <div class="flex items-center gap-3 text-xs text-gray-500 uppercase tracking-[0.2em]">
         <div class="flex gap-1">
@@ -36,11 +30,18 @@
         {{ t('nav.seo_audit') }}
       </a>
       <a
-        class="flex-1 block w-full cursor-pointer py-2 border-y border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
+        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
         [routerLink]="routes.CURRENT_SITE"
         routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
       >
         {{ t('nav.current_site') }}
+      </a>
+      <a
+        class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline flex-1"
+        [routerLink]="routes.HEADINGS"
+        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
+      >
+        {{ t('nav.headings') }}
       </a>
       <a
         class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"

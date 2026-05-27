@@ -32,8 +32,9 @@ export class App {
     });
     this.#destroyRef.onDestroy(() => routerSub.unsubscribe());
 
-    const langSub = this.#transloco.langChanges$.subscribe(lang => this.activeLang.set(lang));
-    this.#destroyRef.onDestroy(() => langSub.unsubscribe());
+    this.#destroyRef.onDestroy(() =>
+      this.#transloco.langChanges$.subscribe(lang => this.activeLang.set(lang)).unsubscribe()
+    );
   }
 
   protected setLang(lang: string) {

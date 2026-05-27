@@ -25,12 +25,6 @@
     "error": "Failed to load audit data",
     "not_found": "Not found"
   },
-  "headingHighlighter": {
-    "title": "Heading Highlighter",
-    "error": "Error:",
-    "select_tag_warning": "Select at least one heading tag",
-    "no_headings_error": "No headings found on this page"
-  },
   "nav": {
     "main": "Main",
     "social": "Social",

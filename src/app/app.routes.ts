@@ -25,8 +25,8 @@ export const routes: Routes = [
   {
     path: ROUTES.SEO_AUDIT,
     loadComponent: () =>
-      import('../modules/site-audit-page/site-audit-page.component').then(
-        m => m.SiteAuditPageComponent
+      import('../modules/base-seo-audit/base-seo-audit.component').then(
+        m => m.BaseSeoAuditComponent
       ),
   },
   {

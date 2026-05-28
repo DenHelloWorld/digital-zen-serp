@@ -7,7 +7,7 @@ import type { HeadingData, HeadingErrorType } from '../models/heading-data.model
  * @remarks Must be self-contained (no external references)
  * because it is serialised and executed in an isolated page context.
  */
-export function parsePageHeadings(): HeadingData[] {
+export const parsePageHeadings = (): HeadingData[] => {
   const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
   const selector = tags.join(',');
   const elements = document.querySelectorAll(selector);
@@ -32,7 +32,7 @@ export function parsePageHeadings(): HeadingData[] {
   }
 
   return results;
-}
+};
 
 /**
  * Validates an array of parsed headings and attaches error codes
@@ -43,7 +43,7 @@ export function parsePageHeadings(): HeadingData[] {
  *   - DUPLICATE_TEXT — same non-empty text appears in multiple headings
  *   - LEVEL_GAP   — nesting level jumps down by more than 1 (e.g. H1 → H3)
  */
-export function validateHeadings(headings: HeadingData[]): HeadingData[] {
+export const validateHeadings = (headings: HeadingData[]): HeadingData[] => {
   /* ── 1. EMPTY_TEXT ────────────────────────────────────────── */
   for (const h of headings) {
     if (h.text.length === 0) {
@@ -77,10 +77,10 @@ export function validateHeadings(headings: HeadingData[]): HeadingData[] {
   }
 
   return headings;
-}
+};
 
-function addError(heading: HeadingData, type: HeadingErrorType): void {
+const addError = (heading: HeadingData, type: HeadingErrorType): void => {
   if (!heading.errors.includes(type)) {
     heading.errors.push(type);
   }
-}
+};

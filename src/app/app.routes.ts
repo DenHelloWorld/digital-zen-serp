@@ -7,16 +7,9 @@ class PlaceholderComponent {}
 
 export const routes: Routes = [
   {
-    path: ROUTES.GOOGLE_SERP,
-    loadComponent: () =>
-      import('../modules/manual-serp/manual-serp.component').then(m => m.ManualSerpComponent),
-  },
-  {
     path: ROUTES.CURRENT_SITE,
     loadComponent: () =>
-      import('../modules/current-tab-serp/current-tab-serp.component').then(
-        m => m.CurrentTabSerpComponent
-      ),
+      import('../modules/current-site/current-site.component').then(m => m.CurrentSiteComponent),
   },
   {
     path: ROUTES.SOCIAL,
@@ -36,6 +29,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: ROUTES.GOOGLE_SERP,
+    redirectTo: ROUTES.CURRENT_SITE,
   },
 ];

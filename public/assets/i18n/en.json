@@ -12,7 +12,9 @@
     "description_label": "Description",
     "description_hint": "This is what will be displayed as the description when this entry appears in search results.",
     "symbols": "chars",
-    "px": "px"
+    "px": "px",
+    "live_mode": "Live",
+    "edit_mode": "Edit"
   },
   "seoAudit": {
     "title": "SEO Audit",

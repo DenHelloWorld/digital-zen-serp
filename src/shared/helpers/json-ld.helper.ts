@@ -12,7 +12,7 @@ interface JsonLdData {
 /**
  * Parses the first LD+JSON script on a page and resolves @graph / array wrapping.
  */
-export function getJsonLd(doc: Document): JsonLdData {
+export const getJsonLd = (doc: Document): JsonLdData => {
   try {
     const script = doc.querySelector('script[type="application/ld+json"]');
     if (!script?.textContent) return {};
@@ -26,4 +26,4 @@ export function getJsonLd(doc: Document): JsonLdData {
   } catch {
     return {};
   }
-}
+};

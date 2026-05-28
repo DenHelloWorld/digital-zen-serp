@@ -18,9 +18,11 @@ export interface HeadingHighlighterConfig {
  *
  * @returns Number of headings (h1-h6) found on the page.
  */
-export function applyHeadingHighlights(config: HeadingHighlighterConfig): {
+export const applyHeadingHighlights = (
+  config: HeadingHighlighterConfig
+): {
   headingsFound: number;
-} {
+} => {
   const TAG_COLORS_MAP: Record<string, string> = {
     h1: '#ef4444',
     h2: '#3b82f6',
@@ -81,4 +83,4 @@ export function applyHeadingHighlights(config: HeadingHighlighterConfig): {
   }
 
   return { headingsFound: totalHeadings };
-}
+};

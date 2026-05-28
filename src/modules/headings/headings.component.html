@@ -1,0 +1,117 @@
+<ng-container *transloco="let t">
+  <dz-heading-highlighter />
+
+  <!-- Title + refresh button -->
+  <div class="flex items-center justify-between w-full">
+    <span class="text-sm font-bold text-gray-900">{{ t('headings.title') }}</span>
+    <button
+      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="isLoading()"
+      (click)="refresh()"
+      type="button"
+    >
+      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+    </button>
+  </div>
+
+  <!-- Error -->
+  @if (error(); as err) {
+    <div
+      class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+    >
+      <span class="font-medium">{{ t('headings.error') }}</span>
+      <span class="text-xs text-red-400">{{ err }}</span>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
+      <span class="text-2xl">🔍</span>
+      <span class="text-sm">{{ t('headings.loading') }}</span>
+    </div>
+  }
+
+  <!-- No headings found -->
+  @if (isReady() && headingsData()!.length === 0) {
+    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
+      <span class="text-2xl">📭</span>
+      <span class="text-sm">{{ t('headings.none_found') }}</span>
+    </div>
+  }
+
+  <!-- Headings list -->
+  @if (isReady() && headingsData()!.length > 0) {
+    <!-- Summary bar -->
+    <div class="flex items-center gap-2 text-xs text-gray-500 w-full">
+      <span
+        >{{ t('headings.total') }}: <strong>{{ headingsData()!.length }}</strong></span
+      >
+      @if (store.hasErrors()) {
+        <span
+          class="text-[10px] text-white font-medium bg-red-500 rounded-full px-1.5 py-0.5 leading-none"
+        >
+          ⚠ {{ t('headings.has_errors') }}
+        </span>
+      }
+    </div>
+
+    <!-- List -->
+    <div class="flex flex-col gap-1 w-full justify-center">
+      @for (h of headingsData()!; track h.id) {
+        <button
+          class="flex flex-col p-1 rounded border transition-all w-full hover:shadow-md hover:-translate-y-0.5 cursor-pointer gap-0.5 text-left"
+          [class.border-red-200]="h.errors.length > 0"
+          [class.bg-red-50]="h.errors.length > 0"
+          [class.border-gray-100]="h.errors.length === 0"
+          [class.bg-white]="h.errors.length === 0"
+          (click)="scrollToHeading(h.id, h.tagName)"
+        >
+          <div class="flex items-center gap-1">
+            <!-- Nesting indicator: vertical lines, one per level — gray normally, red on error -->
+            <div class="flex shrink-0 gap-1">
+              @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+                @if (i <= h.nestingLevel) {
+                  <span
+                    class="block w-0 h-4 border-l-2"
+                    [class.border-gray-400]="h.errors.length === 0"
+                    [class.border-red-500]="h.errors.length > 0"
+                  ></span>
+                }
+              }
+            </div>
+
+            <!-- Tag name chip -->
+            <span
+              class="text-[12px] font-bold px-1.5 py-0.5 leading-none shrink-0 inline-flex items-center justify-center border rounded-sm bg-white"
+              [style.color]="tagColors[h.tagName.toLowerCase()] || '#6b7280'"
+              [style.border-color]="tagColors[h.tagName.toLowerCase()] || '#6b7280'"
+            >
+              {{ h.tagName }}
+            </span>
+
+            <!-- Text — wraps naturally -->
+            @if (h.text.length > 0) {
+              <span class="text-sm text-gray-800 break-words whitespace-pre-wrap min-w-0 flex-1">{{
+                h.text
+              }}</span>
+            }
+          </div>
+
+          <!-- Error chips below -->
+          @if (h.errors.length > 0) {
+            <div class="flex items-center flex-wrap gap-1">
+              @for (errType of h.errors; track errType) {
+                <span
+                  class="text-[10px] text-white font-medium bg-red-500 rounded-full px-1.5 py-0.5 leading-none"
+                >
+                  {{ t('headings.error_' + errType.toLowerCase()) }}
+                </span>
+              }
+            </div>
+          }
+        </button>
+      }
+    </div>
+  }
+</ng-container>

@@ -1,6 +1,6 @@
 import { App } from './app/app';
 import { appConfig } from './app/app.config';
-import { CHROME_KEEPALIVE_PORT } from './modules/comon/enums/chrome-command.enum';
+import { CHROME_KEEPALIVE_PORT } from './shared/enums/chrome-command.enum';
 import { bootstrapApplication } from '@angular/platform-browser';
 
 bootstrapApplication(App, appConfig).catch(err => console.error(err));

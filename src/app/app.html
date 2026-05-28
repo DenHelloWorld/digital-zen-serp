@@ -1,26 +1,26 @@
 <ng-container *transloco="let t">
-  <header class="w-full">
-    <div class="flex items-center justify-between p-1 text-xs text-gray-500">
-      <a href="https://www.linkedin.com/company/csmpoint" target="_blank" rel="noopener noreferrer">
-        <img class="w-7" src="logo.jpg" alt="logo" />
-      </a>
-      <div class="flex items-center gap-3 text-xs text-gray-500 uppercase tracking-[0.2em]">
-        <div class="flex gap-1">
-          @for (lang of languages; track lang.code) {
-            <button
-              class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
-              [attr.data-active]="activeLang() === lang.code"
-              [attr.aria-label]="lang.label"
-              (click)="setLang(lang.code)"
-              type="button"
-            >
-              <span class="text-[18px] leading-none" aria-hidden="true">{{ lang.flag }}</span>
-            </button>
-          }
-        </div>
+  <div class="flex items-center justify-between p-1 text-xs text-gray-500 w-full">
+    <a href="https://www.linkedin.com/company/csmpoint" target="_blank" rel="noopener noreferrer">
+      <img class="w-7" src="logo.jpg" alt="logo" />
+    </a>
+    <div class="flex items-center gap-3 text-xs text-gray-500 uppercase tracking-[0.2em]">
+      <div class="flex gap-1">
+        @for (lang of languages; track lang.code) {
+          <button
+            class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+            [attr.data-active]="activeLang() === lang.code"
+            [attr.aria-label]="lang.label"
+            (click)="setLang(lang.code)"
+            type="button"
+          >
+            <span class="text-[18px] leading-none" aria-hidden="true">{{ lang.flag }}</span>
+          </button>
+        }
       </div>
     </div>
+  </div>
 
+  <header class="sticky top-0 z-10 w-full bg-[var(--google-bg)]">
     <div class="flex bg-gray-500/5 text-sm w-full">
       <a
         class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline flex-1"

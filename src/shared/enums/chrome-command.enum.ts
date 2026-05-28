@@ -5,6 +5,7 @@ export enum CHROME_COMMAND_ENUM {
   BASE_SEO_AUDIT = 'baseSeoAudit',
   HIGHLIGHT_HEADERS = 'highlightHeaders',
   PARSE_HEADINGS = 'parseHeadings',
+  SCROLL_TO_HEADING = 'scrollToHeading',
 }
 
 export type ChromeCommandType =
@@ -13,7 +14,8 @@ export type ChromeCommandType =
   | CHROME_COMMAND_ENUM.SCRAPE_CURRENT_TAB
   | CHROME_COMMAND_ENUM.BASE_SEO_AUDIT
   | CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS
-  | CHROME_COMMAND_ENUM.PARSE_HEADINGS;
+  | CHROME_COMMAND_ENUM.PARSE_HEADINGS
+  | CHROME_COMMAND_ENUM.SCROLL_TO_HEADING;
 
 /** Keepalive port name between side panel and background */
 export const CHROME_KEEPALIVE_PORT = 'dz-keepalive';

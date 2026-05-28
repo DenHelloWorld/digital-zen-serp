@@ -22,6 +22,9 @@ export const parsePageHeadings = (): HeadingData[] => {
     id++;
     const nestingLevel = parseInt(tagName.charAt(1), 10);
 
+    /* Tag this element so we can find it later via heading id */
+    el.setAttribute('data-dz-heading-id', String(id));
+
     results.push({
       id,
       tagName,

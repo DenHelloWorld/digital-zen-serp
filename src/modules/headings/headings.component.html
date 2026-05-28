@@ -59,12 +59,13 @@
     <!-- List -->
     <div class="flex flex-col gap-1 w-full justify-center">
       @for (h of headingsData()!; track h.id) {
-        <div
-          class="flex flex-col p-1 rounded border transition-all w-full hover:shadow-md hover:-translate-y-0.5 cursor-pointer gap-0.5"
+        <button
+          class="flex flex-col p-1 rounded border transition-all w-full hover:shadow-md hover:-translate-y-0.5 cursor-pointer gap-0.5 text-left"
           [class.border-red-200]="h.errors.length > 0"
           [class.bg-red-50]="h.errors.length > 0"
           [class.border-gray-100]="h.errors.length === 0"
           [class.bg-white]="h.errors.length === 0"
+          (click)="scrollToHeading(h.id, h.tagName)"
         >
           <div class="flex items-center gap-1">
             <!-- Nesting indicator: vertical lines, one per level — gray normally, red on error -->
@@ -109,7 +110,7 @@
               }
             </div>
           }
-        </div>
+        </button>
       }
     </div>
   }

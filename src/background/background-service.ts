@@ -7,7 +7,10 @@ import {
 import { FOCUS_ERROR_ENUM } from '../shared/enums/focus-error.enum';
 import { parsePageHeadings } from '../shared/helpers/heading-parser.helper';
 import { isHttpUrl } from '../shared/helpers/is-http-url.helper';
-import { applyHeadingHighlights } from '../shared/helpers/page-heading-highlighter';
+import {
+  applyHeadingHighlights,
+  scrollToHeading,
+} from '../shared/helpers/page-heading-highlighter';
 import type { HeadingData } from '../shared/models/heading-data.model';
 import { GooglePreviewService } from './google-preview.service';
 import { SeoAuditService } from './seo-audit.service';
@@ -42,6 +45,7 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.BASE_SEO_AUDIT, () => this.#handleSeoAudit()],
     [CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS, msg => this.#handleHighlightHeaders(msg)],
     [CHROME_COMMAND_ENUM.PARSE_HEADINGS, () => this.#handleParseHeadings()],
+    [CHROME_COMMAND_ENUM.SCROLL_TO_HEADING, msg => this.#handleScrollToHeading(msg)],
   ]);
 
   constructor() {
@@ -191,6 +195,28 @@ export class BackgroundService {
       });
       const headings = results[0]?.result as HeadingData[] | undefined;
       return { success: true, data: headings ?? [] };
+    } catch {
+      return { success: false, error: 'INJECTION_FAILED' };
+    }
+  }
+
+  async #handleScrollToHeading(message: Record<string, unknown>): Promise<HandlerResult> {
+    const tab = await this.#requireActiveTab();
+    if (!tab?.id) return { success: false, error: 'NO_ACTIVE_TAB' };
+
+    const payload = message['payload'] as { id: number; tagName: string } | undefined;
+    if (!payload || typeof payload.id !== 'number' || typeof payload.tagName !== 'string') {
+      return { success: false, error: 'INVALID_PAYLOAD' };
+    }
+
+    try {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: scrollToHeading,
+        args: [payload.id, payload.tagName],
+      });
+      const result = results[0]?.result as { success: boolean } | undefined;
+      return result ?? { success: false, error: 'INJECTION_FAILED' };
     } catch {
       return { success: false, error: 'INJECTION_FAILED' };
     }

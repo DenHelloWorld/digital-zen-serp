@@ -84,3 +84,43 @@ export const applyHeadingHighlights = (
 
   return { headingsFound: totalHeadings };
 };
+
+/**
+ * Runs inside the web page context via chrome.scripting.executeScript.
+ * Scrolls to a specific heading by its data-dz-heading-id and briefly
+ * flashes a heading-level-specific colour.
+ *
+ * @returns Whether the heading element was found.
+ */
+export const scrollToHeading = (
+  headingId: number,
+  tagName: string
+): { success: boolean } => {
+  const TAG_COLORS_MAP: Record<string, string> = {
+    h1: '#ef4444',
+    h2: '#3b82f6',
+    h3: '#22c55e',
+    h4: '#f97316',
+    h5: '#a855f7',
+    h6: '#6b7280',
+  };
+
+  const el = document.querySelector<HTMLElement>(`[data-dz-heading-id="${headingId}"]`);
+  if (!el) return { success: false };
+
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  /* Flash highlight — use heading-level colour */
+  const color = TAG_COLORS_MAP[tagName.toLowerCase()] || '#6b7280';
+  const originalBg = el.style.background;
+  const originalTransition = el.style.transition;
+  el.style.transition = 'background 0.3s ease';
+  el.style.background = color;
+
+  setTimeout(() => {
+    el.style.background = originalBg;
+    el.style.transition = originalTransition;
+  }, 2000);
+
+  return { success: true };
+};

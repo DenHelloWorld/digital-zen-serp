@@ -62,15 +62,13 @@
           [class.border-gray-100]="h.errors.length === 0"
           [class.bg-white]="h.errors.length === 0"
         >
-          <!-- Nesting indicator: squares, one per level — gray normally, red on error -->
-          <div class="flex gap-1 shrink-0">
+          <!-- Nesting indicator: vertical lines, one per level — gray normally, red on error -->
+          <div class="flex shrink-0 gap-1">
             @for (i of [1, 2, 3, 4, 5, 6]; track i) {
               @if (i <= h.nestingLevel) {
                 <span
-                  class="inline-block w-4 h-4 rounded-sm border"
-                  [class.bg-gray-200]="h.errors.length === 0"
+                  class="block w-0 h-4 border-l-2"
                   [class.border-gray-400]="h.errors.length === 0"
-                  [class.bg-red-200]="h.errors.length > 0"
                   [class.border-red-500]="h.errors.length > 0"
                 ></span>
               }

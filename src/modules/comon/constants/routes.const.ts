@@ -2,7 +2,7 @@ export const ROUTES = Object.freeze({
   GOOGLE_SERP: 'google-serp',
   CURRENT_SITE: 'current-site',
   SOCIAL: 'social',
-  SEO_AUDIT: 'seoAudit',
+  SEO_AUDIT: 'seo-audit',
   HEADINGS: 'headings',
 } as const);
 

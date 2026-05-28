@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
-  selector: 'dz-base-seo-audit',
+  selector: 'dz-seo-audit-view',
   imports: [TranslocoDirective],
   templateUrl: './base-seo-audit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,7 +12,7 @@ import { TranslocoDirective } from '@jsverse/transloco';
       'dz-base-seo-audit p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
-export class BaseSeoAuditComponent {
+export class SeoAuditViewComponent {
   protected readonly store = inject(SeoAuditStore);
 
   protected readonly auditData = computed(() => this.store.auditData());

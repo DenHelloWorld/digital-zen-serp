@@ -1,6 +1,6 @@
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { SeoAuditData } from '../../../shared/models/seo-audit-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { SeoAuditData } from '../models/seo-audit-data.model';
 import { TabActivityService } from '../services/tab-activity.service';
 import { Injectable, signal, effect, inject } from '@angular/core';
 

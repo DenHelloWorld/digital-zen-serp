@@ -1,5 +1,5 @@
+import type { TabInfo } from '../../../shared/models/tab-info.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import type { TabInfo } from '../models/tab-info.model';
 import { Injectable, signal, inject } from '@angular/core';
 
 /**

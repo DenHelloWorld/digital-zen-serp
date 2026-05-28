@@ -1,4 +1,4 @@
-import { HEADING_TAGS, TAG_COLORS } from '../comon/helpers/heading-highlighter.helper';
+import { HEADING_TAGS, TAG_COLORS } from '../../shared/helpers/heading-highlighter.helper';
 import { HeadingsStore } from '../comon/stores/headings.store';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';

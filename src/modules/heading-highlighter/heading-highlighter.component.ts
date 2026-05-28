@@ -1,4 +1,4 @@
-import { HEADING_TAGS, TAG_COLORS } from '../comon/helpers/heading-highlighter.helper';
+import { HEADING_TAGS, TAG_COLORS } from '../../shared/helpers/heading-highlighter.helper';
 import { HeadingHighlighterStore } from '../comon/stores/heading-highlighter.store';
 import { ToggleComponent } from '../ui/toggle/toggle.component';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';

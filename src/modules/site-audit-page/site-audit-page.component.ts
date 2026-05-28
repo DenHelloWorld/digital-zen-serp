@@ -1,13 +1,13 @@
-import { BaseSeoAuditComponent } from '../base-seo-audit/base-seo-audit.component';
+import { SeoAuditViewComponent } from '../base-seo-audit/base-seo-audit.component';
 import { HeadingHighlighterComponent } from '../heading-highlighter/heading-highlighter.component';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'dz-site-audit-page',
-  imports: [BaseSeoAuditComponent, HeadingHighlighterComponent],
+  imports: [SeoAuditViewComponent, HeadingHighlighterComponent],
   template: `
     <ng-container>
-      <dz-base-seo-audit />
+      <dz-seo-audit-view />
       <dz-heading-highlighter />
     </ng-container>
   `,

@@ -1,6 +1,9 @@
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import {
+  HEADING_TAGS,
+  HIGHLIGHTER_STATUS_CONFIG,
+} from '../../../shared/helpers/heading-highlighter.helper';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { HEADING_TAGS, HIGHLIGHTER_STATUS_CONFIG } from '../helpers/heading-highlighter.helper';
 import { TabActivityService } from '../services/tab-activity.service';
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 
@@ -101,21 +104,11 @@ export class HeadingHighlighterStore {
     this.#applyConfig();
   }
 
-  /** Disable highlights (fire-and-forget, no response wait) */
+  /** Disable highlights — delegates to toggleHighlighter for consistency */
   turnOff(): void {
-    if (!this.#isEnabled() || !this.#isChrome) return;
-
-    this.#isEnabled.set(false);
-    this.#headingsFound.set(null);
-
-    chrome.runtime
-      .sendMessage({
-        command: CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS,
-        payload: { enabled: false, selectedTags: this.#selectedTags() },
-      })
-      .catch(() => {
-        /* empty */
-      });
+    if (this.#isEnabled()) {
+      this.toggleHighlighter();
+    }
   }
 
   reset(): void {

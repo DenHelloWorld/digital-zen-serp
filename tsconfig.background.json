@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true
   },
-  "files": ["src/background.ts", "src/extension-config.ts"],
+  "files": ["src/background.ts"],
   "tsc-alias": {
     "verbose": false,
     "resolveFullPaths": true,

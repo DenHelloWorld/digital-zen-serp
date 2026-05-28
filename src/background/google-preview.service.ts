@@ -1,24 +1,8 @@
-import { GooglePreviewData } from '../modules/comon/models/google-preview-data.model';
+import { getJsonLd } from '../shared/helpers/json-ld.helper';
+import { GooglePreviewData } from '../shared/models/google-preview-data.model';
 import { parseHTML } from 'linkedom';
 
-interface JsonLdPerson {
-  name?: string;
-}
-interface JsonLdBrand {
-  name?: string;
-}
-interface JsonLdImage {
-  url?: string;
-}
-
-interface JsonLdData {
-  headline?: string;
-  description?: string;
-  articleBody?: string;
-  author?: string | JsonLdPerson | JsonLdPerson[];
-  image?: string | JsonLdImage | (string | JsonLdImage)[];
-  brand?: JsonLdBrand;
-}
+type JsonLdData = ReturnType<typeof getJsonLd>;
 
 type MetadataRule = (doc: Document, linkedData: JsonLdData) => string | null | undefined;
 
@@ -92,7 +76,7 @@ export class GooglePreviewService {
   public extractMetadata(html: string, url: string): GooglePreviewData {
     try {
       const { document: doc } = parseHTML(html);
-      const linkedData = this.#getJsonLd(doc);
+      const linkedData = getJsonLd(doc);
       const baseUrl = new URL(url).origin;
 
       const title = this.#resolve(doc, linkedData, this.#TITLE_RULES);
@@ -122,22 +106,6 @@ export class GooglePreviewService {
       if (result && result.trim().length > 0) return result.trim();
     }
     return null;
-  }
-
-  #getJsonLd(doc: Document): JsonLdData {
-    try {
-      const script = doc.querySelector('script[type="application/ld+json"]');
-      if (!script?.textContent) return {};
-      const parsed = JSON.parse(script.textContent);
-      const data = parsed['@graph']
-        ? parsed['@graph'][0]
-        : Array.isArray(parsed)
-          ? parsed[0]
-          : parsed;
-      return data || {};
-    } catch {
-      return {};
-    }
   }
 
   #parseJsonLdAuthor(linkedData: JsonLdData): string | null {

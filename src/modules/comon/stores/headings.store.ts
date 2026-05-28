@@ -1,7 +1,7 @@
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { validateHeadings } from '../../../shared/helpers/heading-parser.helper';
+import type { HeadingData } from '../../../shared/models/heading-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { validateHeadings } from '../helpers/heading-parser.helper';
-import type { HeadingData } from '../models/heading-data.model';
 import { TabActivityService } from '../services/tab-activity.service';
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 

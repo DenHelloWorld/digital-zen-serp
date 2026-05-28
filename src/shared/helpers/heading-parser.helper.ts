@@ -6,8 +6,6 @@ import type { HeadingData, HeadingErrorType } from '../models/heading-data.model
  *
  * @remarks Must be self-contained (no external references)
  * because it is serialised and executed in an isolated page context.
- *
- * @returns HeadingData[] — parsed headings in DOM order.
  */
 export function parsePageHeadings(): HeadingData[] {
   const tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
@@ -17,7 +15,7 @@ export function parsePageHeadings(): HeadingData[] {
   let id = 0;
 
   for (const el of elements) {
-    const tagName = el.tagName.toUpperCase(); // "H1", "H2", etc.
+    const tagName = el.tagName.toUpperCase();
     let text = (el as HTMLElement).textContent ?? '';
     text = text.trim().replace(/\s+/g, ' ').replace(/\n+/g, ' ').trim();
 
@@ -44,9 +42,6 @@ export function parsePageHeadings(): HeadingData[] {
  *   - EMPTY_TEXT  — heading has no text content after cleaning
  *   - DUPLICATE_TEXT — same non-empty text appears in multiple headings
  *   - LEVEL_GAP   — nesting level jumps down by more than 1 (e.g. H1 → H3)
- *
- * @param headings — raw HeadingData array from parsePageHeadings()
- * @returns The same array with `errors` populated on each node.
  */
 export function validateHeadings(headings: HeadingData[]): HeadingData[] {
   /* ── 1. EMPTY_TEXT ────────────────────────────────────────── */

@@ -1,6 +1,6 @@
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { GooglePreviewData } from '../../../shared/models/google-preview-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { CHROME_COMMAND_ENUM } from '../enums/chrome-command.enum';
-import { GooglePreviewData } from '../models/google-preview-data.model';
 import { TabActivityService } from '../services/tab-activity.service';
 import { Injectable, signal, effect, inject } from '@angular/core';
 
@@ -43,7 +43,7 @@ export class GooglePreviewStore {
 
     try {
       const response = await chrome.runtime.sendMessage({
-        command: CHROME_COMMAND_ENUM.SCRAP_CURRENT_TAB,
+        command: CHROME_COMMAND_ENUM.SCRAPE_CURRENT_TAB,
       });
 
       if (response?.success) {

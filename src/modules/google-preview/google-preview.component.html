@@ -127,24 +127,26 @@
           >
             {{ name() || t('serp.your_site') }}
           </span>
-          <span class="text-[12px] text-[#4d5156] overflow-wrap-anywhere">
+          <span class="text-[12px] text-[#4d5156] overflow-wrap-anywhere" #linkPreviewEl>
             {{ (mode() === 'edit' ? editLinkUrl() : url()) || t('serp.default_link') }}
           </span>
         </div>
       </div>
 
-      <div class="mt-1">
+      <div class="mt-1 rounded-sm transition-all">
         <h3
           class="text-[#1a0dab] hover:underline cursor-pointer font-medium leading-[1.3] transition-all whitespace-normal overflow-wrap-anywhere"
+          #titlePreviewEl
           [style.font-size.px]="selectedDevice() === 'desktop' ? 18 : 20"
         >
           {{ titlePreview() || t('serp.default_title') }}
         </h3>
       </div>
 
-      <div class="mt-2">
+      <div class="mt-2 rounded-sm transition-all">
         <p
           class="text-[14px] leading-[1.58] text-[#4d5156] transition-all whitespace-normal overflow-wrap-anywhere break-words"
+          #descPreviewEl
         >
           {{ descriptionPreview() || t('serp.default_description') }}
         </p>
@@ -152,8 +154,8 @@
     </div>
   </div>
 
-  <!-- Title: read-only (live) / editable (edit) -->
-  <div class="px-5 w-full">
+  <!-- Title analytics + copy -->
+  <div class="w-full flex flex-col gap-1">
     <div class="flex justify-between items-center gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.title_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
@@ -169,6 +171,7 @@
             ></div>
           }
         </div>
+        <dz-copy-button [text]="title()" [highlightEl]="titlePreviewEl" />
       </div>
     </div>
 
@@ -187,8 +190,8 @@
     }
   </div>
 
-  <!-- Link: read-only (live) / editable (edit) -->
-  <div class="px-5 w-full">
+  <!-- Link analytics + copy -->
+  <div class="w-full flex flex-col gap-1">
     <div class="flex justify-between items-center w-full gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.link_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
@@ -204,6 +207,7 @@
             ></div>
           }
         </div>
+        <dz-copy-button [text]="link()" [highlightEl]="linkPreviewEl" />
       </div>
     </div>
 
@@ -224,8 +228,8 @@
     }
   </div>
 
-  <!-- Description: read-only (live) / editable (edit) -->
-  <div class="px-5 w-full">
+  <!-- Description analytics + copy -->
+  <div class="w-full flex flex-col gap-1">
     <div class="flex justify-between items-center w-full gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.description_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
@@ -241,6 +245,7 @@
             ></div>
           }
         </div>
+        <dz-copy-button [text]="description()" [highlightEl]="descPreviewEl" />
       </div>
     </div>
 

@@ -1,10 +1,11 @@
 import { SeoAuditStore } from '../comon/stores/seo-audit.store';
+import { CopyButtonComponent } from '../ui/copy-button/copy-button.component';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-seo-audit-view',
-  imports: [TranslocoDirective],
+  imports: [TranslocoDirective, CopyButtonComponent],
   templateUrl: './base-seo-audit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

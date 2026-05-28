@@ -94,7 +94,7 @@
 
           <!-- Error badges with human-readable text -->
           @if (h.errors.length > 0) {
-            <div class="flex items-center gap-1 shrink-0">
+            <div class="flex items-center gap-1 shrink-0 ml-auto">
               @for (errType of h.errors; track errType) {
                 <span
                   class="text-[10px] text-red-600 font-medium border border-red-200 bg-red-50 rounded px-1 leading-4"

@@ -1,31 +1,32 @@
 import { ROUTES } from '../modules/comon/constants/routes.const';
-import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
-
-@Component({ template: '<h1 class="p-4">Тут будет настройка для соцсетей ?</h1>' })
-class PlaceholderComponent {}
 
 export const routes: Routes = [
   {
     path: ROUTES.CURRENT_SITE,
     loadComponent: () =>
-      import('../modules/current-site/current-site.component').then(m => m.CurrentSiteComponent),
+      import('../modules/pages/current-site-page/current-site-page.component').then(
+        m => m.CurrentSitePageComponent
+      ),
   },
   {
     path: ROUTES.SOCIAL,
-    component: PlaceholderComponent,
+    loadComponent: () =>
+      import('../modules/pages/social-page/social-page.component').then(m => m.SocialPageComponent),
   },
   {
     path: ROUTES.SEO_AUDIT,
     loadComponent: () =>
-      import('../modules/site-audit-page/site-audit-page.component').then(
+      import('../modules/pages/site-audit-page/site-audit-page.component').then(
         m => m.SiteAuditPageComponent
       ),
   },
   {
     path: ROUTES.HEADINGS,
     loadComponent: () =>
-      import('../modules/headings/headings.component').then(m => m.HeadingsComponent),
+      import('../modules/pages/headings-page/headings-page.component').then(
+        m => m.HeadingsPageComponent
+      ),
   },
   {
     path: '**',

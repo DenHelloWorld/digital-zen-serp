@@ -1,5 +1,5 @@
 export const ROUTES = Object.freeze({
-  CURRENT_SITE: 'current-site',
+  CURRENT_SITE: 'current-site-page',
   SOCIAL: 'social',
   SEO_AUDIT: 'seo-audit',
   HEADINGS: 'headings',

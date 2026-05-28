@@ -1,9 +1,9 @@
 <ng-container *transloco="let t">
   <!-- Live / edit mode toggle -->
-  <div class="flex items-center justify-between px-5 py-1">
+  <div class="flex items-center justify-between self-end">
     <div class="flex gap-1">
       <button
-        class="text-xs px-2 py-0.5 rounded border transition-all"
+        class="text-xs px-2 py-0.5 rounded border transition-all w-f"
         [class.bg-indigo-50]="mode() === 'live'"
         [class.border-indigo-300]="mode() === 'live'"
         [class.text-indigo-700]="mode() === 'live'"
@@ -12,7 +12,7 @@
         (click)="switchMode('live')"
         type="button"
       >
-        {{ t('serp.live_mode') }}
+        👁️
       </button>
       <button
         class="text-xs px-2 py-0.5 rounded border transition-all"
@@ -24,13 +24,13 @@
         (click)="switchMode('edit')"
         type="button"
       >
-        {{ t('serp.edit_mode') }}
+        ✏️
       </button>
     </div>
   </div>
 
   <!-- Search bar + device toggle -->
-  <div class="w-full bg-white pb-1 border-b border-gray-200 flex px-5 gap-1 flex-wrap">
+  <div class="w-full bg-white pb-1 border-b border-gray-200 flex gap-1 flex-wrap">
     <div class="flex-1">
       <div class="relative w-full">
         <div

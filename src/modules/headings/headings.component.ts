@@ -1,15 +1,17 @@
 import { HEADING_TAGS, TAG_COLORS } from '../../shared/helpers/heading-highlighter.helper';
 import { HeadingsStore } from '../comon/stores/headings.store';
+import { HeadingHighlighterComponent } from '../heading-highlighter/heading-highlighter.component';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-headings',
-  imports: [TranslocoDirective],
+  imports: [TranslocoDirective, HeadingHighlighterComponent],
   templateUrl: './headings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'dz-headings p-[var(--spacing)] flex flex-col gap-[var(--spacing)] w-full items-start',
+    class:
+      'dz-headings p-[var(--spacing)] flex flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)] items-start',
   },
 })
 export class HeadingsComponent {

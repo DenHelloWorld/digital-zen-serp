@@ -10,7 +10,8 @@ import { TranslocoDirective } from '@jsverse/transloco';
   templateUrl: './heading-highlighter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'dz-heading-highlighter flex flex-col gap-2 px-[var(--spacing)]',
+    class:
+      'flex flex-col gap-2 w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
   },
 })
 export class HeadingHighlighterComponent {

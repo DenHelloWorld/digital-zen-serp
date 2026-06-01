@@ -29,6 +29,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: ROUTES.PERFORMANCE,
+    loadComponent: () =>
+      import('../modules/pages/performance-page/performance-page.component').then(
+        m => m.PerformancePageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: ROUTES.CURRENT_SITE,
   },

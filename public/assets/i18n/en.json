@@ -45,12 +45,33 @@
     "error_duplicate_text": "Duplicate text",
     "error_level_gap": "Skipped level"
   },
+  "performance": {
+    "title": "Page Performance",
+    "fcp": "First Contentful Paint",
+    "fcp_desc": "Time when the first text or image is painted",
+    "lcp": "Largest Contentful Paint",
+    "lcp_desc": "Time when the largest content element becomes visible",
+    "cls": "Cumulative Layout Shift",
+    "cls_desc": "Measures visual stability — unexpected layout shifts",
+    "tbt": "Total Blocking Time",
+    "tbt_desc": "Sum of time the page was unresponsive (long tasks)",
+    "speed_index": "Speed Index",
+    "speed_index_desc": "How quickly page content is visually displayed",
+    "loading": "Collecting performance metrics...",
+    "error": "Failed to load performance data",
+    "good": "Good",
+    "needs_improvement": "Needs Improvement",
+    "poor": "Poor",
+    "updated": "Updated",
+    "speed_index_unavailable": "Speed Index requires a publicly accessible URL"
+  },
   "nav": {
     "main": "Main",
     "social": "Social",
     "language": "Language",
     "current_site": "Current site",
     "seo_audit": "SEO Audit",
-    "headings": "Headings"
+    "headings": "Headings",
+    "performance": "Performance"
   }
 }

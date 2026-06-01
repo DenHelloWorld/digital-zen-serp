@@ -34,14 +34,9 @@
   @if (isAuditReady()) {
     <div class="flex flex-col gap-1.5">
       <!-- URL (на всю ширину) -->
-      <div class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100">
-        <span class="text-base shrink-0 mt-0.5">🔗</span>
-        <div class="flex flex-col min-w-0 gap-0.5 flex-1">
-          <span class="text-xs text-gray-900 tracking-wide font-bold">{{ t('seoAudit.url') }}</span>
-          <span class="text-sm text-gray-800 break-all" #urlPreviewEl>{{ auditData()?.url }}</span>
-        </div>
-        <dz-copy-button [text]="auditData()?.url ?? ''" [highlightEl]="urlPreviewEl" />
-      </div>
+      @if (auditData()?.url; as currentUrl) {
+        <dz-url-bar [url]="currentUrl" />
+      }
 
       <!-- Status / Lang / Published / Updated в строку -->
       <div class="flex flex-row flex-wrap gap-1.5">

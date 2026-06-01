@@ -17,9 +17,12 @@ export class WebVitalsStore {
   readonly #isChrome = inject(IS_CHROME_EXTENSION);
   readonly #tabActivity = inject(TabActivityService);
 
+  #requestId = 0;
+
   constructor() {
     effect(() => {
       this.#tabActivity.activeTab();
+      this.reset(); // clear stale data immediately on tab switch
       this.loadVitals();
     });
   }
@@ -27,6 +30,7 @@ export class WebVitalsStore {
   async loadVitals(): Promise<void> {
     this.#isLoading.set(true);
     this.#error.set(null);
+    const requestId = ++this.#requestId;
 
     if (!this.#isChrome) {
       this.#isLoading.set(false);
@@ -39,16 +43,21 @@ export class WebVitalsStore {
         command: CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS,
       });
 
+      if (requestId !== this.#requestId) return; // stale response
+
       if (response?.success) {
-        this.#vitalsData.set(response.data);
+        this.#vitalsData.set(response.data as WebVitalsData);
       } else {
         this.#error.set(response?.error || 'UNKNOWN_ERROR');
       }
     } catch (err) {
+      if (requestId !== this.#requestId) return;
       this.#error.set('MESSAGE_SENDING_FAILED');
       console.error('[WebVitalsStore]', err);
     } finally {
-      this.#isLoading.set(false);
+      if (requestId === this.#requestId) {
+        this.#isLoading.set(false);
+      }
     }
   }
 

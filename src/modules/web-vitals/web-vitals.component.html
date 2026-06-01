@@ -22,89 +22,61 @@
     </div>
   }
 
-  <!-- Loading -->
-  @if (isLoading()) {
-    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
-      <span class="text-2xl">⏱️</span>
-      <span class="text-sm">{{ t('performance.loading') }}</span>
-    </div>
-  }
-
-  <!-- Metric cards -->
-  @if (isReady()) {
-    <div class="flex flex-col gap-2 w-full">
-      @if (tabActivity.activeTab()?.url; as currentUrl) {
-        <dz-url-bar [url]="currentUrl" />
-      }
-      @for (m of metrics; track m.key) {
-        <div class="flex items-center gap-3 p-2 rounded-lg border border-gray-100 bg-white">
-          <dz-speedometer
-            class="w-24 shrink-0"
-            [value]="vitalsData()![m.key]"
-            [goodThreshold]="m.good"
-            [poorThreshold]="m.poor"
-            [unit]="m.unit"
-            [decimals]="m.decimals"
-          />
-          <div class="flex flex-col gap-0.5 min-w-0">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span
-                class="text-[10px] font-medium px-1.5 py-0.5 rounded-full leading-none shrink-0"
-                [class.bg-green-100]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
-                "
-                [class.text-green-700]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
-                "
-                [class.bg-orange-100]="
-                  vitalsData()![m.key] !== null &&
-                  vitalsData()![m.key]! > m.good &&
-                  vitalsData()![m.key]! <= m.poor
-                "
-                [class.text-orange-700]="
-                  vitalsData()![m.key] !== null &&
-                  vitalsData()![m.key]! > m.good &&
-                  vitalsData()![m.key]! <= m.poor
-                "
-                [class.bg-red-100]="vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor"
-                [class.text-red-700]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor
-                "
-                [class.bg-gray-100]="vitalsData()![m.key] === null"
-                [class.text-gray-500]="vitalsData()![m.key] === null"
-              >
-                @if (vitalsData()![m.key] !== null) {
-                  @if (vitalsData()![m.key]! <= m.good) {
-                    Good
-                  } @else if (vitalsData()![m.key]! <= m.poor) {
-                    Needs work
-                  } @else {
-                    Poor
-                  }
+  <!-- Metric cards (always visible, pulsing when loading) -->
+  <div class="flex flex-col gap-2 w-full">
+    @if (tabActivity.activeTab()?.url; as currentUrl) {
+      <dz-url-bar [url]="currentUrl" />
+    }
+    @for (m of metrics; track m.key) {
+      @let val = vitalsData()?.[m.key] ?? null;
+      <div class="flex items-center gap-3 p-2 rounded-lg border border-gray-100 bg-white">
+        <dz-speedometer
+          class="w-24 shrink-0"
+          [value]="val"
+          [goodThreshold]="m.good"
+          [poorThreshold]="m.poor"
+          [unit]="m.unit"
+          [decimals]="m.decimals"
+        />
+        <div class="flex flex-col gap-0.5 min-w-0">
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <span
+              class="text-[10px] font-medium px-1.5 py-0.5 rounded-full leading-none shrink-0"
+              [class.bg-green-100]="val !== null && val <= m.good"
+              [class.text-green-700]="val !== null && val <= m.good"
+              [class.bg-orange-100]="val !== null && val > m.good && val <= m.poor"
+              [class.text-orange-700]="val !== null && val > m.good && val <= m.poor"
+              [class.bg-red-100]="val !== null && val > m.poor"
+              [class.text-red-700]="val !== null && val > m.poor"
+              [class.bg-gray-100]="val === null"
+              [class.text-gray-500]="val === null"
+            >
+              @if (val !== null) {
+                @if (val <= m.good) {
+                  {{ t('performance.good') }}
+                } @else if (val <= m.poor) {
+                  {{ t('performance.needs_improvement') }}
                 } @else {
-                  N/A
+                  {{ t('performance.poor') }}
                 }
-              </span>
-              <span class="text-sm font-bold text-gray-900">{{ t(m.labelKey) }}</span>
-            </div>
-            <span class="text-xs text-gray-500 leading-relaxed">{{ t(m.descKey) }}</span>
+              } @else {
+                {{ t('performance.na') }}
+              }
+            </span>
+            <span class="text-sm font-bold text-gray-900 break-words min-w-0">{{
+              t(m.labelKey)
+            }}</span>
           </div>
+          <span class="text-xs text-gray-500 leading-relaxed">{{ t(m.descKey) }}</span>
         </div>
-      }
+      </div>
+    }
+  </div>
+
+  <!-- Timestamp -->
+  @if (vitalsData()?.timestamp) {
+    <div class="text-[10px] text-gray-400 text-right">
+      {{ t('performance.updated') }}: {{ vitalsData()!.timestamp | date: 'HH:mm:ss' }}
     </div>
-
-    <!-- PageSpeed note for Speed Index -->
-    @if (vitalsData()!.speedIndex === null) {
-      <div class="text-[10px] text-gray-400 text-center">
-        {{ t('performance.speed_index_unavailable') }}
-      </div>
-    }
-
-    <!-- Timestamp -->
-    @if (vitalsData()!.timestamp) {
-      <div class="text-[10px] text-gray-400 text-right">
-        {{ t('performance.updated') }}: {{ vitalsData()!.timestamp | date: 'HH:mm:ss' }}
-      </div>
-    }
   }
 </ng-container>

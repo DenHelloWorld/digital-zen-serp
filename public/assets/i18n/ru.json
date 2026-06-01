@@ -62,6 +62,7 @@
     "good": "Хорошо",
     "needs_improvement": "Требует улучшения",
     "poor": "Плохо",
+    "na": "N/A",
     "updated": "Обновлено",
     "speed_index_unavailable": "Speed Index требует публично доступного URL"
   },
@@ -72,6 +73,6 @@
     "current_site": "Текущий сайт",
     "seo_audit": "SEO Аудит",
     "headings": "Заголовки",
-    "performance": "Performance"
+    "performance": "Производительность"
   }
 }

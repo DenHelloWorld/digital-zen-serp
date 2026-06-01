@@ -62,6 +62,7 @@
     "good": "Good",
     "needs_improvement": "Needs Improvement",
     "poor": "Poor",
+    "na": "N/A",
     "updated": "Updated",
     "speed_index_unavailable": "Speed Index requires a publicly accessible URL"
   },

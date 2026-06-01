@@ -38,36 +38,36 @@ export class WebVitalsService {
   }
 
   /**
-   * Fetch Speed Index from PageSpeed Insights API.
-   * Returns null when the URL is not publicly accessible or the API call fails.
+   * Fetch Speed Index from PageSpeed Insights API with retry.
    */
   async fetchSpeedIndex(url: string): Promise<number | null> {
     try {
       const apiUrl = `${PAGESPEED_API_BASE}?url=${encodeURIComponent(url)}&strategy=mobile`;
-      console.log('[WebVitalsService] Fetching Speed Index:', apiUrl);
       const response = await fetch(apiUrl);
-
-      if (!response.ok) {
-        console.warn(
-          '[WebVitalsService] PageSpeed API error:',
-          response.status,
-          response.statusText
-        );
-        return null;
-      }
-
+      if (!response.ok) return null;
       const data = (await response.json()) as PageSpeedInsight;
-      const speedIndex = data?.lighthouseResult?.audits?.['speed-index']?.numericValue ?? null;
-      console.log('[WebVitalsService] Speed Index result:', speedIndex);
-      return speedIndex;
-    } catch (err) {
-      console.error('[WebVitalsService] PageSpeed API fetch failed:', err);
+      return data?.lighthouseResult?.audits?.['speed-index']?.numericValue ?? null;
+    } catch {
       return null;
     }
   }
 
   /**
-   * Collect all web vitals: page metrics + Speed Index from API.
+   * Fetch Speed Index with retry (up to 3 attempts, increasing delay).
+   */
+  async fetchSpeedIndexWithRetry(url: string): Promise<number | null> {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const result = await this.fetchSpeedIndex(url);
+      if (result !== null) return result;
+      if (attempt < 2) {
+        await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Collect page vitals. Speed Index is attempted once (may be null due to API limits).
    */
   async collectAll(tabId: number, url: string): Promise<WebVitalsData> {
     const pageVitals = await this.collectFromPage(tabId);

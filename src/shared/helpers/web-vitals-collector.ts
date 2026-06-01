@@ -79,6 +79,7 @@ export function collectPageWebVitals(): Promise<{
     });
     try {
       clsObserver.observe({ type: 'layout-shift', buffered: true });
+      result.cls = 0; // observer succeeded — no entries means CLS is genuinely 0
     } catch {
       /* CLS not available */
     }
@@ -95,13 +96,26 @@ export function collectPageWebVitals(): Promise<{
       result.tbt = tbtValue;
     });
     try {
-      tbtObserver.observe({ type: 'longtask', buffered: true });
+      tbtObserver.observe({ type: 'longtask' });
+      result.tbt = 0;
     } catch {
       /* TBT not available */
     }
 
-    /* ── Resolve after timeout with whatever we have ── */
+    /* ── Poll for early resolve once FCP + LCP are captured ── */
+    const checkInterval = setInterval(() => {
+      if (result.fcp !== null && result.lcp !== null) {
+        clearInterval(checkInterval);
+        lcpObserver.disconnect();
+        clsObserver.disconnect();
+        tbtObserver.disconnect();
+        resolve(result);
+      }
+    }, 500);
+
+    /* ── Fallback timeout ── */
     setTimeout(() => {
+      clearInterval(checkInterval);
       lcpObserver.disconnect();
       clsObserver.disconnect();
       tbtObserver.disconnect();

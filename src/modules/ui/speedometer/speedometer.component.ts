@@ -67,13 +67,27 @@ const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33
             fill="#9ca3af"
             font-size="10"
             font-family="inherit"
+            style="animation: loadingPulse 1.5s ease-in-out infinite;"
           >
-            —
+            …
           </text>
         }
       </svg>
     </div>
   `,
+  styles: [
+    `
+      @keyframes loadingPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },
 })

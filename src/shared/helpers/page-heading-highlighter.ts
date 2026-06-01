@@ -92,10 +92,7 @@ export const applyHeadingHighlights = (
  *
  * @returns Whether the heading element was found.
  */
-export const scrollToHeading = (
-  headingId: number,
-  tagName: string
-): { success: boolean } => {
+export const scrollToHeading = (headingId: number, tagName: string): { success: boolean } => {
   const TAG_COLORS_MAP: Record<string, string> = {
     h1: '#ef4444',
     h2: '#3b82f6',

@@ -14,6 +14,7 @@ import {
 import type { HeadingData } from '../shared/models/heading-data.model';
 import { GooglePreviewService } from './google-preview.service';
 import { SeoAuditService } from './seo-audit.service';
+import { WebVitalsService } from './web-vitals.service';
 
 interface InjectionResult {
   html: string;
@@ -36,6 +37,7 @@ type MessageHandler = (
 export class BackgroundService {
   readonly #googlePreview = new GooglePreviewService();
   readonly #seoAudit = new SeoAuditService();
+  readonly #webVitals = new WebVitalsService();
   readonly #keepalivePorts = new Set<chrome.runtime.Port>();
   readonly #highlightedTabs = new Set<number>();
 
@@ -46,6 +48,7 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS, msg => this.#handleHighlightHeaders(msg)],
     [CHROME_COMMAND_ENUM.PARSE_HEADINGS, () => this.#handleParseHeadings()],
     [CHROME_COMMAND_ENUM.SCROLL_TO_HEADING, msg => this.#handleScrollToHeading(msg)],
+    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, () => this.#handleCollectWebVitals()],
   ]);
 
   constructor() {
@@ -217,6 +220,19 @@ export class BackgroundService {
       });
       const result = results[0]?.result as { success: boolean } | undefined;
       return result ?? { success: false, error: 'INJECTION_FAILED' };
+    } catch {
+      return { success: false, error: 'INJECTION_FAILED' };
+    }
+  }
+
+  async #handleCollectWebVitals(): Promise<HandlerResult> {
+    const tab = await this.#requireActiveTab();
+    if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
+    if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
+
+    try {
+      const vitals = await this.#webVitals.collectAll(tab.id, tab.url);
+      return { success: true, data: vitals };
     } catch {
       return { success: false, error: 'INJECTION_FAILED' };
     }

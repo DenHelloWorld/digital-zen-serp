@@ -3,6 +3,7 @@ export const ROUTES = Object.freeze({
   SOCIAL: 'social',
   SEO_AUDIT: 'seo-audit',
   HEADINGS: 'headings',
+  PERFORMANCE: 'performance',
 } as const);
 
 /**

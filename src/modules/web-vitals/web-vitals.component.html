@@ -1,0 +1,110 @@
+<ng-container *transloco="let t">
+  <!-- Title + refresh button -->
+  <div class="flex items-center justify-between w-full">
+    <span class="text-sm font-bold text-gray-900">{{ t('performance.title') }}</span>
+    <button
+      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="isLoading()"
+      (click)="refresh()"
+      type="button"
+    >
+      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+    </button>
+  </div>
+
+  <!-- Error -->
+  @if (error(); as err) {
+    <div
+      class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+    >
+      <span class="font-medium">{{ t('performance.error') }}</span>
+      <span class="text-xs text-red-400">{{ err }}</span>
+    </div>
+  }
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
+      <span class="text-2xl">⏱️</span>
+      <span class="text-sm">{{ t('performance.loading') }}</span>
+    </div>
+  }
+
+  <!-- Metric cards -->
+  @if (isReady()) {
+    <div class="flex flex-col gap-2 w-full">
+      @if (tabActivity.activeTab()?.url; as currentUrl) {
+        <dz-url-bar [url]="currentUrl" />
+      }
+      @for (m of metrics; track m.key) {
+        <div class="flex items-center gap-3 p-2 rounded-lg border border-gray-100 bg-white">
+          <dz-speedometer
+            class="w-24 shrink-0"
+            [value]="vitalsData()![m.key]"
+            [goodThreshold]="m.good"
+            [poorThreshold]="m.poor"
+            [unit]="m.unit"
+            [decimals]="m.decimals"
+          />
+          <div class="flex flex-col gap-0.5 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span
+                class="text-[10px] font-medium px-1.5 py-0.5 rounded-full leading-none shrink-0"
+                [class.bg-green-100]="
+                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
+                "
+                [class.text-green-700]="
+                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
+                "
+                [class.bg-orange-100]="
+                  vitalsData()![m.key] !== null &&
+                  vitalsData()![m.key]! > m.good &&
+                  vitalsData()![m.key]! <= m.poor
+                "
+                [class.text-orange-700]="
+                  vitalsData()![m.key] !== null &&
+                  vitalsData()![m.key]! > m.good &&
+                  vitalsData()![m.key]! <= m.poor
+                "
+                [class.bg-red-100]="vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor"
+                [class.text-red-700]="
+                  vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor
+                "
+                [class.bg-gray-100]="vitalsData()![m.key] === null"
+                [class.text-gray-500]="vitalsData()![m.key] === null"
+              >
+                @if (vitalsData()![m.key] !== null) {
+                  @if (vitalsData()![m.key]! <= m.good) {
+                    Good
+                  } @else if (vitalsData()![m.key]! <= m.poor) {
+                    Needs work
+                  } @else {
+                    Poor
+                  }
+                } @else {
+                  N/A
+                }
+              </span>
+              <span class="text-sm font-bold text-gray-900">{{ t(m.labelKey) }}</span>
+            </div>
+            <span class="text-xs text-gray-500 leading-relaxed">{{ t(m.descKey) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- PageSpeed note for Speed Index -->
+    @if (vitalsData()!.speedIndex === null) {
+      <div class="text-[10px] text-gray-400 text-center">
+        {{ t('performance.speed_index_unavailable') }}
+      </div>
+    }
+
+    <!-- Timestamp -->
+    @if (vitalsData()!.timestamp) {
+      <div class="text-[10px] text-gray-400 text-right">
+        {{ t('performance.updated') }}: {{ vitalsData()!.timestamp | date: 'HH:mm:ss' }}
+      </div>
+    }
+  }
+</ng-container>

@@ -29,8 +29,6 @@
     </button>
   </div>
 
-  <dz-loading-bar [visible]="isLoading()" />
-
   <!-- Error (connection) -->
   @if (error(); as err) {
     <div
@@ -63,6 +61,13 @@
         <span>ℹ️</span><span>{{ t('performance.error_api') }}</span>
       </div>
     }
+    @if (data.errorCode === 'BLOCKED_DOMAIN') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-gray-200 bg-gray-50 rounded-lg text-xs text-gray-500"
+      >
+        <span>🚫</span><span>{{ t('performance.error_blocked_domain') }}</span>
+      </div>
+    }
   }
 
   <!-- URL -->
@@ -70,48 +75,157 @@
     <dz-url-bar [url]="currentUrl" />
   }
 
-  <!-- Metric cards -->
-  <div class="flex flex-col gap-1 w-full">
-    @for (m of metrics; track m.key) {
-      @let val = vitalsData()?.[m.key] ?? null;
-      <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white">
+  <!-- Performance Score -->
+  @if (vitalsData() || isLoading()) {
+    <div class="flex flex-col rounded-lg border border-blue-100 bg-blue-50/40 overflow-hidden">
+      <div class="flex items-center gap-3 px-2 py-2">
         <dz-speedometer
           class="w-16 shrink-0"
-          [value]="val"
-          [goodThreshold]="m.good"
-          [poorThreshold]="m.poor"
-          [unit]="m.unit"
-          [decimals]="m.decimals"
+          [value]="invertedScore()"
+          [displayValue]="score()"
+          [goodThreshold]="10"
+          [poorThreshold]="50"
+          [unit]="'/ 100'"
+          [decimals]="0"
         />
         <div class="flex flex-col gap-0.5 min-w-0 flex-1">
-          <div class="flex items-center gap-1 flex-wrap">
-            <span
-              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
-              [class.bg-green-100]="val !== null && val <= m.good"
-              [class.text-green-700]="val !== null && val <= m.good"
-              [class.bg-orange-100]="val !== null && val > m.good && val <= m.poor"
-              [class.text-orange-700]="val !== null && val > m.good && val <= m.poor"
-              [class.bg-red-100]="val !== null && val > m.poor"
-              [class.text-red-700]="val !== null && val > m.poor"
-              [class.bg-gray-100]="val === null"
-              [class.text-gray-400]="val === null"
-            >
-              @if (val !== null) {
-                @if (val <= m.good) {
-                  {{ t('performance.good') }}
-                } @else if (val <= m.poor) {
-                  {{ t('performance.needs_improvement') }}
-                } @else {
-                  {{ t('performance.poor') }}
-                }
-              } @else {
-                {{ t('performance.na') }}
-              }
-            </span>
-            <span class="text-xs font-semibold text-gray-800 truncate">{{ t(m.labelKey) }}</span>
-          </div>
-          <span class="text-[10px] text-gray-400 leading-snug">{{ t(m.descKey) }}</span>
+          <span class="text-sm font-semibold text-gray-800">{{ t('performance.score') }}</span>
+          <span class="text-[11px] text-gray-400 leading-snug">{{
+            t('performance.score_desc')
+          }}</span>
         </div>
+      </div>
+      <dz-loading-bar [visible]="isLoading() && score() === null" />
+    </div>
+  }
+
+  <!-- Opportunities -->
+  @if (opportunities(); as items) {
+    <div class="flex flex-col gap-1">
+      <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{
+        t('performance.opportunities')
+      }}</span>
+      @for (item of items; track item.id) {
+        <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white">
+          <span
+            class="w-2 h-2 rounded-full shrink-0"
+            [class.bg-red-500]="item.score !== null && item.score < 0.5"
+            [class.bg-orange-400]="item.score !== null && item.score >= 0.5"
+          ></span>
+          <span class="text-[11px] text-gray-700 flex-1 min-w-0">{{
+            t('performance.opp.' + item.id, { default: item.title })
+          }}</span>
+          @if (item.displayValue) {
+            <span class="text-[10px] text-gray-400 shrink-0 tabular-nums">{{
+              item.displayValue
+            }}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Main: metric cards (left) + filmstrip (right) -->
+  <div class="flex gap-2 w-full items-start">
+    <!-- Metric cards — single column -->
+    <div class="flex flex-col gap-1 flex-1 min-w-0">
+      @for (m of metrics; track m.key) {
+        @if (!m.localOnly || isLocal()) {
+          @let val = vitalsData()?.[m.key] ?? null;
+          @let cruxMetric = m.cruxKey ? (vitalsData()?.crux?.[m.cruxKey] ?? null) : null;
+          <div class="flex flex-col rounded-lg border border-gray-100 bg-white overflow-hidden">
+            <div class="flex items-center gap-2 px-1.5 py-1">
+              <dz-speedometer
+                class="w-14 shrink-0"
+                [value]="val"
+                [goodThreshold]="m.good"
+                [poorThreshold]="m.poor"
+                [unit]="m.unit"
+                [decimals]="m.decimals"
+              />
+              <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+                <!-- Badges row -->
+                <div class="flex items-center gap-1 flex-wrap">
+                  <!-- Lab data badge -->
+                  <span
+                    class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
+                    [class.bg-green-100]="val !== null && val <= m.good"
+                    [class.text-green-700]="val !== null && val <= m.good"
+                    [class.bg-orange-100]="val !== null && val > m.good && val <= m.poor"
+                    [class.text-orange-700]="val !== null && val > m.good && val <= m.poor"
+                    [class.bg-red-100]="val !== null && val > m.poor"
+                    [class.text-red-700]="val !== null && val > m.poor"
+                    [class.bg-gray-100]="val === null"
+                    [class.text-gray-400]="val === null"
+                  >
+                    @if (val !== null) {
+                      @if (val <= m.good) {
+                        {{ t('performance.good') }}
+                      } @else if (val <= m.poor) {
+                        {{ t('performance.needs_improvement') }}
+                      } @else {
+                        {{ t('performance.poor') }}
+                      }
+                    } @else {
+                      {{ t('performance.na') }}
+                    }
+                  </span>
+
+                  <!-- CrUX badge -->
+                  @if (cruxMetric) {
+                    <span
+                      class="text-[9px] font-medium px-1 py-0.5 rounded-full leading-none shrink-0 border"
+                      [class.bg-green-50]="cruxMetric.category === 'FAST'"
+                      [class.text-green-600]="cruxMetric.category === 'FAST'"
+                      [class.border-green-200]="cruxMetric.category === 'FAST'"
+                      [class.bg-orange-50]="cruxMetric.category === 'AVERAGE'"
+                      [class.text-orange-600]="cruxMetric.category === 'AVERAGE'"
+                      [class.border-orange-200]="cruxMetric.category === 'AVERAGE'"
+                      [class.bg-red-50]="cruxMetric.category === 'SLOW'"
+                      [class.text-red-600]="cruxMetric.category === 'SLOW'"
+                      [class.border-red-200]="cruxMetric.category === 'SLOW'"
+                    >
+                      👤 {{ t('performance.crux_' + cruxMetric.category.toLowerCase()) }}
+                    </span>
+                  }
+
+                  <span class="text-xs font-semibold text-gray-800 truncate">{{
+                    t(m.labelKey)
+                  }}</span>
+                </div>
+                <!-- Description -->
+                <span class="text-[11px] text-gray-400 leading-snug">{{ t(m.descKey) }}</span>
+                <!-- Thresholds -->
+                <span class="text-[10px] text-gray-400 leading-none mt-0.5"
+                  ><span class="text-gray-300">{{ t('performance.thresholds') }}:</span>
+                  {{ m.thresholds }}</span
+                >
+              </div>
+            </div>
+            <dz-loading-bar [visible]="isLoading() && val === null" />
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Filmstrip — right column -->
+    @if (filmstrip(); as frames) {
+      <div class="flex flex-col gap-1 w-28 shrink-0">
+        <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{
+          t('performance.filmstrip')
+        }}</span>
+        @for (frame of frames; track frame.timestamp) {
+          <div class="flex flex-col items-center gap-0.5">
+            <img
+              class="w-full h-auto rounded border border-gray-100 object-contain bg-gray-50"
+              [src]="frame.data"
+              [alt]="frame.timestamp + 'ms'"
+            />
+            <span class="text-[9px] text-gray-400 tabular-nums"
+              >{{ frame.timestamp / 1000 | number: '1.1-1' }}s</span
+            >
+          </div>
+        }
       </div>
     }
   </div>

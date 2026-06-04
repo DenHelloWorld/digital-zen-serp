@@ -16,6 +16,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   DestroyRef,
   inject,
   OnInit,
@@ -38,6 +39,13 @@ export class GooglePreviewComponent implements OnInit {
   readonly #destroyRef = inject(DestroyRef);
   readonly #transloco = inject(TranslocoService);
   readonly #store = inject(GooglePreviewStore);
+
+  constructor() {
+    effect(() => {
+      this.activeTab();
+      this.#iconStage.set(0);
+    });
+  }
 
   /* ── Mode ─────────────────────────────────── */
   protected readonly mode = signal<'live' | 'edit'>('live');
@@ -89,9 +97,41 @@ export class GooglePreviewComponent implements OnInit {
     return this.currentTabPreview()?.url ?? '';
   });
 
-  protected readonly iconUrl = computed(() =>
-    FaviconHelper.getGoogleUrl(cleanUrl(this.activeTab()?.url))
-  );
+  /** 0 = tab/S2, 1 = /favicon.ico, 2 = grey G fallback */
+  readonly #iconStage = signal(0);
+
+  protected readonly iconUrl = computed((): string | null => {
+    const stage = this.#iconStage();
+    const url = this.activeTab()?.url ?? '';
+    const origin = this.#origin(url);
+    // 0: /favicon.ico — most direct
+    if (stage === 0) return origin ? `${origin}/favicon.ico` : this.#s2(url);
+    // 1: tab favicon (http only — skip chrome:// URLs)
+    if (stage === 1) {
+      const tab = this.activeTab()?.favIconUrl ?? '';
+      return isHttpUrl(tab) ? tab : this.#s2(url);
+    }
+    // 2: Google S2
+    if (stage === 2) return this.#s2(url);
+    return null;
+  });
+
+  #origin(url: string): string | null {
+    try {
+      return new URL(url).origin;
+    } catch {
+      return null;
+    }
+  }
+
+  #s2(url: string): string | null {
+    const s2 = FaviconHelper.getGoogleUrl(cleanUrl(url));
+    return isHttpUrl(s2) ? s2 : null;
+  }
+
+  protected onIconError(): void {
+    this.#iconStage.update(s => s + 1);
+  }
 
   protected readonly editLinkUrl = computed(() => cleanProtocol(cleanUrl(this.editLink())));
 

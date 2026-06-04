@@ -112,9 +112,14 @@
       [style.max-width.px]="selectedDevice() === 'desktop' ? 712 : 375"
     >
       <div class="flex items-center gap-3 mb-1.5">
-        @if (mode() === 'live' && isHttpUrl(iconUrl())) {
+        @if (mode() === 'live' && iconUrl()) {
           <div class="dz-icon-box dz-icon-box--nm round">
-            <img class="dz-icon dz-icon--shadow round" [src]="iconUrl()" [alt]="iconUrl()" />
+            <img
+              class="dz-icon dz-icon--shadow round"
+              [src]="iconUrl()!"
+              (error)="onIconError()"
+              alt=""
+            />
           </div>
         } @else {
           <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center shrink-0">

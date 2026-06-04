@@ -25,7 +25,7 @@
   <dz-loading-bar [visible]="isLoading()" />
 
   <!-- Данные аудита -->
-  @if (isAuditReady()) {
+  @if (auditData()) {
     <div class="flex flex-col gap-1.5">
       <!-- URL (на всю ширину) -->
       @if (auditData()?.url; as currentUrl) {

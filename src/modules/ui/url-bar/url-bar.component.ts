@@ -1,18 +1,13 @@
-import { isHttpUrl } from '../../../shared/helpers/is-http-url.helper';
-import { FaviconHelper } from '../../comon/helpers/favicon.helper';
 import { CopyButtonComponent } from '../copy-button/copy-button.component';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { FaviconComponent } from '../favicon/favicon.component';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
   selector: 'dz-url-bar',
-  imports: [CopyButtonComponent],
+  imports: [CopyButtonComponent, FaviconComponent],
   template: `
     <div class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100 w-full">
-      @if (isHttpUrl(faviconUrl())) {
-        <img class="w-4 h-4 shrink-0 rounded-sm object-contain" [src]="faviconUrl()" alt="" />
-      } @else {
-        <span class="text-base shrink-0">🔗</span>
-      }
+      <dz-favicon class="w-4 h-4 shrink-0" [url]="url()" />
       <div class="flex flex-col min-w-0 gap-0.5 flex-1">
         <span class="text-xs text-gray-900 tracking-wide font-bold">URL</span>
         <span class="text-sm text-gray-800 break-all" #urlPreviewEl>{{ url() }}</span>
@@ -27,7 +22,4 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 })
 export class UrlBarComponent {
   readonly url = input.required<string>();
-
-  protected readonly isHttpUrl = isHttpUrl;
-  protected readonly faviconUrl = computed(() => FaviconHelper.getGoogleUrl(this.url(), 32));
 }

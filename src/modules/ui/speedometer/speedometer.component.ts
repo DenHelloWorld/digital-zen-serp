@@ -41,7 +41,10 @@ const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33
             font-family="inherit"
             style="font-variant-numeric: tabular-nums;"
           >
-            {{ value()! | number: (decimals() > 0 ? '1.0-' + decimals() : '1.0-0') }}
+            {{
+              (displayValue() ?? value())!
+                | number: (decimals() > 0 ? '1.0-' + decimals() : '1.0-0')
+            }}
           </text>
 
           <!-- Unit -->
@@ -93,6 +96,8 @@ const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33
 })
 export class SpeedometerComponent {
   readonly value = input<number | null>(null);
+  /** Override the number shown in the ring center (ring fill still uses value). */
+  readonly displayValue = input<number | null>(null);
   readonly goodThreshold = input<number>(0);
   readonly poorThreshold = input<number>(1);
   readonly unit = input('');

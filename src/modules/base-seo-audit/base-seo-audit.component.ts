@@ -21,10 +21,6 @@ export class SeoAuditViewComponent {
   protected readonly isLoading = computed(() => this.store.isLoading());
   protected readonly error = computed(() => this.store.error());
 
-  protected readonly isAuditReady = computed(
-    () => !this.isLoading() && !this.error() && this.auditData()
-  );
-
   protected readonly statusColor = computed(() => {
     const status = this.auditData()?.status;
     if (status == null || status === 0) return 'bg-gray-200';

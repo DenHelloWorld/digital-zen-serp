@@ -1,6 +1,8 @@
 /// <reference types="chrome"/>
+import { isPrivateUrl } from '../shared/helpers/is-private-url.helper';
 import { collectPageWebVitals } from '../shared/helpers/web-vitals-collector';
-import { WebVitalsData } from '../shared/models/web-vitals-data.model';
+import { WebVitalsData, WebVitalsStrategy } from '../shared/models/web-vitals-data.model';
+import { PAGESPEED_API_KEY } from './pagespeed-key.generated';
 
 const PAGESPEED_API_BASE = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
@@ -14,12 +16,10 @@ interface PageSpeedInsight {
       'speed-index'?: { numericValue?: number };
     };
   };
+  error?: { code: number; message: string };
 }
 
 export class WebVitalsService {
-  /**
-   * Inject web vitals collector into the page and wait for results.
-   */
   async collectFromPage(tabId: number): Promise<{
     fcp: number | null;
     lcp: number | null;
@@ -30,57 +30,115 @@ export class WebVitalsService {
       target: { tabId },
       func: collectPageWebVitals,
     });
-
     const vitals = results.result as Awaited<ReturnType<typeof collectPageWebVitals>> | undefined;
     if (!vitals) throw new Error('INJECTION_FAILED');
-
     return vitals;
   }
 
-  /**
-   * Fetch Speed Index from PageSpeed Insights API with retry.
-   */
-  async fetchSpeedIndex(url: string): Promise<number | null> {
+  async fetchAllFromApi(
+    url: string,
+    strategy: WebVitalsStrategy
+  ): Promise<{ data: PageSpeedInsight; status: number }> {
+    const key = PAGESPEED_API_KEY || '';
+    const keyParam = key ? `&key=${encodeURIComponent(key)}` : '';
+    const apiUrl = `${PAGESPEED_API_BASE}?url=${encodeURIComponent(url)}&strategy=${strategy}${keyParam}`;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
     try {
-      const apiUrl = `${PAGESPEED_API_BASE}?url=${encodeURIComponent(url)}&strategy=mobile`;
-      const response = await fetch(apiUrl);
-      if (!response.ok) return null;
+      const response = await fetch(apiUrl, { signal: controller.signal });
       const data = (await response.json()) as PageSpeedInsight;
-      return data?.lighthouseResult?.audits?.['speed-index']?.numericValue ?? null;
-    } catch {
-      return null;
+      return { data, status: response.status };
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
-  /**
-   * Fetch Speed Index with retry (up to 3 attempts, increasing delay).
-   */
-  async fetchSpeedIndexWithRetry(url: string): Promise<number | null> {
-    for (let attempt = 0; attempt < 3; attempt++) {
-      const result = await this.fetchSpeedIndex(url);
-      if (result !== null) return result;
-      if (attempt < 2) {
-        await new Promise(r => setTimeout(r, 2000 * (attempt + 1)));
+  async collectAll(
+    tabId: number,
+    url: string,
+    strategy: WebVitalsStrategy
+  ): Promise<WebVitalsData> {
+    const base = { url, strategy, timestamp: Date.now() };
+
+    // Private URLs — fallback to PerformanceObserver immediately
+    if (isPrivateUrl(url)) {
+      try {
+        const pageVitals = await this.collectFromPage(tabId);
+        return {
+          ...base,
+          source: 'local',
+          errorCode: 'PRIVATE_URL',
+          fcp: pageVitals.fcp,
+          lcp: pageVitals.lcp,
+          cls: pageVitals.cls,
+          tbt: pageVitals.tbt,
+          speedIndex: null,
+        };
+      } catch {
+        return {
+          ...base,
+          source: 'local',
+          errorCode: 'INJECTION_FAILED',
+          fcp: null,
+          lcp: null,
+          cls: null,
+          tbt: null,
+          speedIndex: null,
+        };
       }
     }
-    return null;
-  }
 
-  /**
-   * Collect page vitals. Speed Index is attempted once (may be null due to API limits).
-   */
-  async collectAll(tabId: number, url: string): Promise<WebVitalsData> {
-    const pageVitals = await this.collectFromPage(tabId);
-    const speedIndex = await this.fetchSpeedIndex(url);
+    // Public URL — single PageSpeed API call for all metrics
+    try {
+      const { data, status } = await this.fetchAllFromApi(url, strategy);
 
-    return {
-      url,
-      fcp: pageVitals.fcp,
-      lcp: pageVitals.lcp,
-      cls: pageVitals.cls,
-      tbt: pageVitals.tbt,
-      speedIndex,
-      timestamp: Date.now(),
-    };
+      if (status === 429) {
+        return {
+          ...base,
+          source: 'api',
+          errorCode: 'RATE_LIMIT',
+          fcp: null,
+          lcp: null,
+          cls: null,
+          tbt: null,
+          speedIndex: null,
+        };
+      }
+
+      if (status !== 200 || data.error) {
+        return {
+          ...base,
+          source: 'api',
+          errorCode: 'API_ERROR',
+          fcp: null,
+          lcp: null,
+          cls: null,
+          tbt: null,
+          speedIndex: null,
+        };
+      }
+
+      const audits = data.lighthouseResult?.audits;
+      return {
+        ...base,
+        source: 'api',
+        fcp: audits?.['first-contentful-paint']?.numericValue ?? null,
+        lcp: audits?.['largest-contentful-paint']?.numericValue ?? null,
+        cls: audits?.['cumulative-layout-shift']?.numericValue ?? null,
+        tbt: audits?.['total-blocking-time']?.numericValue ?? null,
+        speedIndex: audits?.['speed-index']?.numericValue ?? null,
+      };
+    } catch {
+      return {
+        ...base,
+        source: 'api',
+        errorCode: 'API_UNAVAILABLE',
+        fcp: null,
+        lcp: null,
+        cls: null,
+        tbt: null,
+        speedIndex: null,
+      };
+    }
   }
 }

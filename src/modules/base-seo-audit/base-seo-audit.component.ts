@@ -1,11 +1,12 @@
 import { SeoAuditStore } from '../comon/stores/seo-audit.store';
+import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { UrlBarComponent } from '../ui/url-bar/url-bar.component';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-seo-audit-view',
-  imports: [TranslocoDirective, UrlBarComponent],
+  imports: [TranslocoDirective, UrlBarComponent, LoadingBarComponent],
   templateUrl: './base-seo-audit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {

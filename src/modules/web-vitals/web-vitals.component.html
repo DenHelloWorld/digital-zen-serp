@@ -1,47 +1,92 @@
 <ng-container *transloco="let t">
-  <!-- Title + refresh button -->
-  <div class="flex items-center justify-between w-full">
-    <span class="text-sm font-bold text-gray-900">{{ t('performance.title') }}</span>
+  <!-- Header -->
+  <div class="flex items-center gap-2 w-full">
+    <span class="text-sm font-bold text-gray-900 mr-auto">{{ t('performance.title') }}</span>
+
+    <!-- Strategy toggle -->
+    <div class="flex gap-1">
+      @for (s of strategies; track s.value) {
+        <button
+          class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-40 disabled:cursor-not-allowed"
+          [attr.data-active]="strategy() === s.value"
+          [disabled]="isLoading()"
+          (click)="setStrategy(s.value)"
+          type="button"
+        >
+          <span class="text-[18px] leading-none">{{ s.icon }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Refresh -->
     <button
-      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="border border-gray-200 px-1.5 py-0.5 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
       [disabled]="isLoading()"
       (click)="refresh()"
       type="button"
     >
-      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+      {{ isLoading() ? '⏳' : '🔄' }}
     </button>
   </div>
 
-  <!-- Error -->
+  <dz-loading-bar [visible]="isLoading()" />
+
+  <!-- Error (connection) -->
   @if (error(); as err) {
     <div
-      class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+      class="flex gap-1.5 items-start p-2 border border-red-200 bg-red-50 rounded-lg text-xs text-red-600"
     >
-      <span class="font-medium">{{ t('performance.error') }}</span>
-      <span class="text-xs text-red-400">{{ err }}</span>
+      <span>⚠️</span><span>{{ err }}</span>
     </div>
   }
 
-  <!-- Metric cards (always visible, pulsing when loading) -->
-  <div class="flex flex-col gap-2 w-full">
-    @if (tabActivity.activeTab()?.url; as currentUrl) {
-      <dz-url-bar [url]="currentUrl" />
+  <!-- Banners -->
+  @if (vitalsData(); as data) {
+    @if (data.source === 'local') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-amber-200 bg-amber-50 rounded-lg text-xs text-amber-700"
+      >
+        <span>⚠️</span><span>{{ t('performance.local_source_note') }}</span>
+      </div>
     }
+    @if (data.errorCode === 'RATE_LIMIT') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-orange-200 bg-orange-50 rounded-lg text-xs text-orange-700"
+      >
+        <span>🚦</span><span>{{ t('performance.error_rate_limit') }}</span>
+      </div>
+    }
+    @if (data.errorCode === 'API_ERROR' || data.errorCode === 'API_UNAVAILABLE') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-red-200 bg-red-50 rounded-lg text-xs text-red-600"
+      >
+        <span>ℹ️</span><span>{{ t('performance.error_api') }}</span>
+      </div>
+    }
+  }
+
+  <!-- URL -->
+  @if (tabActivity.activeTab()?.url; as currentUrl) {
+    <dz-url-bar [url]="currentUrl" />
+  }
+
+  <!-- Metric cards -->
+  <div class="flex flex-col gap-1 w-full">
     @for (m of metrics; track m.key) {
       @let val = vitalsData()?.[m.key] ?? null;
-      <div class="flex items-center gap-3 p-2 rounded-lg border border-gray-100 bg-white">
+      <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white">
         <dz-speedometer
-          class="w-24 shrink-0"
+          class="w-16 shrink-0"
           [value]="val"
           [goodThreshold]="m.good"
           [poorThreshold]="m.poor"
           [unit]="m.unit"
           [decimals]="m.decimals"
         />
-        <div class="flex flex-col gap-0.5 min-w-0">
-          <div class="flex items-center gap-1.5 flex-wrap">
+        <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+          <div class="flex items-center gap-1 flex-wrap">
             <span
-              class="text-[10px] font-medium px-1.5 py-0.5 rounded-full leading-none shrink-0"
+              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
               [class.bg-green-100]="val !== null && val <= m.good"
               [class.text-green-700]="val !== null && val <= m.good"
               [class.bg-orange-100]="val !== null && val > m.good && val <= m.poor"
@@ -49,7 +94,7 @@
               [class.bg-red-100]="val !== null && val > m.poor"
               [class.text-red-700]="val !== null && val > m.poor"
               [class.bg-gray-100]="val === null"
-              [class.text-gray-500]="val === null"
+              [class.text-gray-400]="val === null"
             >
               @if (val !== null) {
                 @if (val <= m.good) {
@@ -63,20 +108,30 @@
                 {{ t('performance.na') }}
               }
             </span>
-            <span class="text-sm font-bold text-gray-900 break-words min-w-0">{{
-              t(m.labelKey)
-            }}</span>
+            <span class="text-xs font-semibold text-gray-800 truncate">{{ t(m.labelKey) }}</span>
           </div>
-          <span class="text-xs text-gray-500 leading-relaxed">{{ t(m.descKey) }}</span>
+          <span class="text-[10px] text-gray-400 leading-snug">{{ t(m.descKey) }}</span>
         </div>
       </div>
     }
   </div>
 
-  <!-- Timestamp -->
-  @if (vitalsData()?.timestamp) {
-    <div class="text-[10px] text-gray-400 text-right">
-      {{ t('performance.updated') }}: {{ vitalsData()!.timestamp | date: 'HH:mm:ss' }}
+  <!-- Footer -->
+  @if (vitalsData(); as data) {
+    <div class="flex items-center justify-between text-[9px] text-gray-400 -mt-1">
+      <span
+        class="px-1 py-0.5 rounded-full font-medium"
+        [class.bg-blue-50]="data.source === 'api'"
+        [class.text-blue-400]="data.source === 'api'"
+        [class.bg-gray-100]="data.source === 'local'"
+        [class.text-gray-400]="data.source === 'local'"
+        >{{
+          data.source === 'api'
+            ? '☁️ ' + t('performance.source_api')
+            : '💻 ' + t('performance.source_local')
+        }}</span
+      >
+      <span>{{ t('performance.updated') }}: {{ data.timestamp | date: 'HH:mm:ss' }}</span>
     </div>
   }
 </ng-container>

@@ -48,7 +48,7 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS, msg => this.#handleHighlightHeaders(msg)],
     [CHROME_COMMAND_ENUM.PARSE_HEADINGS, () => this.#handleParseHeadings()],
     [CHROME_COMMAND_ENUM.SCROLL_TO_HEADING, msg => this.#handleScrollToHeading(msg)],
-    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, () => this.#handleCollectWebVitals()],
+    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, msg => this.#handleCollectWebVitals(msg)],
   ]);
 
   constructor() {
@@ -225,17 +225,14 @@ export class BackgroundService {
     }
   }
 
-  async #handleCollectWebVitals(): Promise<HandlerResult> {
+  async #handleCollectWebVitals(msg: Record<string, unknown>): Promise<HandlerResult> {
     const tab = await this.#requireActiveTab();
     if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
     if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
 
-    try {
-      const vitals = await this.#webVitals.collectAll(tab.id, tab.url);
-      return { success: true, data: vitals };
-    } catch {
-      return { success: false, error: 'INJECTION_FAILED' };
-    }
+    const strategy = msg['strategy'] === 'desktop' ? 'desktop' : 'mobile';
+    const vitals = await this.#webVitals.collectAll(tab.id, tab.url, strategy);
+    return { success: true, data: vitals };
   }
 
   /* ── Helpers ──────────────────────────────────────────────── */

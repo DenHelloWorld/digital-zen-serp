@@ -1,5 +1,6 @@
 import { TabActivityService } from '../comon/services/tab-activity.service';
 import { WebVitalsStore } from '../comon/stores/web-vitals.store';
+import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { SpeedometerComponent } from '../ui/speedometer/speedometer.component';
 import { UrlBarComponent } from '../ui/url-bar/url-bar.component';
 import { DatePipe } from '@angular/common';
@@ -66,7 +67,13 @@ const METRICS: MetricDef[] = [
 
 @Component({
   selector: 'dz-web-vitals',
-  imports: [TranslocoDirective, SpeedometerComponent, UrlBarComponent, DatePipe],
+  imports: [
+    TranslocoDirective,
+    SpeedometerComponent,
+    UrlBarComponent,
+    LoadingBarComponent,
+    DatePipe,
+  ],
   templateUrl: './web-vitals.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -78,16 +85,23 @@ export class WebVitalsComponent {
   protected readonly store = inject(WebVitalsStore);
   protected readonly tabActivity = inject(TabActivityService);
   protected readonly metrics = METRICS;
+  protected readonly strategies = [
+    { value: 'mobile' as const, icon: '📱' },
+    { value: 'desktop' as const, icon: '🖥️' },
+  ];
 
   protected readonly vitalsData = computed(() => this.store.vitalsData());
   protected readonly isLoading = computed(() => this.store.isLoading());
   protected readonly error = computed(() => this.store.error());
-
-  protected readonly isReady = computed(
-    () => !this.isLoading() && !this.error() && this.vitalsData()
-  );
+  protected readonly strategy = computed(() => this.store.strategy());
+  protected readonly source = computed(() => this.store.vitalsData()?.source ?? null);
+  protected readonly errorCode = computed(() => this.store.vitalsData()?.errorCode ?? null);
 
   protected refresh(): void {
     this.store.loadVitals();
+  }
+
+  protected setStrategy(s: 'mobile' | 'desktop'): void {
+    this.store.setStrategy(s);
   }
 }

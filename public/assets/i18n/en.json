@@ -64,7 +64,11 @@
     "poor": "Poor",
     "na": "N/A",
     "updated": "Updated",
-    "speed_index_unavailable": "Speed Index requires a publicly accessible URL"
+    "source_api": "PageSpeed Insights",
+    "source_local": "Local measurement",
+    "local_source_note": "This URL is not publicly accessible. Metrics are measured locally in your browser and may differ from Google's data.",
+    "error_rate_limit": "PageSpeed API rate limit reached. Try again in a minute or add an API key in settings.",
+    "error_api": "PageSpeed API returned an error. The page may be unavailable or blocked."
   },
   "nav": {
     "main": "Main",

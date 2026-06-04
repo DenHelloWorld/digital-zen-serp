@@ -22,13 +22,7 @@
     </div>
   }
 
-  <!-- Загрузка -->
-  @if (isLoading()) {
-    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
-      <span class="text-2xl">🔍</span>
-      <span class="text-sm">{{ t('seoAudit.loading') }}</span>
-    </div>
-  }
+  <dz-loading-bar [visible]="isLoading()" />
 
   <!-- Данные аудита -->
   @if (isAuditReady()) {

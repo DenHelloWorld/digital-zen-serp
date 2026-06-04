@@ -64,7 +64,11 @@
     "poor": "Плохо",
     "na": "N/A",
     "updated": "Обновлено",
-    "speed_index_unavailable": "Speed Index требует публично доступного URL"
+    "source_api": "PageSpeed Insights",
+    "source_local": "Локальные замеры",
+    "local_source_note": "Этот URL недоступен публично. Метрики измерены локально в вашем браузере и могут отличаться от данных Google.",
+    "error_rate_limit": "Превышен лимит запросов PageSpeed API. Подождите минуту или добавьте API ключ в настройки.",
+    "error_api": "PageSpeed API вернул ошибку. Страница может быть недоступна или заблокирована."
   },
   "nav": {
     "main": "Основные",

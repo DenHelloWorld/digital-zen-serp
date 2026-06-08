@@ -97,20 +97,20 @@ export class GooglePreviewComponent implements OnInit {
     return this.currentTabPreview()?.url ?? '';
   });
 
-  /** 0 = tab/S2, 1 = /favicon.ico, 2 = grey G fallback */
+  /** 0 = tab favicon, 1 = /favicon.ico, 2 = Google S2, 3 = null */
   readonly #iconStage = signal(0);
 
   protected readonly iconUrl = computed((): string | null => {
     const stage = this.#iconStage();
     const url = this.activeTab()?.url ?? '';
     const origin = this.#origin(url);
-    // 0: /favicon.ico — most direct
-    if (stage === 0) return origin ? `${origin}/favicon.ico` : this.#s2(url);
-    // 1: tab favicon (http only — skip chrome:// URLs)
-    if (stage === 1) {
+    // 0: Chrome tab favicon — best quality, already resolved to highest-res icon
+    if (stage === 0) {
       const tab = this.activeTab()?.favIconUrl ?? '';
-      return isHttpUrl(tab) ? tab : this.#s2(url);
+      return isHttpUrl(tab) ? tab : origin ? `${origin}/favicon.ico` : this.#s2(url);
     }
+    // 1: /favicon.ico
+    if (stage === 1) return origin ? `${origin}/favicon.ico` : this.#s2(url);
     // 2: Google S2
     if (stage === 2) return this.#s2(url);
     return null;

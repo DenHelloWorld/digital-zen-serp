@@ -43,13 +43,13 @@ export class FaviconComponent {
     const url = this.url();
     const origin = this.#origin(url);
 
-    // 0: /favicon.ico directly — most reliable, either works or 404s cleanly
-    if (stage === 0) return origin ? `${origin}/favicon.ico` : this.#next(url);
-    // 1: tab favicon from Chrome (may be chrome:// — skip if not http)
-    if (stage === 1) {
+    // 0: Chrome tab favicon — best quality, already resolved to highest-res icon by Chrome
+    if (stage === 0) {
       const tab = this.#tabActivity.activeTab()?.favIconUrl ?? '';
-      return isHttpUrl(tab) ? tab : this.#s2(url);
+      return isHttpUrl(tab) ? tab : this.#next(url);
     }
+    // 1: /favicon.ico — direct, reliable fallback
+    if (stage === 1) return origin ? `${origin}/favicon.ico` : this.#s2(url);
     // 2: Google S2 service
     if (stage === 2) return this.#s2(url);
     // 3: emoji
@@ -77,7 +77,7 @@ export class FaviconComponent {
   }
 
   #s2(url: string): string | null {
-    const s2 = FaviconHelper.getGoogleUrl(url, 32);
+    const s2 = FaviconHelper.getGoogleUrl(url, 64);
     return isHttpUrl(s2) ? s2 : null;
   }
 

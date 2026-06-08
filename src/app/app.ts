@@ -1,11 +1,11 @@
 import { ROUTES } from '../modules/comon/constants/routes.const';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-root',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoDirective],
+  imports: [RouterOutlet, RouterLink, TranslocoDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -10,7 +10,9 @@
       (click)="refresh()"
       type="button"
     >
-      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+      <svg class="dz-icon w-3.5 h-3.5" [class.animate-spin]="isLoading()" aria-hidden="true">
+        <use [attr.href]="isLoading() ? '#icon-loader' : '#icon-refresh-cw'"></use>
+      </svg>
     </button>
   </div>
 
@@ -29,7 +31,9 @@
   <!-- No headings found -->
   @if (isReady() && headingsData()!.length === 0) {
     <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
-      <span class="text-2xl">📭</span>
+      <svg class="dz-icon w-8 h-8 text-gray-300" aria-hidden="true">
+        <use href="#icon-inbox"></use>
+      </svg>
       <span class="text-sm">{{ t('headings.none_found') }}</span>
     </div>
   }
@@ -45,7 +49,7 @@
         <span
           class="text-[10px] text-white font-medium bg-red-500 rounded-full px-1.5 py-0.5 leading-none"
         >
-          ⚠ {{ t('headings.has_errors') }}
+          {{ t('headings.has_errors') }}
         </span>
       }
     </div>

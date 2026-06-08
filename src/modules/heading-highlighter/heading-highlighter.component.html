@@ -57,12 +57,16 @@
   <!-- Status card -->
   @if (store.status() === 'warning') {
     <div class="flex items-center gap-2 p-1.5 rounded-lg border border-yellow-300 bg-yellow-50">
-      <span class="text-sm">⚠️</span>
+      <svg class="dz-icon w-3.5 h-3.5 shrink-0" aria-hidden="true">
+        <use href="#icon-alert-triangle"></use>
+      </svg>
       <span class="text-xs text-yellow-800">{{ t('headingHighlighter.select_tag_warning') }}</span>
     </div>
   } @else if (store.status() === 'error') {
     <div class="flex items-center gap-2 p-1.5 rounded-lg border border-red-300 bg-red-50">
-      <span class="text-sm">🚫</span>
+      <svg class="dz-icon w-3.5 h-3.5 shrink-0" aria-hidden="true">
+        <use href="#icon-ban"></use>
+      </svg>
       <span class="text-xs text-red-800">{{ t('headingHighlighter.no_headings_error') }}</span>
     </div>
   }

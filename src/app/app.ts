@@ -24,11 +24,11 @@ export class App {
     { code: 'ru', flag: '🇷🇺', label: 'Русский' },
   ] as const;
   protected readonly tabs = [
-    { route: ROUTES.SEO_AUDIT, labelKey: 'nav.seo_audit' },
-    { route: ROUTES.CURRENT_SITE, labelKey: 'nav.current_site' },
-    { route: ROUTES.HEADINGS, labelKey: 'nav.headings' },
-    { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance' },
-    { route: ROUTES.SOCIAL, labelKey: 'nav.social' },
+    { route: ROUTES.SEO_AUDIT, labelKey: 'nav.seo_audit', emoji: '🔍' },
+    { route: ROUTES.CURRENT_SITE, labelKey: 'nav.current_site', emoji: '🌐' },
+    { route: ROUTES.HEADINGS, labelKey: 'nav.headings', emoji: '📑' },
+    { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance', emoji: '⚡' },
+    { route: ROUTES.SOCIAL, labelKey: 'nav.social', emoji: '🔗' },
   ] as const;
 
   constructor() {

@@ -10,9 +10,7 @@
       (click)="refresh()"
       type="button"
     >
-      <svg class="dz-icon w-3.5 h-3.5" [class.animate-spin]="isLoading()" aria-hidden="true">
-        <use [attr.href]="isLoading() ? '#icon-loader' : '#icon-refresh-cw'"></use>
-      </svg>
+      <span>🔄</span>
     </button>
   </div>
 
@@ -31,9 +29,7 @@
   <!-- No headings found -->
   @if (isReady() && headingsData()!.length === 0) {
     <div class="flex flex-col items-center gap-2 py-8 text-slate-400">
-      <svg class="dz-icon w-8 h-8 text-slate-300" aria-hidden="true">
-        <use href="#icon-inbox"></use>
-      </svg>
+      <span class="text-3xl">📭</span>
       <span class="text-sm">{{ t('headings.none_found') }}</span>
     </div>
   }

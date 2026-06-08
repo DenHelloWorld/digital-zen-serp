@@ -35,7 +35,7 @@
         aria-label="Close panel"
         type="button"
       >
-        <svg class="dz-icon w-3.5 h-3.5" aria-hidden="true"><use href="#icon-x"></use></svg>
+        ✕
       </button>
     </div>
   </div>
@@ -55,7 +55,7 @@
           [class.hover:bg-slate-50]="currentUrl() !== '/' + tab.route"
           [routerLink]="tab.route"
         >
-          {{ t(tab.labelKey) }}
+          {{ tab.emoji }} {{ t(tab.labelKey) }}
         </a>
       }
     </nav>

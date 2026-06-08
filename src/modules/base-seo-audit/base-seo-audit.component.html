@@ -1,5 +1,5 @@
 <ng-container *transloco="let t">
-  <!-- Заголовок + кнопка обновления -->
+  <!-- Header + refresh button -->
   <div class="flex items-center justify-between">
     <span class="text-sm font-bold text-gray-900">{{ t('seoAudit.title') }}</span>
     <button
@@ -12,7 +12,7 @@
     </button>
   </div>
 
-  <!-- Ошибка -->
+  <!-- Error -->
   @if (error(); as err) {
     <div
       class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
@@ -24,15 +24,15 @@
 
   <dz-loading-bar [visible]="isLoading()" />
 
-  <!-- Данные аудита -->
+  <!-- Audit data -->
   @if (auditData()) {
     <div class="flex flex-col gap-1.5">
-      <!-- URL (на всю ширину) -->
+      <!-- URL -->
       @if (auditData()?.url; as currentUrl) {
         <dz-url-bar [url]="currentUrl" />
       }
 
-      <!-- Status / Lang / Published / Updated в строку -->
+      <!-- Status / Lang / Published / Updated -->
       <div class="flex flex-row flex-wrap gap-1.5">
         <!-- Status -->
         <div

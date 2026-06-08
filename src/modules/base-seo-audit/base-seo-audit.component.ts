@@ -5,16 +5,15 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
-  selector: 'dz-seo-audit-view',
+  selector: 'dz-base-seo-audit',
   imports: [TranslocoDirective, UrlBarComponent, LoadingBarComponent],
   templateUrl: './base-seo-audit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'dz-base-seo-audit p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
+    class: 'flex flex-col gap-[var(--spacing)] w-full',
   },
 })
-export class SeoAuditViewComponent {
+export class BaseSeoAuditComponent {
   protected readonly store = inject(SeoAuditStore);
 
   protected readonly auditData = computed(() => this.store.auditData());

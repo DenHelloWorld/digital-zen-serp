@@ -30,7 +30,22 @@
     "score_seo": "SEO",
     "score_best_practices": "Best Practices",
     "score_accessibility": "Доступность",
-    "scores_hint": "Откройте вкладку Производительность и запустите сканирование"
+    "scores_hint": "Откройте вкладку Производительность и запустите сканирование",
+    "index": {
+      "title": "Индексирование",
+      "col_param": "Параметр",
+      "col_value": "Значение",
+      "col_status": "Статус",
+      "status_ok": "OK",
+      "status_missing": "Не найдено",
+      "status_bad": "Плохо",
+      "robots_meta": "Robots Meta Tag",
+      "x_robots": "X-Robots-Tag",
+      "canonical": "Canonical",
+      "canonical_match": "Canonical Match",
+      "hreflang": "Hreflang",
+      "robots_txt": "robots.txt"
+    }
   },
   "headingHighlighter": {
     "title": "Подсветка заголовков",

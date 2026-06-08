@@ -30,7 +30,22 @@
     "score_seo": "SEO",
     "score_best_practices": "Best Practices",
     "score_accessibility": "Accessibility",
-    "scores_hint": "Open Performance tab and run a scan to see Lighthouse scores"
+    "scores_hint": "Open Performance tab and run a scan to see Lighthouse scores",
+    "index": {
+      "title": "Index",
+      "col_param": "Parameter",
+      "col_value": "Value",
+      "col_status": "Status",
+      "status_ok": "OK",
+      "status_missing": "Missing",
+      "status_bad": "Bad",
+      "robots_meta": "Robots Meta Tag",
+      "x_robots": "X-Robots-Tag",
+      "canonical": "Canonical",
+      "canonical_match": "Canonical Match",
+      "hreflang": "Hreflang",
+      "robots_txt": "robots.txt"
+    }
   },
   "headingHighlighter": {
     "title": "Heading Highlighter",

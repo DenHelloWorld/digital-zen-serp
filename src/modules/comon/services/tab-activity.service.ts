@@ -3,11 +3,9 @@ import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { Injectable, signal, inject } from '@angular/core';
 
 /**
- * Centralises Chrome tab-event listeners so that every store
- * can react to tab switches and page loads through a single signal.
- *
- * On each tab activation or page load (status === 'complete')
- * it queries the active tab and stores a lightweight TabInfo.
+ * Fetches the current tab once on init.
+ * No tab-switch listeners needed — the panel lives inside the page
+ * and is destroyed on navigation along with it.
  */
 @Injectable({ providedIn: 'root' })
 export class TabActivityService {
@@ -18,19 +16,15 @@ export class TabActivityService {
 
   constructor() {
     if (!this.#isChrome) return;
-
-    this.#refreshActiveTab();
-
-    chrome.tabs.onActivated.addListener(() => this.#refreshActiveTab());
-
-    chrome.tabs.onUpdated.addListener((_tabId, changeInfo) => {
-      if (changeInfo.status === 'complete') {
-        this.#refreshActiveTab();
-      }
-    });
+    void this.#fetchActiveTab();
   }
 
-  async #refreshActiveTab(): Promise<void> {
+  refresh(): void {
+    if (!this.#isChrome) return;
+    void this.#fetchActiveTab();
+  }
+
+  async #fetchActiveTab(): Promise<void> {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const tab = tabs[0];
@@ -43,7 +37,7 @@ export class TabActivityService {
         });
       }
     } catch {
-      /* chrome API error — keep previous value */
+      /* chrome API error */
     }
   }
 }

@@ -40,4 +40,8 @@ export class App {
     if (lang === this.activeLang()) return;
     this.#transloco.setActiveLang(lang);
   }
+
+  protected closePanel() {
+    window.parent.postMessage({ command: 'CLOSE_PANEL' }, '*');
+  }
 }

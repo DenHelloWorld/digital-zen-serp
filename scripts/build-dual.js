@@ -75,6 +75,12 @@ try {
     { stdio: 'inherit', cwd: path.join(__dirname, '..') }
   );
 
+  console.log('📦 esbuild content.ts...');
+  execSync(
+    'esbuild src/content.ts --bundle --outfile=dist/browser/content.js --format=iife --target=es2020 --platform=browser --external:chrome',
+    { stdio: 'inherit', cwd: path.join(__dirname, '..') }
+  );
+
   if (fs.existsSync(targetDir)) fs.rmSync(targetDir, { recursive: true, force: true });
   fs.mkdirSync(targetDir, { recursive: true });
 
@@ -83,6 +89,9 @@ try {
 
   const bgFile = path.join(distDir, 'browser', 'background.js');
   if (fs.existsSync(bgFile)) fs.copyFileSync(bgFile, path.join(targetDir, 'background.js'));
+
+  const contentFile = path.join(distDir, 'browser', 'content.js');
+  if (fs.existsSync(contentFile)) fs.copyFileSync(contentFile, path.join(targetDir, 'content.js'));
 
   console.log('🧹 Очистка временных папок...');
   if (fs.existsSync(angularTrash)) fs.rmSync(angularTrash, { recursive: true, force: true });

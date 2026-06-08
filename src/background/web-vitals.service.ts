@@ -38,7 +38,7 @@ type AuditRecord = Record<
       score?: number | null;
       displayValue?: string;
       numericValue?: number;
-      details?: { items?: Array<{ timestamp?: number; data?: string }> };
+      details?: { items?: { timestamp?: number; data?: string }[] };
     }
   | undefined
 >;
@@ -169,7 +169,7 @@ export class WebVitalsService {
       .join('');
     const apiUrl = `${PAGESPEED_API_BASE}?url=${encodeURIComponent(url)}&strategy=${strategy}${categories}${keyParam}`;
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const timeout = setTimeout(() => controller.abort(), 90_000);
     try {
       const response = await fetch(apiUrl, { signal: controller.signal });
       const data = (await response.json()) as PageSpeedInsight;
@@ -215,9 +215,11 @@ export class WebVitalsService {
       const { data, status } = await this.fetchAllFromApi(url, strategy);
 
       if (status === 429) {
+        console.warn('[WebVitalsService] Rate limit hit', { url, strategy });
         return { ...base, ...NULL_METRICS, source: 'api', errorCode: 'RATE_LIMIT' };
       }
       if (status !== 200 || data.error) {
+        console.warn('[WebVitalsService] API error', { url, strategy, status, error: data.error });
         return { ...base, ...NULL_METRICS, source: 'api', errorCode: 'API_ERROR' };
       }
 
@@ -264,7 +266,8 @@ export class WebVitalsService {
         domContentLoaded: null,
         domComplete: null,
       };
-    } catch {
+    } catch (err) {
+      console.error('[WebVitalsService] fetch failed', { url, strategy, err });
       return { ...base, ...NULL_METRICS, source: 'api', errorCode: 'API_UNAVAILABLE' };
     }
   }

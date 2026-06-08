@@ -1,71 +1,64 @@
 <ng-container *transloco="let t">
-  <div class="flex items-center justify-between p-1 text-xs text-gray-500 w-full">
+  <!-- Top bar -->
+  <div
+    class="flex items-center justify-between px-2 py-1 border-b border-slate-200 w-full bg-white shrink-0"
+  >
     <a href="https://www.linkedin.com/company/csmpoint" target="_blank" rel="noopener noreferrer">
-      <img class="w-7" src="logo.jpg" alt="logo" />
+      <img class="w-6 h-6 rounded" src="logo.jpg" alt="logo" />
     </a>
-    <div class="flex items-center gap-3 text-xs text-gray-500 uppercase tracking-[0.2em]">
-      <div class="flex gap-1">
+
+    <div class="flex items-center gap-2">
+      <!-- Lang switcher -->
+      <div class="flex gap-0.5">
         @for (lang of languages; track lang.code) {
           <button
-            class="group flex items-center justify-center gap-1.5 rounded border border-gray-500/30 px-2 py-1 text-sm transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
-            [attr.data-active]="activeLang() === lang.code"
+            class="px-1.5 py-0.5 rounded text-xs font-medium transition-colors cursor-pointer border"
+            [class.border-cyan-300]="activeLang() === lang.code"
+            [class.bg-cyan-50]="activeLang() === lang.code"
+            [class.text-cyan-700]="activeLang() === lang.code"
+            [class.border-transparent]="activeLang() !== lang.code"
+            [class.text-slate-500]="activeLang() !== lang.code"
+            [class.hover:bg-slate-50]="activeLang() !== lang.code"
             [attr.aria-label]="lang.label"
             (click)="setLang(lang.code)"
             type="button"
           >
-            <span class="text-[18px] leading-none" aria-hidden="true">{{ lang.flag }}</span>
+            {{ lang.flag }}
           </button>
         }
       </div>
+
+      <!-- Close -->
       <button
-        class="inline-flex items-center justify-center border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 text-gray-500"
+        class="flex items-center justify-center w-6 h-6 rounded text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
         (click)="closePanel()"
         aria-label="Close panel"
         type="button"
       >
-        <span aria-hidden="true">✕</span>
+        <svg class="dz-icon w-3.5 h-3.5" aria-hidden="true"><use href="#icon-x"></use></svg>
       </button>
     </div>
   </div>
 
-  <header class="sticky top-0 z-10 w-full bg-[var(--google-bg)]">
-    <div class="flex bg-gray-500/5 text-sm w-full">
-      <a
-        class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline flex-1"
-        [routerLink]="routes.SEO_AUDIT"
-        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-      >
-        {{ t('nav.seo_audit') }}
-      </a>
-      <a
-        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-        [routerLink]="routes.CURRENT_SITE"
-        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-      >
-        {{ t('nav.current_site') }}
-      </a>
-      <a
-        class="block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline flex-1"
-        [routerLink]="routes.HEADINGS"
-        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-      >
-        {{ t('nav.headings') }}
-      </a>
-      <a
-        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-        [routerLink]="routes.PERFORMANCE"
-        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-      >
-        {{ t('nav.performance') }}
-      </a>
-      <a
-        class="flex-1 block w-full cursor-pointer py-2 border border-l-0 border-gray-500/30 text-center text-gray-500 transition-colors duration-200 no-underline"
-        [routerLink]="routes.SOCIAL"
-        routerLinkActive="border-b-indigo-500 bg-white text-indigo-500"
-      >
-        {{ t('nav.social') }}
-      </a>
-    </div>
+  <!-- Navigation tabs -->
+  <header class="sticky top-0 z-30 w-full bg-white border-b border-slate-200 shrink-0">
+    <nav class="flex w-full">
+      @for (tab of tabs; track tab.route) {
+        <a
+          class="flex-1 py-2 text-center text-xs font-medium transition-colors cursor-pointer no-underline border-b-2"
+          [class.border-cyan-600]="currentUrl() === '/' + tab.route"
+          [class.text-cyan-700]="currentUrl() === '/' + tab.route"
+          [class.bg-white]="currentUrl() === '/' + tab.route"
+          [class.border-transparent]="currentUrl() !== '/' + tab.route"
+          [class.text-slate-500]="currentUrl() !== '/' + tab.route"
+          [class.hover:text-slate-700]="currentUrl() !== '/' + tab.route"
+          [class.hover:bg-slate-50]="currentUrl() !== '/' + tab.route"
+          [routerLink]="tab.route"
+        >
+          {{ t(tab.labelKey) }}
+        </a>
+      }
+    </nav>
   </header>
 </ng-container>
 

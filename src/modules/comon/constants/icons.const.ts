@@ -11,6 +11,7 @@
  */
 export const ICONS = Object.freeze({
   GLOBE: '#icon-globe',
+  X: '#icon-x',
   REFRESH_CW: '#icon-refresh-cw',
   LOADER: '#icon-loader',
   ALERT_TRIANGLE: '#icon-alert-triangle',

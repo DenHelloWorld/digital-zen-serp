@@ -198,8 +198,8 @@ export class WebVitalsComponent {
   protected readonly tabActivity = inject(TabActivityService);
   protected readonly metrics = METRICS;
   protected readonly strategies = [
-    { value: 'mobile' as const, icon: '📱' },
-    { value: 'desktop' as const, icon: '🖥️' },
+    { value: 'mobile' as const, label: '📱' },
+    { value: 'desktop' as const, label: '🖥️' },
   ];
 
   protected readonly vitalsData = computed(() => this.store.vitalsData());

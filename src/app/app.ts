@@ -23,6 +23,13 @@ export class App {
     { code: 'en', flag: '🇺🇸', label: 'English' },
     { code: 'ru', flag: '🇷🇺', label: 'Русский' },
   ] as const;
+  protected readonly tabs = [
+    { route: ROUTES.SEO_AUDIT, labelKey: 'nav.seo_audit' },
+    { route: ROUTES.CURRENT_SITE, labelKey: 'nav.current_site' },
+    { route: ROUTES.HEADINGS, labelKey: 'nav.headings' },
+    { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance' },
+    { route: ROUTES.SOCIAL, labelKey: 'nav.social' },
+  ] as const;
 
   constructor() {
     const routerSub = this.#router.events.subscribe(event => {

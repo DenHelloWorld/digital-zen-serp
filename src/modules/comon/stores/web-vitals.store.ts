@@ -6,8 +6,10 @@ import { Injectable, signal, computed, effect, untracked, inject } from '@angula
 
 @Injectable({ providedIn: 'root' })
 export class WebVitalsStore {
-  /** Cache keyed by `${url}|${strategy}` — survives tab switches */
+  /** Only successful (non-error) results — keyed by `${url}|${strategy}` */
   readonly #cache = signal<Record<string, WebVitalsData>>({});
+  /** Latest fetch result per key — includes error results, for display only */
+  readonly #latest = signal<Record<string, WebVitalsData>>({});
   readonly #isLoading = signal(false);
   readonly #error = signal<string | null>(null);
   readonly #strategy = signal<WebVitalsStrategy>('mobile');
@@ -17,7 +19,8 @@ export class WebVitalsStore {
     const url = this.#tabActivity.activeTab()?.url;
     const strategy = this.#strategy();
     if (!url) return null;
-    return this.#cache()[this.#key(url, strategy)] ?? null;
+    const key = this.#key(url, strategy);
+    return this.#cache()[key] ?? this.#latest()[key] ?? null;
   });
 
   readonly isLoading = this.#isLoading.asReadonly();
@@ -32,7 +35,6 @@ export class WebVitalsStore {
   constructor() {
     effect(() => {
       const url = this.#tabActivity.activeTab()?.url ?? null;
-      // Only fetch when URL actually changes
       const prevUrl = untracked(() => this.#lastLoadedUrl());
       if (url && url !== prevUrl) {
         untracked(() => {
@@ -47,7 +49,6 @@ export class WebVitalsStore {
     this.#strategy.set(strategy);
   }
 
-  /** Manual refresh — re-fetches even if already cached */
   async loadVitals(): Promise<void> {
     const url = this.#tabActivity.activeTab()?.url;
     if (!url) return;
@@ -60,6 +61,16 @@ export class WebVitalsStore {
 
     if (alreadyCached && !force) return;
 
+    if (force) {
+      // Clear latest display results so loading state is visible to the user
+      this.#latest.update(l => {
+        const next = { ...l };
+        delete next[this.#key(url, 'mobile')];
+        delete next[this.#key(url, 'desktop')];
+        return next;
+      });
+    }
+
     this.#isLoading.set(true);
     this.#error.set(null);
     const requestId = ++this.#requestId;
@@ -70,37 +81,38 @@ export class WebVitalsStore {
       return;
     }
 
-    await this.#fetchStrategy(url, 'mobile', requestId);
-    // Small delay to avoid hitting PageSpeed API rate limit on back-to-back requests
-    await new Promise(r => setTimeout(r, 1500));
-    await this.#fetchStrategy(url, 'desktop', requestId);
+    try {
+      const response = await chrome.runtime.sendMessage({
+        command: CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS_BOTH,
+      });
+
+      if (requestId !== this.#requestId) return;
+
+      if (response?.success) {
+        const both = response.data as { mobile: WebVitalsData; desktop: WebVitalsData };
+        this.#storeResult(url, 'mobile', both.mobile);
+        this.#storeResult(url, 'desktop', both.desktop);
+      } else if (!this.#error()) {
+        this.#error.set(response?.error || 'UNKNOWN_ERROR');
+      }
+    } catch (err) {
+      if (requestId !== this.#requestId) return;
+      this.#error.set('MESSAGE_SENDING_FAILED');
+      console.error('[WebVitalsStore]', err);
+    }
 
     if (requestId === this.#requestId) {
       this.#isLoading.set(false);
     }
   }
 
-  async #fetchStrategy(url: string, strategy: WebVitalsStrategy, requestId: number): Promise<void> {
-    try {
-      const response = await chrome.runtime.sendMessage({
-        command: CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS,
-        strategy,
-      });
-
-      if (requestId !== this.#requestId) return;
-
-      if (response?.success) {
-        const data = response.data as WebVitalsData;
-        this.#cache.update(c => ({ ...c, [this.#key(url, strategy)]: data }));
-      } else if (!this.#error()) {
-        this.#error.set(response?.error || 'UNKNOWN_ERROR');
-      }
-    } catch (err) {
-      if (requestId !== this.#requestId) return;
-      if (!this.#error()) {
-        this.#error.set('MESSAGE_SENDING_FAILED');
-      }
-      console.error('[WebVitalsStore]', err);
+  #storeResult(url: string, strategy: WebVitalsStrategy, data: WebVitalsData): void {
+    const key = this.#key(url, strategy);
+    if (data.errorCode) {
+      // Error results: display only, not cached — so next open will auto-retry
+      this.#latest.update(l => ({ ...l, [key]: data }));
+    } else {
+      this.#cache.update(c => ({ ...c, [key]: data }));
     }
   }
 

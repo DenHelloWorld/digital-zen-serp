@@ -45,7 +45,7 @@
     <nav class="flex w-full">
       @for (tab of tabs; track tab.route) {
         <a
-          class="flex-1 py-2 text-center text-xs font-medium transition-colors cursor-pointer no-underline border-b-2"
+          class="flex-1 py-2 text-center text-xs font-medium transition-colors cursor-pointer no-underline border-b-2 truncate px-1"
           [class.border-cyan-600]="currentUrl() === '/' + tab.route"
           [class.text-cyan-700]="currentUrl() === '/' + tab.route"
           [class.bg-white]="currentUrl() === '/' + tab.route"
@@ -54,6 +54,7 @@
           [class.hover:text-slate-700]="currentUrl() !== '/' + tab.route"
           [class.hover:bg-slate-50]="currentUrl() !== '/' + tab.route"
           [routerLink]="tab.route"
+          [dzTitleIfTruncated]="tab.emoji + ' ' + t(tab.labelKey)"
         >
           {{ tab.emoji }} {{ t(tab.labelKey) }}
         </a>

@@ -1,11 +1,12 @@
 import { ROUTES } from '../modules/comon/constants/routes.const';
+import { TitleIfTruncatedDirective } from '../modules/comon/directives/title-if-truncated.directive';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-root',
-  imports: [RouterOutlet, RouterLink, TranslocoDirective],
+  imports: [RouterOutlet, RouterLink, TranslocoDirective, TitleIfTruncatedDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

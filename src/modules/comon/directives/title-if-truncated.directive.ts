@@ -1,4 +1,12 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  OnDestroy,
+  effect,
+  inject,
+  input,
+} from '@angular/core';
 
 @Directive({
   selector: '[dzTitleIfTruncated]',
@@ -6,23 +14,34 @@ import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, inject } from '
 })
 export class TitleIfTruncatedDirective implements AfterViewInit, OnDestroy {
   readonly #el = inject<ElementRef<HTMLElement>>(ElementRef);
-  #observer: ResizeObserver | null = null;
+  readonly titleText = input('', { alias: 'dzTitleIfTruncated' });
 
-  @Input('dzTitleIfTruncated') titleText = '';
+  #observer: ResizeObserver | null = null;
+  #raf: ReturnType<typeof requestAnimationFrame> | null = null;
+
+  constructor() {
+    effect(() => {
+      this.titleText();
+      this.#scheduleUpdate();
+    });
+  }
 
   ngAfterViewInit() {
-    this.#update();
-    this.#observer = new ResizeObserver(() => this.#update());
+    this.#observer = new ResizeObserver(() => this.#scheduleUpdate());
     this.#observer.observe(this.#el.nativeElement);
   }
 
   ngOnDestroy() {
     this.#observer?.disconnect();
+    if (this.#raf !== null) cancelAnimationFrame(this.#raf);
   }
 
-  #update() {
-    const el = this.#el.nativeElement;
-    el.title =
-      el.scrollWidth > el.clientWidth ? this.titleText || el.textContent?.trim() || '' : '';
+  #scheduleUpdate() {
+    if (this.#raf !== null) cancelAnimationFrame(this.#raf);
+    this.#raf = requestAnimationFrame(() => {
+      const el = this.#el.nativeElement;
+      el.title =
+        el.scrollWidth > el.clientWidth ? this.titleText() || el.textContent?.trim() || '' : '';
+    });
   }
 }

@@ -1,9 +1,9 @@
 <ng-container *transloco="let t">
   <!-- Header + refresh button -->
   <div class="flex items-center justify-between">
-    <span class="text-sm font-bold text-gray-900">{{ t('seoAudit.title') }}</span>
+    <span class="text-sm font-bold text-slate-800 font-mono">{{ t('seoAudit.title') }}</span>
     <button
-      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="group flex items-center gap-1 border border-slate-200 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-50 disabled:cursor-not-allowed"
       [disabled]="isLoading()"
       (click)="refresh()"
       type="button"
@@ -38,75 +38,75 @@
       <div class="flex flex-row flex-wrap gap-1.5">
         <!-- Status -->
         <div
-          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100 flex-1 min-w-[100px]"
+          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-slate-100 flex-1 min-w-[100px]"
         >
-          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-gray-400" aria-hidden="true">
+          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden="true">
             <use href="#icon-signal"></use>
           </svg>
           <div class="flex flex-col min-w-0 gap-0.5">
-            <span class="text-[10px] text-gray-900 tracking-wide font-bold">
+            <span class="text-[10px] text-slate-500 tracking-wide font-mono uppercase">
               {{ t('seoAudit.status') }}
             </span>
             <div class="flex items-center gap-1.5">
               <span class="inline-block w-2 h-2 rounded-full" [class]="statusColor()"></span>
-              <span class="text-sm text-gray-800 font-medium">{{ auditData()?.status }}</span>
+              <span class="text-sm text-slate-700 font-medium">{{ auditData()?.status }}</span>
             </div>
           </div>
         </div>
 
         <!-- Lang -->
         <div
-          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100 flex-1 min-w-[100px]"
+          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-slate-100 flex-1 min-w-[100px]"
         >
-          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-gray-400" aria-hidden="true">
+          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden="true">
             <use href="#icon-globe"></use>
           </svg>
           <div class="flex flex-col min-w-0 gap-0.5">
-            <span class="text-[10px] text-gray-900 tracking-wide font-bold">{{
+            <span class="text-[10px] text-slate-500 tracking-wide font-mono uppercase">{{
               t('seoAudit.lang')
             }}</span>
             @if (auditData()?.lang; as lang) {
-              <span class="text-sm text-gray-800 font-medium">{{ lang }}</span>
+              <span class="text-sm text-slate-700 font-medium">{{ lang }}</span>
             } @else {
-              <span class="text-sm text-gray-400 italic">{{ t('seoAudit.not_found') }}</span>
+              <span class="text-sm text-slate-300 italic">{{ t('seoAudit.not_found') }}</span>
             }
           </div>
         </div>
 
         <!-- Published -->
         <div
-          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100 flex-1 min-w-[100px]"
+          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-slate-100 flex-1 min-w-[100px]"
         >
-          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-gray-400" aria-hidden="true">
+          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden="true">
             <use href="#icon-calendar"></use>
           </svg>
           <div class="flex flex-col min-w-0 gap-0.5">
-            <span class="text-[10px] text-gray-900 tracking-wide font-bold">
+            <span class="text-[10px] text-slate-500 tracking-wide font-mono uppercase">
               {{ t('seoAudit.published') }}
             </span>
             @if (auditData()?.published; as published) {
-              <span class="text-sm text-gray-800">{{ published }}</span>
+              <span class="text-sm text-slate-700">{{ published }}</span>
             } @else {
-              <span class="text-sm text-gray-400 italic">{{ t('seoAudit.not_found') }}</span>
+              <span class="text-sm text-slate-300 italic">{{ t('seoAudit.not_found') }}</span>
             }
           </div>
         </div>
 
         <!-- Updated -->
         <div
-          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-gray-100 flex-1 min-w-[100px]"
+          class="flex items-center gap-2 p-1 bg-white rounded-lg border border-slate-100 flex-1 min-w-[100px]"
         >
-          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-gray-400" aria-hidden="true">
+          <svg class="dz-icon w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden="true">
             <use href="#icon-clock"></use>
           </svg>
           <div class="flex flex-col min-w-0 gap-0.5">
-            <span class="text-[10px] text-gray-900 tracking-wide font-bold">
+            <span class="text-[10px] text-slate-500 tracking-wide font-mono uppercase">
               {{ t('seoAudit.updated') }}
             </span>
             @if (auditData()?.updated; as updated) {
-              <span class="text-sm text-gray-800">{{ updated }}</span>
+              <span class="text-sm text-slate-700">{{ updated }}</span>
             } @else {
-              <span class="text-sm text-gray-400 italic">{{ t('seoAudit.not_found') }}</span>
+              <span class="text-sm text-slate-300 italic">{{ t('seoAudit.not_found') }}</span>
             }
           </div>
         </div>

@@ -1,0 +1,53 @@
+<ng-container *transloco="let t">
+  @if (rows().length) {
+    <div class="flex flex-col gap-1">
+      <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{
+        t('seoAudit.index.title')
+      }}</span>
+      @for (row of rows(); track row.labelKey) {
+        <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white">
+          <span
+            class="w-2 h-2 rounded-full shrink-0"
+            [class.bg-green-500]="row.status === 'ok'"
+            [class.bg-red-400]="row.status === 'missing'"
+            [class.bg-orange-400]="row.status === 'bad'"
+          ></span>
+          <span class="text-[11px] text-gray-700 shrink-0 w-[110px]">{{ t(row.labelKey) }}</span>
+          <span class="text-[10px] text-gray-400 flex-1 min-w-0 truncate">
+            @if (row.value) {
+              @if (row.link) {
+                <a
+                  class="text-blue-500 hover:underline"
+                  [href]="row.value"
+                  target="_blank"
+                  rel="noopener"
+                  >{{ row.value }}</a
+                >
+              } @else {
+                {{ row.value }}
+              }
+            } @else {
+              —
+            }
+          </span>
+          @if (row.status === 'ok') {
+            <span
+              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0 bg-green-100 text-green-700"
+              >{{ t('seoAudit.index.status_ok') }}</span
+            >
+          } @else if (row.status === 'missing') {
+            <span
+              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0 bg-red-100 text-red-600"
+              >{{ t('seoAudit.index.status_missing') }}</span
+            >
+          } @else {
+            <span
+              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0 bg-orange-100 text-orange-600"
+              >{{ t('seoAudit.index.status_bad') }}</span
+            >
+          }
+        </div>
+      }
+    </div>
+  }
+</ng-container>

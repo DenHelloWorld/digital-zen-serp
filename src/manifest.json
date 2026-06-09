@@ -10,18 +10,18 @@
     "unlimitedStorage",
     "activeTab",
     "identity",
-    "scripting",
-    "sidePanel"
+    "scripting"
   ],
   "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Digital Zen SERP"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["index.html"],
+      "resources": ["index.html", "content.js"],
       "matches": ["<all_urls>"]
     }
   ],
-  "side_panel": { "default_path": "index.html" },
-
   "background": {
     "service_worker": "background.js",
     "type": "module"

@@ -1,28 +1,24 @@
 import { SeoAuditStore } from '../comon/stores/seo-audit.store';
+import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { UrlBarComponent } from '../ui/url-bar/url-bar.component';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
-  selector: 'dz-seo-audit-view',
-  imports: [TranslocoDirective, UrlBarComponent],
+  selector: 'dz-base-seo-audit',
+  imports: [TranslocoDirective, UrlBarComponent, LoadingBarComponent],
   templateUrl: './base-seo-audit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'dz-base-seo-audit p-[var(--spacing)] flex justify-center flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',
+    class: 'flex flex-col gap-[var(--spacing)] w-full',
   },
 })
-export class SeoAuditViewComponent {
+export class BaseSeoAuditComponent {
   protected readonly store = inject(SeoAuditStore);
 
   protected readonly auditData = computed(() => this.store.auditData());
   protected readonly isLoading = computed(() => this.store.isLoading());
   protected readonly error = computed(() => this.store.error());
-
-  protected readonly isAuditReady = computed(
-    () => !this.isLoading() && !this.error() && this.auditData()
-  );
 
   protected readonly statusColor = computed(() => {
     const status = this.auditData()?.status;

@@ -45,3 +45,10 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment variables
+.env
+
+# Generated from .env at build time
+src/background/pagespeed-key.generated.ts
+

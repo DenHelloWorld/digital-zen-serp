@@ -40,6 +40,7 @@ export class BackgroundService {
   readonly #webVitals = new WebVitalsService();
   readonly #keepalivePorts = new Set<chrome.runtime.Port>();
   readonly #highlightedTabs = new Set<number>();
+  readonly #injectedTabs = new Set<number>();
 
   readonly #handlers = new Map<ChromeCommandType, MessageHandler>([
     [CHROME_COMMAND_ENUM.SCRAPE_CURRENT_TAB, () => this.#handleScrap()],
@@ -48,7 +49,8 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.HIGHLIGHT_HEADERS, msg => this.#handleHighlightHeaders(msg)],
     [CHROME_COMMAND_ENUM.PARSE_HEADINGS, () => this.#handleParseHeadings()],
     [CHROME_COMMAND_ENUM.SCROLL_TO_HEADING, msg => this.#handleScrollToHeading(msg)],
-    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, () => this.#handleCollectWebVitals()],
+    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, msg => this.#handleCollectWebVitals(msg)],
+    [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS_BOTH, () => this.#handleCollectWebVitalsBoth()],
   ]);
 
   constructor() {
@@ -56,7 +58,29 @@ export class BackgroundService {
   }
 
   #initListeners(): void {
-    let operationQueue: Promise<void> = Promise.resolve();
+    chrome.action.onClicked.addListener(tab => {
+      if (!tab.id) return;
+      const tabId = tab.id;
+      const inject = this.#injectedTabs.has(tabId)
+        ? Promise.resolve()
+        : chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }).then(() => {
+            this.#injectedTabs.add(tabId);
+          });
+
+      inject
+        .then(() => chrome.tabs.sendMessage(tabId, { command: 'TOGGLE_PANEL' }))
+        .catch(err => console.warn('[BackgroundService] toggle panel failed:', err));
+    });
+
+    chrome.tabs.onRemoved.addListener(tabId => {
+      this.#injectedTabs.delete(tabId);
+    });
+
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
+      if (changeInfo.status === 'loading') {
+        this.#injectedTabs.delete(tabId);
+      }
+    });
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const safeSendResponse = (response?: unknown) => {
@@ -67,34 +91,19 @@ export class BackgroundService {
         }
       };
 
-      /* sidePanel.open() requires synchronous call (user gesture) */
-      if (message.command === CHROME_COMMAND_ENUM.OPEN_SIDE_PANEL_APP) {
-        const targetWindowId = message.windowId || sender.tab?.windowId;
-        const options = targetWindowId
-          ? { windowId: targetWindowId as number }
-          : { windowId: chrome.windows.WINDOW_ID_CURRENT };
-        chrome.sidePanel
-          .open(options)
-          .then(() => safeSendResponse({ success: true }))
-          .catch(() => safeSendResponse({ success: false }));
+      const handler = this.#handlers.get(message.command as ChromeCommandType);
+      if (!handler) {
+        console.warn('[BackgroundService]', 'Unknown command:', message.command);
+        safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.GENERIC_ERROR });
         return true;
       }
 
-      operationQueue = operationQueue.then(async () => {
-        const handler = this.#handlers.get(message.command as ChromeCommandType);
-        if (!handler) {
-          console.warn('[BackgroundService]', 'Unknown command:', message.command);
-          safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.GENERIC_ERROR });
-          return;
-        }
-        try {
-          const result = await handler(message, sender);
-          safeSendResponse(result);
-        } catch (err) {
+      handler(message, sender)
+        .then(result => safeSendResponse(result))
+        .catch(err => {
           console.error('[BackgroundService]', `Handler error:`, err);
           safeSendResponse({ success: false, error: FOCUS_ERROR_ENUM.GENERIC_ERROR });
-        }
-      });
+        });
 
       return true;
     });
@@ -112,10 +121,24 @@ export class BackgroundService {
 
     chrome.runtime.onInstalled.addListener(() => {
       console.info('[BackgroundService]', 'App initialized via onInstalled');
-      chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {
-        /* non-critical */
-      });
     });
+
+    this.#setEmojiIcon();
+  }
+
+  #setEmojiIcon(): void {
+    try {
+      const size = 128;
+      const canvas = new OffscreenCanvas(size, size);
+      const ctx = canvas.getContext('2d')!;
+      ctx.font = `${size * 0.78}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🔍', size / 2, size / 2 + 6);
+      chrome.action.setIcon({ imageData: ctx.getImageData(0, 0, size, size) });
+    } catch {
+      /* fallback to browser default */
+    }
   }
 
   /* ── Command handlers ─────────────────────────────────────── */
@@ -225,17 +248,24 @@ export class BackgroundService {
     }
   }
 
-  async #handleCollectWebVitals(): Promise<HandlerResult> {
+  async #handleCollectWebVitals(msg: Record<string, unknown>): Promise<HandlerResult> {
     const tab = await this.#requireActiveTab();
     if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
     if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
 
-    try {
-      const vitals = await this.#webVitals.collectAll(tab.id, tab.url);
-      return { success: true, data: vitals };
-    } catch {
-      return { success: false, error: 'INJECTION_FAILED' };
-    }
+    const strategy = msg['strategy'] === 'desktop' ? 'desktop' : 'mobile';
+    const vitals = await this.#webVitals.collectAll(tab.id, tab.url, strategy);
+    return { success: true, data: vitals };
+  }
+
+  async #handleCollectWebVitalsBoth(): Promise<HandlerResult> {
+    const tab = await this.#requireActiveTab();
+    if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
+    if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
+
+    const mobile = await this.#webVitals.collectAll(tab.id, tab.url, 'mobile');
+    const desktop = await this.#webVitals.collectAll(tab.id, tab.url, 'desktop');
+    return { success: true, data: { mobile, desktop } };
   }
 
   /* ── Helpers ──────────────────────────────────────────────── */

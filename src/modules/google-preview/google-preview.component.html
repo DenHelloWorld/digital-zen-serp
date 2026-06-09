@@ -4,37 +4,37 @@
     <div class="flex gap-1">
       <button
         class="text-xs px-2 py-0.5 rounded border transition-all w-f"
-        [class.bg-indigo-50]="mode() === 'live'"
-        [class.border-indigo-300]="mode() === 'live'"
-        [class.text-indigo-700]="mode() === 'live'"
-        [class.border-gray-300]="mode() !== 'live'"
-        [class.text-gray-500]="mode() !== 'live'"
+        [class.bg-cyan-50]="mode() === 'live'"
+        [class.border-cyan-400]="mode() === 'live'"
+        [class.text-cyan-700]="mode() === 'live'"
+        [class.border-slate-200]="mode() !== 'live'"
+        [class.text-slate-500]="mode() !== 'live'"
         (click)="switchMode('live')"
         type="button"
       >
-        👁️
+        <span>👁️</span>
       </button>
       <button
         class="text-xs px-2 py-0.5 rounded border transition-all"
-        [class.bg-indigo-50]="mode() === 'edit'"
-        [class.border-indigo-300]="mode() === 'edit'"
-        [class.text-indigo-700]="mode() === 'edit'"
-        [class.border-gray-300]="mode() !== 'edit'"
-        [class.text-gray-500]="mode() !== 'edit'"
+        [class.bg-cyan-50]="mode() === 'edit'"
+        [class.border-cyan-400]="mode() === 'edit'"
+        [class.text-cyan-700]="mode() === 'edit'"
+        [class.border-slate-200]="mode() !== 'edit'"
+        [class.text-slate-500]="mode() !== 'edit'"
         (click)="switchMode('edit')"
         type="button"
       >
-        ✏️
+        <span>✏️</span>
       </button>
     </div>
   </div>
 
   <!-- Search bar + device toggle -->
-  <div class="w-full bg-white pb-1 border-b border-gray-200 flex gap-1 flex-wrap">
+  <div class="w-full bg-white pb-1 border-b border-slate-200 flex gap-1 flex-wrap">
     <div class="flex-1">
       <div class="relative w-full">
         <div
-          class="flex items-center w-full h-[46px] px-4 bg-white border border-gray-200 rounded-full hover:shadow-md focus-within:shadow-md transition-shadow"
+          class="flex items-center w-full h-[46px] px-4 bg-white border border-slate-200 rounded-full hover:shadow-md focus-within:shadow-md transition-shadow"
         >
           <div class="flex items-center justify-center shrink-0 mr-2">
             <svg focusable="false" viewBox="0 0 24 24" width="20" height="20">
@@ -66,7 +66,7 @@
             type="text"
           />
           <button
-            class="flex items-center justify-center w-10 h-10 text-gray-500 hover:text-black shrink-0"
+            class="flex items-center justify-center w-10 h-10 text-slate-500 hover:text-black shrink-0"
             [class.hidden]="mode() === 'live' || !editSiteName()"
             (click)="editSiteName.set('')"
           >
@@ -84,7 +84,7 @@
     <ul class="dz-list dz-list--horizontal">
       <li>
         <button
-          class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+          class="group flex items-center gap-1.5 border border-slate-200 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-cyan-400 data-[active=true]:bg-cyan-50 data-[active=true]:text-cyan-700 hover:bg-slate-50 hover:border-slate-300"
           [attr.data-active]="selectedDevice() === 'desktop'"
           (click)="selectedDevice.set('desktop')"
           type="button"
@@ -94,7 +94,7 @@
       </li>
       <li>
         <button
-          class="group flex items-center gap-1.5 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-blue-400 data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600 hover:bg-gray-50 hover:border-gray-400"
+          class="group flex items-center gap-1.5 border border-slate-200 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 data-[active=true]:border-cyan-400 data-[active=true]:bg-cyan-50 data-[active=true]:text-cyan-700 hover:bg-slate-50 hover:border-slate-300"
           [attr.data-active]="selectedDevice() === 'mobile'"
           (click)="selectedDevice.set('mobile')"
           type="button"
@@ -112,13 +112,18 @@
       [style.max-width.px]="selectedDevice() === 'desktop' ? 712 : 375"
     >
       <div class="flex items-center gap-3 mb-1.5">
-        @if (mode() === 'live' && isHttpUrl(iconUrl())) {
+        @if (mode() === 'live' && iconUrl()) {
           <div class="dz-icon-box dz-icon-box--nm round">
-            <img class="dz-icon dz-icon--shadow round" [src]="iconUrl()" [alt]="iconUrl()" />
+            <img
+              class="dz-icon dz-icon--shadow round"
+              [src]="iconUrl()!"
+              (error)="onIconError()"
+              alt=""
+            />
           </div>
         } @else {
           <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center shrink-0">
-            <span class="text-[10px] font-bold text-gray-400">G</span>
+            <span class="text-[10px] font-bold text-slate-400">G</span>
           </div>
         }
         <div class="flex flex-col min-w-0">
@@ -159,7 +164,7 @@
     <div class="flex justify-between items-center gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.title_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
-        <span class="text-xs text-gray-400 tabular-nums">
+        <span class="text-xs text-slate-400 tabular-nums">
           {{ title().length }} / {{ charLimits.title }} {{ t('serp.symbols') }}
         </span>
         <div class="flex gap-0.5 h-1.5 w-24">
@@ -177,7 +182,7 @@
 
     @if (mode() === 'edit') {
       <div
-        class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+        class="w-full h-6 gap-3 flex items-center text-sm text-slate-500 bg-white border border-slate-200 rounded p-1"
       >
         <input
           class="outline-none bg-transparent h-full w-full"
@@ -186,7 +191,7 @@
           type="text"
         />
       </div>
-      <div class="text-[10px] text-gray-400 mt-1">{{ t('serp.title_hint') }}</div>
+      <div class="text-[10px] text-slate-400 mt-1">{{ t('serp.title_hint') }}</div>
     }
   </div>
 
@@ -195,7 +200,7 @@
     <div class="flex justify-between items-center w-full gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.link_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
-        <span class="text-xs text-gray-400 tabular-nums">
+        <span class="text-xs text-slate-400 tabular-nums">
           {{ link().length }} / {{ charLimits.link }} {{ t('serp.symbols') }}
         </span>
         <div class="flex gap-0.5 h-1.5 w-24">
@@ -213,7 +218,7 @@
 
     @if (mode() === 'edit') {
       <div
-        class="w-full h-6 gap-3 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1"
+        class="w-full h-6 gap-3 flex items-center text-sm text-slate-500 bg-white border border-slate-200 rounded p-1"
       >
         <input
           class="outline-none bg-transparent h-full w-full"
@@ -223,7 +228,7 @@
         />
       </div>
       @if (editLink() === '/') {
-        <div class="text-[10px] text-gray-400 mt-1">{{ t('serp.link_error_home') }}</div>
+        <div class="text-[10px] text-slate-400 mt-1">{{ t('serp.link_error_home') }}</div>
       }
     }
   </div>
@@ -233,7 +238,7 @@
     <div class="flex justify-between items-center w-full gap-1 flex-wrap">
       <span class="hint hint--md">{{ t('serp.description_label') }}</span>
       <div class="flex items-center gap-1 flex-wrap">
-        <span class="text-xs text-gray-400 tabular-nums no-wrap">
+        <span class="text-xs text-slate-400 tabular-nums no-wrap">
           {{ description().length }} / {{ charLimits.description }} {{ t('serp.symbols') }}
         </span>
         <div class="flex gap-0.5 h-1.5 w-24">
@@ -251,7 +256,7 @@
 
     @if (mode() === 'edit') {
       <div
-        class="w-full min-h-9 flex items-center text-sm text-gray-500 bg-white border border-gray-500/30 rounded p-1 transition-all"
+        class="w-full min-h-9 flex items-center text-sm text-slate-500 bg-white border border-slate-200 rounded p-1 transition-all"
       >
         <textarea
           class="outline-none bg-transparent w-full resize-none overflow-hidden leading-tight"
@@ -261,7 +266,7 @@
           rows="2"
         ></textarea>
       </div>
-      <div class="text-[10px] text-gray-400 mt-1">{{ t('serp.description_hint') }}</div>
+      <div class="text-[10px] text-slate-400 mt-1">{{ t('serp.description_hint') }}</div>
     }
   </div>
 </ng-container>

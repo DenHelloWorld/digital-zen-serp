@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ng build*)",
+      "Bash(ng serve*)",
+      "Bash(ng lint*)",
+      "Bash(npm run build*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run format*)",
+      "Bash(node scripts/build-dual.js*)",
+      "Bash(npx tsc*)",
+      "Bash(dir *)",
+      "Bash(ls *)"
+    ]
+  }
+}

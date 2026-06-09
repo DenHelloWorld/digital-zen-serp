@@ -10,9 +10,20 @@
  * ```
  */
 export const ICONS = Object.freeze({
-  MIC: '#icon-mic',
-  SEARCH: '#icon-search',
   GLOBE: '#icon-globe',
+  X: '#icon-x',
+  REFRESH_CW: '#icon-refresh-cw',
+  LOADER: '#icon-loader',
+  ALERT_TRIANGLE: '#icon-alert-triangle',
+  BAN: '#icon-ban',
+  INFO: '#icon-info',
+  EYE: '#icon-eye',
+  PENCIL: '#icon-pencil',
+  INBOX: '#icon-inbox',
+  SIGNAL: '#icon-signal',
+  CALENDAR: '#icon-calendar',
+  CLOCK: '#icon-clock',
+  USER: '#icon-user',
 } as const);
 
 /**

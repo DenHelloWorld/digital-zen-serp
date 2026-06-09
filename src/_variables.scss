@@ -4,36 +4,66 @@
   --google-container-width: 1100px;
 
   /* Основные размеры (по сетке Google) */
-  --serp-max-width: 652px; /* Ширина текстового блока выдачи */
+  --serp-max-width: 652px;
   --serp-content-padding: 20px;
 
-  /* Цвета ссылок (Заголовки) */
-  --google-link: #1a0dab; /* Тот самый синий */
-  --google-link-visited: #609; /* Посещенная ссылка */
-  --google-link-hover: #1a0dab; /* Обычно остается таким же, но с подчеркиванием */
-
-  /* Текст и описание */
-  --google-text: #4d5156; /* Серый для описания (Snippet) */
-  --google-title: #1a0dab; /* Цвет заголовка */
-  --google-url: #202124; /* Цвет URL / Навигации над заголовком */
+  /* Цвета ссылок Google (не менять — симуляция SERP) */
+  --google-link: #1a0dab;
+  --google-link-visited: #609;
+  --google-link-hover: #1a0dab;
+  --google-text: #4d5156;
+  --google-title: #1a0dab;
+  --google-url: #202124;
   --google-icon-color: #1f1f1f;
-
-  /* Фон и границы */
   --google-bg: #ffffff;
-  --google-border: #dbdbdb; /* Граница карточек / инпутов */
-  --google-hover-bg: #f8f9fa; /* Фон при ховере на подсказки */
-
-  /* Шрифты (Google использует Roboto или Arial) */
+  --google-border: #dbdbdb;
+  --google-hover-bg: #f8f9fa;
   --google-font-family: 'arial', sans-serif;
   --google-font-size-title: 20px;
   --google-font-size-text: 14px;
   --google-font-size-url: 14px;
-
-  /* Специфические фишки */
-  --google-result-gap: 28px; /* Отступ между результатами */
-
+  --google-result-gap: 28px;
   --google-search-bar-radius: 26px;
 
+  /* === Design System: Digital Zen SERP (Light / Data-Dense Dashboard) === */
+
+  /* Шрифты */
+  --font-heading: 'Fira Code', monospace;
+  --font-body: 'Fira Sans', sans-serif;
+
+  /* Палитра */
+  --color-primary: #0891b2; /* cyan-600 */
+  --color-primary-light: #ecfeff; /* cyan-50 */
+  --color-primary-hover: #0e7490; /* cyan-700 */
+  --color-secondary: #22d3ee; /* cyan-400 */
+
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc; /* slate-50 */
+  --color-surface-hover: #f1f5f9; /* slate-100 */
+  --color-border: #e2e8f0; /* slate-200 */
+  --color-border-strong: #cbd5e1; /* slate-300 */
+
+  --color-text: #164e63; /* cyan-900 */
+  --color-text-muted: #475569; /* slate-600 */
+  --color-text-subtle: #94a3b8; /* slate-400 */
+
+  /* Семантические */
+  --color-zen-success: #22c55e; /* green-500 */
+  --color-on-success: #f0fdf4;
+  --color-zen-warn: #f59e0b; /* amber-500 */
+  --color-on-warn: #fffbeb;
+  --color-zen-error: #ef4444; /* red-500 */
+  --color-zen-info: #3b82f6; /* blue-500 */
+  --color-on-info: #eff6ff;
+  --color-zen-accent: #8b5cf6; /* violet-500 */
+
+  /* Старые алиасы (для обратной совместимости) */
+  --color-glass-text: #475569;
+  --color-component-bg-light: #ecfeff;
+  --color-component-text-light: #475569;
+  --color-on-error: #fef2f2;
+
+  /* Спейсинг */
   --spacing: 8px;
   --spacing-xs: 4px;
   --spacing-sm: 6px;
@@ -42,27 +72,36 @@
   --spacing-xl: 24px;
   --spacing-xxl: 32px;
   --list-gap: 0.5rem;
-  --radius: 12px;
-  --radius-xs: 8px;
+
+  /* Радиусы */
+  --radius: 8px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Иконки и кнопки */
   --icon-height: 100%;
-  --btn-size-nm: 38px;
+  --btn-size-nm: 36px;
   --btn-size-xs: 24px;
-  --btn-size-sm: 32px;
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-md: 16px;
-  --font-size-lg: 18px;
+  --btn-size-sm: 30px;
+  --btn-size-lg: 64px;
+
+  /* Шрифтовые размеры */
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-md: 15px;
+  --font-size-lg: 17px;
   --font-size-xl: 20px;
-  --shadow-color: rgba(0, 0, 0, 0.25);
-  --color-glass-text: rgba(71, 85, 105, 0.7);
-  --color-component-bg-light: #ebf2ff;
-  --color-component-text-light: #475569;
-  --color-zen-accent: #ac37ff;
-  --color-zen-error: #d33434;
-  --color-zen-warn: #d3b334;
-  --color-on-warn: #475569;
-  --color-zen-success: #22a865;
-  --color-on-success: #f1f5f9;
-  --color-zen-info: #3b82f6;
-  --color-on-info: #f1f5f9;
+
+  /* Тени */
+  --shadow-color: rgba(0, 0, 0, 0.08);
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow-md: 0 2px 8px var(--shadow-color);
+
+  /* z-index scale */
+  --z-base: 10;
+  --z-overlay: 20;
+  --z-nav: 30;
+  --z-modal: 50;
 }

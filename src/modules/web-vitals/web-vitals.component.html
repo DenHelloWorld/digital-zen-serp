@@ -1,110 +1,249 @@
 <ng-container *transloco="let t">
-  <!-- Title + refresh button -->
-  <div class="flex items-center justify-between w-full">
-    <span class="text-sm font-bold text-gray-900">{{ t('performance.title') }}</span>
+  <!-- Header -->
+  <div class="flex items-center gap-2 w-full">
+    <span class="text-sm font-semibold text-slate-800 mr-auto font-mono">{{
+      t('performance.title')
+    }}</span>
+
+    <!-- Strategy toggle -->
+    <div class="flex rounded border border-slate-200 overflow-hidden">
+      @for (s of strategies; track s.value) {
+        <button
+          class="flex items-center justify-center px-2.5 py-1 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          [class.bg-cyan-600]="strategy() === s.value"
+          [class.text-white]="strategy() === s.value"
+          [class.text-slate-500]="strategy() !== s.value"
+          [class.hover:bg-slate-50]="strategy() !== s.value"
+          [disabled]="isLoading()"
+          (click)="setStrategy(s.value)"
+          type="button"
+        >
+          <span class="leading-none">{{ s.label }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Refresh -->
     <button
-      class="group flex items-center gap-1 border border-gray-500/30 px-2 py-1 text-sm rounded bg-white transition-all active:scale-95 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+      class="flex items-center justify-center border border-slate-200 p-1.5 rounded bg-white transition-colors hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
       [disabled]="isLoading()"
       (click)="refresh()"
+      aria-label="Refresh"
       type="button"
     >
-      <span class="text-base leading-none">{{ isLoading() ? '⏳' : '🔄' }}</span>
+      <span>🔄</span>
     </button>
   </div>
 
-  <!-- Error -->
+  <!-- Error (connection) -->
   @if (error(); as err) {
     <div
-      class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+      class="flex gap-1.5 items-start p-2 border border-red-200 bg-red-50 rounded-lg text-xs text-red-600"
     >
-      <span class="font-medium">{{ t('performance.error') }}</span>
-      <span class="text-xs text-red-400">{{ err }}</span>
+      <span>⚠️</span>
+      <span>{{ err }}</span>
     </div>
   }
 
-  <!-- Loading -->
-  @if (isLoading()) {
-    <div class="flex flex-col items-center gap-2 py-8 text-gray-400">
-      <span class="text-2xl">⏱️</span>
-      <span class="text-sm">{{ t('performance.loading') }}</span>
+  <!-- Banners -->
+  @if (vitalsData(); as data) {
+    @if (data.source === 'local') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-amber-200 bg-amber-50 rounded-lg text-xs text-amber-700"
+      >
+        <span>⚠️</span>
+        <span>{{ t('performance.local_source_note') }}</span>
+      </div>
+    }
+    @if (data.errorCode === 'RATE_LIMIT') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-orange-200 bg-orange-50 rounded-lg text-xs text-orange-700"
+      >
+        <span>⚠️</span>
+        <span>{{ t('performance.error_rate_limit') }}</span>
+      </div>
+    }
+    @if (data.errorCode === 'API_ERROR' || data.errorCode === 'API_UNAVAILABLE') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-red-200 bg-red-50 rounded-lg text-xs text-red-600"
+      >
+        <span>ℹ️</span>
+        <span>{{ t('performance.error_api') }}</span>
+      </div>
+    }
+    @if (data.errorCode === 'BLOCKED_DOMAIN') {
+      <div
+        class="flex gap-1.5 items-start p-2 border border-slate-200 bg-slate-50 rounded-lg text-xs text-slate-500"
+      >
+        <span>🚫</span>
+        <span>{{ t('performance.error_blocked_domain') }}</span>
+      </div>
+    }
+  }
+
+  <!-- URL -->
+  @if (tabActivity.activeTab()?.url; as currentUrl) {
+    <dz-url-bar [url]="currentUrl" />
+  }
+
+  <!-- Performance Score -->
+  @if (vitalsData() || isLoading()) {
+    <div class="flex flex-col rounded-lg border border-cyan-100 bg-cyan-50/30 overflow-hidden">
+      <div class="flex items-center gap-3 px-2 py-2">
+        <div class="flex flex-col items-center gap-1 shrink-0">
+          <dz-speedometer
+            class="w-16"
+            [value]="invertedScore()"
+            [displayValue]="score()"
+            [goodThreshold]="10"
+            [poorThreshold]="50"
+            [unit]="'/ 100'"
+            [decimals]="0"
+          />
+          <div class="flex flex-col gap-0.5 items-center text-center">
+            <span class="text-xs font-semibold text-slate-700">{{ t('performance.score') }}</span>
+            <span class="text-[10px] text-slate-400 leading-snug">{{
+              t('performance.score_desc')
+            }}</span>
+          </div>
+        </div>
+        @if (filmstrip(); as frames) {
+          @if (frames[frames.length - 1]; as last) {
+            <div class="flex flex-col items-center gap-0.5 flex-1">
+              <img
+                class="w-full h-auto rounded border border-cyan-100 object-contain bg-white shadow-sm"
+                [src]="last.data"
+                [attr.alt]="null"
+              />
+              <span class="text-[9px] text-slate-400 tabular-nums font-mono"
+                >{{ last.timestamp / 1000 | number: '1.1-1' }}s</span
+              >
+            </div>
+          }
+        }
+      </div>
+      <dz-loading-bar [visible]="isLoading() && score() === null" />
     </div>
   }
 
   <!-- Metric cards -->
-  @if (isReady()) {
-    <div class="flex flex-col gap-2 w-full">
-      @if (tabActivity.activeTab()?.url; as currentUrl) {
-        <dz-url-bar [url]="currentUrl" />
-      }
-      @for (m of metrics; track m.key) {
-        <div class="flex items-center gap-3 p-2 rounded-lg border border-gray-100 bg-white">
-          <dz-speedometer
-            class="w-24 shrink-0"
-            [value]="vitalsData()![m.key]"
-            [goodThreshold]="m.good"
-            [poorThreshold]="m.poor"
-            [unit]="m.unit"
-            [decimals]="m.decimals"
-          />
-          <div class="flex flex-col gap-0.5 min-w-0">
-            <div class="flex items-center gap-1.5 flex-wrap">
-              <span
-                class="text-[10px] font-medium px-1.5 py-0.5 rounded-full leading-none shrink-0"
-                [class.bg-green-100]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
-                "
-                [class.text-green-700]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! <= m.good
-                "
-                [class.bg-orange-100]="
-                  vitalsData()![m.key] !== null &&
-                  vitalsData()![m.key]! > m.good &&
-                  vitalsData()![m.key]! <= m.poor
-                "
-                [class.text-orange-700]="
-                  vitalsData()![m.key] !== null &&
-                  vitalsData()![m.key]! > m.good &&
-                  vitalsData()![m.key]! <= m.poor
-                "
-                [class.bg-red-100]="vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor"
-                [class.text-red-700]="
-                  vitalsData()![m.key] !== null && vitalsData()![m.key]! > m.poor
-                "
-                [class.bg-gray-100]="vitalsData()![m.key] === null"
-                [class.text-gray-500]="vitalsData()![m.key] === null"
-              >
-                @if (vitalsData()![m.key] !== null) {
-                  @if (vitalsData()![m.key]! <= m.good) {
-                    Good
-                  } @else if (vitalsData()![m.key]! <= m.poor) {
-                    Needs work
+  <div class="flex flex-col gap-1">
+    @for (m of metrics; track m.key) {
+      @if (!m.localOnly || isLocal()) {
+        @let val = vitalsData()?.[m.key] ?? null;
+        @let cruxMetric = m.cruxKey ? (vitalsData()?.crux?.[m.cruxKey] ?? null) : null;
+        <div class="flex flex-col rounded-lg border border-slate-100 bg-white overflow-hidden">
+          <div class="flex items-center gap-2 px-1.5 py-1">
+            <dz-speedometer
+              class="w-14 shrink-0"
+              [value]="val"
+              [goodThreshold]="m.good"
+              [poorThreshold]="m.poor"
+              [unit]="m.unit"
+              [decimals]="m.decimals"
+            />
+            <div class="flex flex-col gap-0.5 min-w-0 flex-1">
+              <div class="flex items-center gap-1 flex-wrap">
+                <span
+                  class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
+                  [class.bg-green-100]="val !== null && val <= m.good"
+                  [class.text-green-700]="val !== null && val <= m.good"
+                  [class.bg-orange-100]="val !== null && val > m.good && val <= m.poor"
+                  [class.text-orange-700]="val !== null && val > m.good && val <= m.poor"
+                  [class.bg-red-100]="val !== null && val > m.poor"
+                  [class.text-red-700]="val !== null && val > m.poor"
+                  [class.bg-slate-100]="val === null"
+                  [class.text-slate-400]="val === null"
+                >
+                  @if (val !== null) {
+                    @if (val <= m.good) {
+                      {{ t('performance.good') }}
+                    } @else if (val <= m.poor) {
+                      {{ t('performance.needs_improvement') }}
+                    } @else {
+                      {{ t('performance.poor') }}
+                    }
                   } @else {
-                    Poor
+                    {{ t('performance.na') }}
                   }
-                } @else {
-                  N/A
+                </span>
+                @if (cruxMetric) {
+                  <span
+                    class="text-[9px] font-medium px-1 py-0.5 rounded-full leading-none shrink-0 border"
+                    [class.bg-green-50]="cruxMetric.category === 'FAST'"
+                    [class.text-green-600]="cruxMetric.category === 'FAST'"
+                    [class.border-green-200]="cruxMetric.category === 'FAST'"
+                    [class.bg-orange-50]="cruxMetric.category === 'AVERAGE'"
+                    [class.text-orange-600]="cruxMetric.category === 'AVERAGE'"
+                    [class.border-orange-200]="cruxMetric.category === 'AVERAGE'"
+                    [class.bg-red-50]="cruxMetric.category === 'SLOW'"
+                    [class.text-red-600]="cruxMetric.category === 'SLOW'"
+                    [class.border-red-200]="cruxMetric.category === 'SLOW'"
+                  >
+                    👤 {{ t('performance.crux_' + cruxMetric.category.toLowerCase()) }}
+                  </span>
                 }
+                <span class="text-xs font-semibold text-slate-700 truncate">{{
+                  t(m.labelKey)
+                }}</span>
+              </div>
+              <span class="text-[11px] text-slate-400 leading-snug">{{ t(m.descKey) }}</span>
+              <span class="text-[10px] text-slate-300 leading-none mt-0.5 font-mono">
+                <span class="text-slate-200">{{ t('performance.thresholds') }}:</span>
+                {{ m.thresholds }}
               </span>
-              <span class="text-sm font-bold text-gray-900">{{ t(m.labelKey) }}</span>
             </div>
-            <span class="text-xs text-gray-500 leading-relaxed">{{ t(m.descKey) }}</span>
           </div>
+          <dz-loading-bar [visible]="isLoading() && val === null" />
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Opportunities -->
+  @if (opportunities(); as items) {
+    <div class="flex flex-col gap-1">
+      <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-wide font-mono">{{
+        t('performance.opportunities')
+      }}</span>
+      @for (item of items; track item.id) {
+        <div
+          class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-slate-100 bg-white"
+        >
+          <span
+            class="w-2 h-2 rounded-full shrink-0"
+            [class.bg-red-400]="item.score !== null && item.score < 0.5"
+            [class.bg-orange-300]="item.score !== null && item.score >= 0.5"
+          ></span>
+          <span class="text-[11px] text-slate-600 flex-1 min-w-0">{{
+            t('performance.opp.' + item.id, { default: item.title })
+          }}</span>
+          @if (item.displayValue) {
+            <span class="text-[10px] text-slate-400 shrink-0 tabular-nums font-mono">{{
+              item.displayValue
+            }}</span>
+          }
         </div>
       }
     </div>
+  }
 
-    <!-- PageSpeed note for Speed Index -->
-    @if (vitalsData()!.speedIndex === null) {
-      <div class="text-[10px] text-gray-400 text-center">
-        {{ t('performance.speed_index_unavailable') }}
-      </div>
-    }
-
-    <!-- Timestamp -->
-    @if (vitalsData()!.timestamp) {
-      <div class="text-[10px] text-gray-400 text-right">
-        {{ t('performance.updated') }}: {{ vitalsData()!.timestamp | date: 'HH:mm:ss' }}
-      </div>
-    }
+  <!-- Footer -->
+  @if (vitalsData(); as data) {
+    <div class="flex items-center justify-between text-[9px] text-slate-400 -mt-1">
+      <span
+        class="px-1.5 py-0.5 rounded-full font-medium font-mono"
+        [class.bg-cyan-50]="data.source === 'api'"
+        [class.text-cyan-500]="data.source === 'api'"
+        [class.bg-slate-100]="data.source === 'local'"
+        [class.text-slate-400]="data.source === 'local'"
+        >{{
+          data.source === 'api' ? t('performance.source_api') : t('performance.source_local')
+        }}</span
+      >
+      <span class="font-mono"
+        >{{ t('performance.updated') }}: {{ data.timestamp | date: 'HH:mm:ss' }}</span
+      >
+    </div>
   }
 </ng-container>

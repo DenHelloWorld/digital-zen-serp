@@ -5,35 +5,35 @@ import type {
   SchemaPropertyRow,
   SchemaPropertyStatus,
 } from '../models/schema-data.model';
-import { SCHEMA_RULES_MAP } from './schema-rules/index';
+import { SCHEMA_RULES_MAP } from './schema-rules/schema-rules.const';
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}(T[\d:.Z+-]+)?$/;
 const URL_RE = /^https?:\/\/.+/;
 
 const m = (key: string, params?: Record<string, unknown>): ValidationMessage => ({ key, params });
 
-function stringify(val: unknown): string | null {
+const stringify = (val: unknown): string | null => {
   if (val == null) return null;
   if (typeof val === 'string') return val || null;
   if (typeof val === 'object') return JSON.stringify(val).slice(0, 120);
   return String(val);
-}
+};
 
-function hasValue(val: unknown): boolean {
+const hasValue = (val: unknown): boolean => {
   if (val == null) return false;
   if (typeof val === 'string') return val.trim().length > 0;
   if (Array.isArray(val)) return val.length > 0;
   if (typeof val === 'object') return Object.keys(val as object).length > 0;
   return true;
-}
+};
 
-function statusFor(statuses: SchemaPropertyStatus[]): SchemaBlockStatus {
+const statusFor = (statuses: SchemaPropertyStatus[]): SchemaBlockStatus => {
   if (statuses.some(s => s === 'invalid' || s === 'missing')) return 'has-errors';
   if (statuses.some(s => s === 'warning')) return 'has-warnings';
   return 'valid';
-}
+};
 
-export function validateSchemaBlock(block: SchemaBlock): SchemaBlock {
+export const validateSchemaBlock = (block: SchemaBlock): SchemaBlock => {
   if (block.overallStatus === 'broken') return block;
 
   const rule = SCHEMA_RULES_MAP.get(block.type.toLowerCase());
@@ -48,6 +48,33 @@ export function validateSchemaBlock(block: SchemaBlock): SchemaBlock {
 
   const rows: SchemaPropertyRow[] = [];
 
+  const validateValue = (field: string, strVal: string): SchemaPropertyRow | null => {
+    if (rule.urlFields.includes(field) && !URL_RE.test(strVal))
+      return {
+        property: field,
+        value: strVal,
+        status: 'invalid',
+        message: m('social.schema.msg.invalid_url'),
+      };
+    if (rule.dateFields.includes(field) && !ISO_DATE_RE.test(strVal))
+      return {
+        property: field,
+        value: strVal,
+        status: 'invalid',
+        message: m('social.schema.msg.invalid_date'),
+      };
+    if (rule.enumFields[field] && !rule.enumFields[field].includes(strVal))
+      return {
+        property: field,
+        value: strVal,
+        status: 'invalid',
+        message: m('social.schema.msg.invalid_enum', {
+          values: rule.enumFields[field].slice(0, 4).join(', '),
+        }),
+      };
+    return null;
+  };
+
   for (const field of rule.required) {
     const val = block.properties[field];
     if (!hasValue(val)) {
@@ -60,38 +87,7 @@ export function validateSchemaBlock(block: SchemaBlock): SchemaBlock {
       continue;
     }
     const strVal = stringify(val)!;
-
-    if (rule.urlFields.includes(field) && !URL_RE.test(strVal)) {
-      rows.push({
-        property: field,
-        value: strVal,
-        status: 'invalid',
-        message: m('social.schema.msg.invalid_url'),
-      });
-      continue;
-    }
-    if (rule.dateFields.includes(field) && !ISO_DATE_RE.test(strVal)) {
-      rows.push({
-        property: field,
-        value: strVal,
-        status: 'invalid',
-        message: m('social.schema.msg.invalid_date'),
-      });
-      continue;
-    }
-    if (rule.enumFields[field] && !rule.enumFields[field].includes(strVal)) {
-      rows.push({
-        property: field,
-        value: strVal,
-        status: 'invalid',
-        message: m('social.schema.msg.invalid_enum', {
-          values: rule.enumFields[field].slice(0, 4).join(', '),
-        }),
-      });
-      continue;
-    }
-
-    rows.push({ property: field, value: strVal, status: 'ok' });
+    rows.push(validateValue(field, strVal) ?? { property: field, value: strVal, status: 'ok' });
   }
 
   for (const field of rule.recommended) {
@@ -106,27 +102,7 @@ export function validateSchemaBlock(block: SchemaBlock): SchemaBlock {
       continue;
     }
     const strVal = stringify(val)!;
-
-    if (rule.urlFields.includes(field) && !URL_RE.test(strVal)) {
-      rows.push({
-        property: field,
-        value: strVal,
-        status: 'invalid',
-        message: m('social.schema.msg.invalid_url'),
-      });
-      continue;
-    }
-    if (rule.dateFields.includes(field) && !ISO_DATE_RE.test(strVal)) {
-      rows.push({
-        property: field,
-        value: strVal,
-        status: 'invalid',
-        message: m('social.schema.msg.invalid_date'),
-      });
-      continue;
-    }
-
-    rows.push({ property: field, value: strVal, status: 'ok' });
+    rows.push(validateValue(field, strVal) ?? { property: field, value: strVal, status: 'ok' });
   }
 
   const knownFields = new Set([...rule.required, ...rule.recommended]);
@@ -137,4 +113,4 @@ export function validateSchemaBlock(block: SchemaBlock): SchemaBlock {
 
   const overallStatus = statusFor(rows.map(r => r.status));
   return { ...block, rows, overallStatus };
-}
+};

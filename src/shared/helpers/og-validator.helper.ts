@@ -22,11 +22,17 @@ const VALID_OG_TYPES = new Set([
 
 const VALID_TWITTER_CARDS = new Set(['summary', 'summary_large_image', 'app', 'player']);
 
-function get(tags: MetaTag[], key: string): MetaTag | undefined {
-  return tags.find(t => t.key === key);
-}
+const groupFor = (key: string): import('../models/og-data.model').MetaTagGroup => {
+  if (key.startsWith('og:')) return 'og';
+  if (key.startsWith('twitter:')) return 'twitter';
+  if (key === 'fb:app_id' || key === 'fb:pages') return 'facebook';
+  if (key.startsWith('article:')) return 'article';
+  return 'basic';
+};
 
-export function validateMetaTags(tags: MetaTag[]): MetaTag[] {
+const get = (tags: MetaTag[], key: string): MetaTag | undefined => tags.find(t => t.key === key);
+
+export const validateMetaTags = (tags: MetaTag[]): MetaTag[] => {
   const result = tags.map(t => ({ ...t }));
 
   const set = (key: string, status: MetaTagStatus, msg?: ValidationMessage) => {
@@ -117,9 +123,9 @@ export function validateMetaTags(tags: MetaTag[]): MetaTag[] {
   }
 
   return result;
-}
+};
 
-export function computeOgBlockStatus(tags: MetaTag[]): OgBlockStatus {
+export const computeOgBlockStatus = (tags: MetaTag[]): OgBlockStatus => {
   const title = tags.find(t => t.key === 'og:title');
   if (!title?.value || title.status === 'invalid') return 'broken';
   const hasIssue = tags.some(
@@ -127,12 +133,4 @@ export function computeOgBlockStatus(tags: MetaTag[]): OgBlockStatus {
   );
   if (hasIssue) return 'needs-improvement';
   return 'ready';
-}
-
-function groupFor(key: string): import('../models/og-data.model').MetaTagGroup {
-  if (key.startsWith('og:')) return 'og';
-  if (key.startsWith('twitter:')) return 'twitter';
-  if (key === 'fb:app_id' || key === 'fb:pages') return 'facebook';
-  if (key.startsWith('article:')) return 'article';
-  return 'basic';
-}
+};

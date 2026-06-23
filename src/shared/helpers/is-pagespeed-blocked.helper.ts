@@ -25,11 +25,11 @@ const BLOCKED_DOMAINS = new Set([
   'www.amazon.com',
 ]);
 
-export function isPageSpeedBlocked(url: string): boolean {
+export const isPageSpeedBlocked = (url: string): boolean => {
   try {
     const { hostname } = new URL(url);
     return BLOCKED_DOMAINS.has(hostname);
   } catch {
     return false;
   }
-}
+};

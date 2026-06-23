@@ -60,10 +60,8 @@
           t(group.labelKey)
         }}</span>
         @for (tag of group.tags; track tag.key) {
-          <div class="flex flex-col">
-            <div
-              class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white"
-            >
+          <div class="flex flex-col rounded-lg border border-gray-100 bg-white overflow-hidden">
+            <div class="flex items-center gap-2 px-2 py-1.5">
               <span class="w-2 h-2 rounded-full shrink-0" [class]="dotClass(tag.status)"></span>
               <span
                 class="text-[11px] text-gray-700 shrink-0 w-[110px] truncate font-mono"
@@ -87,9 +85,14 @@
               </span>
             </div>
             @if (tag.statusMessage && tag.status !== 'ok') {
-              <p class="px-6 pb-0.5 text-[9px] text-slate-400 leading-tight">
-                {{ t(tag.statusMessage.key, tag.statusMessage.params) }}
-              </p>
+              <div class="px-[26px] pb-1.5 flex flex-wrap gap-1">
+                <span
+                  class="text-[9px] rounded-full px-1.5 py-0.5 leading-none"
+                  [class]="badgeClass(tag.status)"
+                >
+                  {{ t(tag.statusMessage.key, tag.statusMessage.params) }}
+                </span>
+              </div>
             }
           </div>
         }

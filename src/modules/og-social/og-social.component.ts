@@ -38,11 +38,13 @@ export class OgSocialComponent {
   protected readonly error = computed(() => this.#store.error());
 
   protected readonly groups = computed(() => {
+    const isKnownGroup = (g: string): g is MetaTagGroup => GROUP_ORDER.includes(g as MetaTagGroup);
     const map = new Map<MetaTagGroup, MetaTag[]>();
     for (const tag of this.tags()) {
-      const list = map.get(tag.group as MetaTagGroup) ?? [];
+      const group: MetaTagGroup = isKnownGroup(tag.group) ? tag.group : 'basic';
+      const list = map.get(group) ?? [];
       list.push(tag);
-      map.set(tag.group as MetaTagGroup, list);
+      map.set(group, list);
     }
     return GROUP_ORDER.filter(g => map.has(g)).map(g => ({
       group: g,

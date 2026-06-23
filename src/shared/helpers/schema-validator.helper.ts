@@ -49,7 +49,12 @@ export const validateSchemaBlock = (block: SchemaBlock): SchemaBlock => {
   const rows: SchemaPropertyRow[] = [];
 
   const validateValue = (field: string, strVal: string): SchemaPropertyRow | null => {
-    if (rule.urlFields.includes(field) && !URL_RE.test(strVal))
+    if (
+      rule.urlFields.includes(field) &&
+      !URL_RE.test(strVal) &&
+      strVal[0] !== '{' &&
+      strVal[0] !== '['
+    )
       return {
         property: field,
         value: strVal,

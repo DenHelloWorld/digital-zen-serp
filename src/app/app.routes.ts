@@ -10,9 +10,16 @@ export const routes: Routes = [
       ),
   },
   {
-    path: ROUTES.SOCIAL,
+    path: ROUTES.OG,
     loadComponent: () =>
       import('../modules/pages/social-page/social-page.component').then(m => m.SocialPageComponent),
+  },
+  {
+    path: ROUTES.SCHEMA,
+    loadComponent: () =>
+      import('../modules/pages/schema-og-page/schema-og-page.component').then(
+        m => m.SchemaOgPageComponent
+      ),
   },
   {
     path: ROUTES.SEO_AUDIT,

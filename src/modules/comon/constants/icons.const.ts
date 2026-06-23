@@ -4,29 +4,21 @@
  *
  * @example
  * ```html
- * <svg class="dz-icon">
- *   <use [attr.href]="icons.PLUS"></use>
- * </svg>
+ * <svg><use [attr.href]="ICONS.GLOBE"></use></svg>
  * ```
  */
 export const ICONS = Object.freeze({
+  // Lucide — stroke-based UI icons
   GLOBE: '#icon-globe',
-  X: '#icon-x',
-  REFRESH_CW: '#icon-refresh-cw',
-  LOADER: '#icon-loader',
-  ALERT_TRIANGLE: '#icon-alert-triangle',
-  BAN: '#icon-ban',
-  INFO: '#icon-info',
-  EYE: '#icon-eye',
-  PENCIL: '#icon-pencil',
-  INBOX: '#icon-inbox',
-  SIGNAL: '#icon-signal',
-  CALENDAR: '#icon-calendar',
-  CLOCK: '#icon-clock',
-  USER: '#icon-user',
+
+  // Simple Icons — brand logos (fill-based)
+  SI_FACEBOOK: '#si-facebook',
+  SI_TWITTER: '#si-x',
+  SI_TELEGRAM: '#si-telegram',
+  SI_LINKEDIN: '#si-linkedin',
+  SI_SLACK: '#si-slack',
+  SI_GOOGLE: '#si-google',
+  SI_PINTEREST: '#si-pinterest',
 } as const);
 
-/**
- * Type representing all available icon identifiers
- */
 export type IconType = (typeof ICONS)[keyof typeof ICONS];

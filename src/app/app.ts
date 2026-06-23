@@ -29,7 +29,8 @@ export class App {
     { route: ROUTES.CURRENT_SITE, labelKey: 'nav.current_site', emoji: '🌐' },
     { route: ROUTES.HEADINGS, labelKey: 'nav.headings', emoji: '📑' },
     { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance', emoji: '⚡' },
-    { route: ROUTES.SOCIAL, labelKey: 'nav.social', emoji: '🔗' },
+    { route: ROUTES.OG, labelKey: 'nav.og', emoji: '🔗' },
+    { route: ROUTES.SCHEMA, labelKey: 'nav.schema', emoji: '🧩' },
   ] as const;
 
   constructor() {

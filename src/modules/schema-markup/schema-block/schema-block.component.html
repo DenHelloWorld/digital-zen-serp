@@ -1,0 +1,80 @@
+<ng-container *transloco="let t">
+  <!-- Header row -->
+  <div
+    class="flex items-center gap-2 px-2 py-1.5 rounded-t-lg border border-slate-200 bg-slate-50 cursor-pointer select-none"
+    (click)="toggleRaw()"
+    (keydown.enter)="toggleRaw()"
+    (keydown.space)="toggleRaw()"
+    role="button"
+    tabindex="0"
+  >
+    <span class="w-2 h-2 rounded-full shrink-0" [class]="headerDotClass"></span>
+    <span class="text-[11px] font-semibold text-slate-800 truncate flex-1 min-w-0">{{
+      block().type
+    }}</span>
+    <span class="text-[9px] text-slate-400 uppercase tracking-wide shrink-0 font-mono">{{
+      block().format
+    }}</span>
+    <span
+      class="text-[9px] font-semibold px-1.5 py-0.5 rounded-full leading-none shrink-0"
+      [class]="headerBadge.cls"
+    >
+      {{ t(headerBadge.labelKey) }}
+    </span>
+    <span class="text-[10px] text-slate-400 shrink-0">{{ showRaw() ? '▲' : '▼' }}</span>
+  </div>
+
+  <!-- Broken JSON notice -->
+  @if (block().overallStatus === 'broken') {
+    <div class="px-2 py-1.5 border border-t-0 border-slate-200 rounded-b-lg bg-red-50">
+      <span class="text-[10px] text-red-600">⚠ {{ t('social.schema.parse_error') }}</span>
+    </div>
+  }
+
+  <!-- Property rows -->
+  @if (block().rows.length && block().overallStatus !== 'broken') {
+    <div class="flex flex-col border border-t-0 border-slate-200 rounded-b-lg overflow-hidden">
+      @for (row of block().rows; track row.property) {
+        <div class="flex flex-col border-b border-slate-50 last:border-0 bg-white">
+          <div class="flex items-center gap-2 px-2 py-1.5">
+            <span class="w-2 h-2 rounded-full shrink-0" [class]="dotClass(row.status)"></span>
+            <span
+              class="text-[11px] text-gray-700 shrink-0 w-[110px] truncate"
+              [title]="row.property"
+              >{{ row.property }}</span
+            >
+            <span
+              class="text-[10px] text-gray-400 flex-1 min-w-0 truncate"
+              [title]="row.value ?? ''"
+              >{{ row.value ?? '—' }}</span
+            >
+            <span
+              class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
+              [class]="badgeClass(row.status)"
+            >
+              {{ t('social.status.' + row.status) }}
+            </span>
+          </div>
+          @if (row.message && row.status !== 'ok') {
+            <p class="px-6 pb-1 text-[9px] text-slate-400 leading-tight">
+              {{ t(row.message.key, row.message.params) }}
+            </p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Raw viewer -->
+  @if (showRaw()) {
+    <div class="relative rounded-lg border border-slate-200 bg-slate-900 overflow-hidden mt-1">
+      <div class="absolute top-1.5 right-1.5 z-10">
+        <dz-copy-button [text]="block().raw" />
+      </div>
+      <pre
+        class="text-[10px] text-slate-300 p-3 pr-10 overflow-x-auto max-h-60 whitespace-pre-wrap break-all leading-relaxed"
+        >{{ block().raw }}</pre
+      >
+    </div>
+  }
+</ng-container>

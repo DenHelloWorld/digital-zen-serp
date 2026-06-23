@@ -1,0 +1,63 @@
+<ng-container *transloco="let t">
+  <p class="text-[9px] text-slate-400 italic">{{ t('social.simulator.disclaimer') }}</p>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Google" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Google</span>
+    </div>
+    <dz-google-card [data]="ogData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Twitter" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+        >X (Twitter)</span
+      >
+    </div>
+    <dz-twitter-card [data]="twitterData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Facebook" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Facebook</span>
+    </div>
+    <dz-facebook-card [data]="ogData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Telegram" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Telegram</span>
+    </div>
+    <dz-telegram-card [data]="ogData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.LinkedIn" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">LinkedIn</span>
+    </div>
+    <dz-linkedin-card [data]="ogData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Slack" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Slack</span>
+    </div>
+    <dz-slack-card [data]="ogData()" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <dz-social-icon [platform]="P.Pinterest" [size]="20" />
+      <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide"
+        >Pinterest</span
+      >
+    </div>
+    <dz-pinterest-card [data]="ogData()" />
+  </div>
+</ng-container>

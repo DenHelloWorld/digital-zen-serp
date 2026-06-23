@@ -132,9 +132,77 @@
     "crux_average": "Avg",
     "crux_slow": "Slow"
   },
+  "social": {
+    "schema": {
+      "title": "Schema Markup",
+      "not_available": "Schema analysis is not available on this page",
+      "error": "Failed to analyze page",
+      "not_found": "No Schema Markup found on this page",
+      "status_valid": "Valid",
+      "status_has_warnings": "Has Warnings",
+      "status_has_errors": "Has Errors",
+      "status_broken": "Broken",
+      "parse_error": "JSON parse error — see raw source below",
+      "msg": {
+        "required_missing": "Required field is missing",
+        "recommended_missing": "Recommended field is missing",
+        "invalid_url": "Value must be a valid URL (https://...)",
+        "invalid_date": "Value must be a valid ISO 8601 date",
+        "invalid_enum": "Must be one of: {{ values }}"
+      }
+    },
+    "og": {
+      "title": "Social Preview",
+      "not_available": "Social preview analysis is not available on this page",
+      "error": "Failed to analyze page",
+      "not_found": "No Open Graph or social meta tags found",
+      "status_ready": "Ready to share",
+      "status_needs_improvement": "Needs improvement",
+      "status_broken": "Broken preview",
+      "group_og": "Open Graph",
+      "group_twitter": "Twitter / X Cards",
+      "group_facebook": "Facebook",
+      "group_article": "Article Meta",
+      "group_basic": "Basic Meta",
+      "msg": {
+        "title_too_long": "Title exceeds 70 characters",
+        "desc_too_long": "Description exceeds 200 characters",
+        "desc_too_short": "Description is too short (under 50 characters)",
+        "url_missing": "og:url is missing",
+        "url_mismatch": "og:url does not match the canonical URL",
+        "type_missing": "og:type is missing",
+        "type_invalid": "Unknown type \"{{ value }}\"",
+        "twitter_card_missing": "twitter:card is missing",
+        "twitter_card_invalid": "Unknown card type \"{{ value }}\"",
+        "twitter_image_fallback": "Uses og:image as fallback",
+        "handle_at": "Handle should start with @",
+        "image_not_accessible": "Image is not accessible",
+        "image_timeout": "Image load timed out",
+        "image_too_small": "Image too small: {{ w }}×{{ h }}px (min 200×200)",
+        "image_below_recommended": "Below recommended size for large preview ({{ w }}×{{ h }}px)",
+        "image_aspect_ratio": "Aspect ratio {{ ratio }}:1 — may be cropped (expected ~1.91:1)",
+        "image_too_large": "File size exceeds 8 MB (Facebook limit)",
+        "duplicate_conflict": "Duplicate tag with conflicting value"
+      }
+    },
+    "simulator": {
+      "title": "Link Preview Simulator",
+      "disclaimer": "Approximate preview — platforms may render differently",
+      "no_title": "No title",
+      "no_image": "No image",
+      "image_not_accessible": "Image not accessible"
+    },
+    "status": {
+      "ok": "OK",
+      "warning": "Warning",
+      "missing": "Missing",
+      "invalid": "Invalid"
+    }
+  },
   "nav": {
     "main": "Main",
-    "social": "Social",
+    "og": "OG & Social",
+    "schema": "Schema",
     "language": "Language",
     "current_site": "Current site",
     "seo_audit": "SEO Audit",

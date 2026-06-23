@@ -1,0 +1,31 @@
+<ng-container *transloco="let t">
+  <div class="rounded-2xl overflow-hidden border border-slate-200 relative">
+    <div class="w-full h-[220px] bg-slate-100 flex items-center justify-center overflow-hidden">
+      @if (data().image && !imgError()) {
+        <img
+          class="w-full h-full object-cover"
+          [src]="data().image!"
+          (error)="onImgError()"
+          alt=""
+        />
+      } @else {
+        <div class="flex flex-col items-center gap-1 text-slate-300">
+          <span class="text-3xl">🖼️</span>
+          <span class="text-xs">{{
+            data().image
+              ? t('social.simulator.image_not_accessible')
+              : t('social.simulator.no_image')
+          }}</span>
+        </div>
+      }
+    </div>
+    <div class="absolute bottom-3 left-3 right-3">
+      <span
+        class="inline-block bg-black/75 text-white text-[13px] font-medium px-2.5 py-1 rounded max-w-full truncate leading-tight"
+      >
+        {{ truncate(data().title, 70) || t('social.simulator.no_title') }}
+      </span>
+    </div>
+  </div>
+  <p class="text-xs text-slate-400 px-0.5">From {{ data().domain.toLowerCase() }}</p>
+</ng-container>

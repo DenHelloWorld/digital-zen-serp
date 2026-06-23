@@ -14,7 +14,7 @@ if (!w.__dzPanelInit) {
       position: fixed;
       top: 0;
       right: 0;
-      width: 560px;
+      width: 650px;
       height: 100vh;
       transform: translateX(100%);
       transition: transform 0.28s cubic-bezier(.4, 0, .2, 1);

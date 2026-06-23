@@ -13,6 +13,7 @@ import {
 } from '../shared/helpers/page-heading-highlighter';
 import type { HeadingData } from '../shared/models/heading-data.model';
 import { GooglePreviewService } from './google-preview.service';
+import { SchemaOgService } from './schema-og.service';
 import { SeoAuditService } from './seo-audit.service';
 import { WebVitalsService } from './web-vitals.service';
 
@@ -36,6 +37,7 @@ type MessageHandler = (
 
 export class BackgroundService {
   readonly #googlePreview = new GooglePreviewService();
+  readonly #schemaOg = new SchemaOgService();
   readonly #seoAudit = new SeoAuditService();
   readonly #webVitals = new WebVitalsService();
   readonly #keepalivePorts = new Set<chrome.runtime.Port>();
@@ -51,6 +53,7 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.SCROLL_TO_HEADING, msg => this.#handleScrollToHeading(msg)],
     [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, msg => this.#handleCollectWebVitals(msg)],
     [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS_BOTH, () => this.#handleCollectWebVitalsBoth()],
+    [CHROME_COMMAND_ENUM.COLLECT_SCHEMA_OG, () => this.#handleCollectSchemaOg()],
   ]);
 
   constructor() {
@@ -266,6 +269,15 @@ export class BackgroundService {
     const mobile = await this.#webVitals.collectAll(tab.id, tab.url, 'mobile');
     const desktop = await this.#webVitals.collectAll(tab.id, tab.url, 'desktop');
     return { success: true, data: { mobile, desktop } };
+  }
+
+  async #handleCollectSchemaOg(): Promise<HandlerResult> {
+    const tab = await this.#requireActiveTab();
+    if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
+    if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
+
+    const data = await this.#schemaOg.collect(tab.id, tab.url);
+    return { success: true, data };
   }
 
   /* ── Helpers ──────────────────────────────────────────────── */

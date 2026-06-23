@@ -1,0 +1,138 @@
+import { SchemaTypeRule } from './schema-rules.types';
+
+const OFFER_AVAILABILITY = [
+  'https://schema.org/InStock',
+  'https://schema.org/OutOfStock',
+  'https://schema.org/PreOrder',
+  'https://schema.org/Discontinued',
+  'https://schema.org/InStoreOnly',
+  'https://schema.org/LimitedAvailability',
+  'https://schema.org/OnlineOnly',
+  'https://schema.org/SoldOut',
+  'InStock',
+  'OutOfStock',
+  'PreOrder',
+  'Discontinued',
+  'InStoreOnly',
+  'LimitedAvailability',
+  'OnlineOnly',
+  'SoldOut',
+];
+
+const RULES: SchemaTypeRule[] = [
+  {
+    type: 'Product',
+    required: ['name'],
+    recommended: ['image', 'description', 'sku', 'offers', 'aggregateRating', 'brand'],
+    urlFields: ['image', 'url'],
+    dateFields: [],
+    enumFields: { 'offers.availability': OFFER_AVAILABILITY },
+  },
+  {
+    type: 'Article',
+    required: ['headline', 'author', 'datePublished'],
+    recommended: ['image', 'dateModified', 'publisher', 'description'],
+    urlFields: ['image', 'url'],
+    dateFields: ['datePublished', 'dateModified'],
+    enumFields: {},
+  },
+  {
+    type: 'Organization',
+    required: ['name'],
+    recommended: ['url', 'logo', 'contactPoint', 'sameAs', 'address'],
+    urlFields: ['url', 'logo', 'sameAs'],
+    dateFields: [],
+    enumFields: {},
+  },
+  {
+    type: 'LocalBusiness',
+    required: ['name', 'address'],
+    recommended: ['telephone', 'openingHours', 'url', 'image', 'geo', 'priceRange'],
+    urlFields: ['url', 'image'],
+    dateFields: [],
+    enumFields: {},
+  },
+  {
+    type: 'FAQPage',
+    required: ['mainEntity'],
+    recommended: [],
+    urlFields: [],
+    dateFields: [],
+    enumFields: {},
+  },
+  {
+    type: 'BreadcrumbList',
+    required: ['itemListElement'],
+    recommended: [],
+    urlFields: [],
+    dateFields: [],
+    enumFields: {},
+  },
+  {
+    type: 'Review',
+    required: ['itemReviewed', 'reviewRating', 'author'],
+    recommended: ['datePublished', 'reviewBody', 'publisher'],
+    urlFields: [],
+    dateFields: ['datePublished'],
+    enumFields: {},
+  },
+  {
+    type: 'Event',
+    required: ['name', 'startDate', 'location'],
+    recommended: ['endDate', 'description', 'image', 'url', 'organizer', 'offers'],
+    urlFields: ['url', 'image'],
+    dateFields: ['startDate', 'endDate'],
+    enumFields: {
+      eventStatus: [
+        'https://schema.org/EventScheduled',
+        'https://schema.org/EventCancelled',
+        'https://schema.org/EventPostponed',
+        'https://schema.org/EventRescheduled',
+        'EventScheduled',
+        'EventCancelled',
+        'EventPostponed',
+        'EventRescheduled',
+      ],
+    },
+  },
+  {
+    type: 'Recipe',
+    required: ['name', 'recipeIngredient', 'recipeInstructions'],
+    recommended: [
+      'image',
+      'author',
+      'description',
+      'prepTime',
+      'cookTime',
+      'totalTime',
+      'recipeYield',
+      'nutrition',
+    ],
+    urlFields: ['image', 'url'],
+    dateFields: ['datePublished'],
+    enumFields: {},
+  },
+  {
+    type: 'JobPosting',
+    required: ['title', 'description', 'hiringOrganization', 'jobLocation', 'datePosted'],
+    recommended: ['validThrough', 'employmentType', 'baseSalary'],
+    urlFields: ['url'],
+    dateFields: ['datePosted', 'validThrough'],
+    enumFields: {
+      employmentType: [
+        'FULL_TIME',
+        'PART_TIME',
+        'CONTRACTOR',
+        'TEMPORARY',
+        'INTERN',
+        'VOLUNTEER',
+        'PER_DIEM',
+        'OTHER',
+      ],
+    },
+  },
+];
+
+export const SCHEMA_RULES_MAP = new Map<string, SchemaTypeRule>(
+  RULES.map(r => [r.type.toLowerCase(), r])
+);

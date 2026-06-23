@@ -1,6 +1,7 @@
 export const ROUTES = Object.freeze({
   CURRENT_SITE: 'current-site-page',
-  SOCIAL: 'social',
+  OG: 'og',
+  SCHEMA: 'schema',
   SEO_AUDIT: 'seo-audit',
   HEADINGS: 'headings',
   PERFORMANCE: 'performance',

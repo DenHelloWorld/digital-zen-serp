@@ -132,9 +132,77 @@
     "crux_average": "Средне",
     "crux_slow": "Медленно"
   },
+  "social": {
+    "schema": {
+      "title": "Schema Markup",
+      "not_available": "Анализ Schema недоступен на этой странице",
+      "error": "Не удалось проанализировать страницу",
+      "not_found": "Schema Markup не найден на этой странице",
+      "status_valid": "Валидный",
+      "status_has_warnings": "Есть предупреждения",
+      "status_has_errors": "Есть ошибки",
+      "status_broken": "Сломан",
+      "parse_error": "Ошибка парсинга JSON — см. исходный код ниже",
+      "msg": {
+        "required_missing": "Обязательное поле отсутствует",
+        "recommended_missing": "Рекомендуемое поле отсутствует",
+        "invalid_url": "Значение должно быть валидным URL (https://...)",
+        "invalid_date": "Значение должно быть датой в формате ISO 8601",
+        "invalid_enum": "Должно быть одним из: {{ values }}"
+      }
+    },
+    "og": {
+      "title": "Social Preview",
+      "not_available": "Анализ Social Preview недоступен на этой странице",
+      "error": "Не удалось проанализировать страницу",
+      "not_found": "Open Graph и social мета-теги не найдены",
+      "status_ready": "Готов к шарингу",
+      "status_needs_improvement": "Требует улучшения",
+      "status_broken": "Превью сломано",
+      "group_og": "Open Graph",
+      "group_twitter": "Twitter / X Cards",
+      "group_facebook": "Facebook",
+      "group_article": "Article Meta",
+      "group_basic": "Базовые мета",
+      "msg": {
+        "title_too_long": "Заголовок превышает 70 символов",
+        "desc_too_long": "Описание превышает 200 символов",
+        "desc_too_short": "Описание слишком короткое (менее 50 символов)",
+        "url_missing": "og:url отсутствует",
+        "url_mismatch": "og:url не совпадает с canonical URL",
+        "type_missing": "og:type отсутствует",
+        "type_invalid": "Неизвестный тип \"{{ value }}\"",
+        "twitter_card_missing": "twitter:card отсутствует",
+        "twitter_card_invalid": "Неизвестный тип карточки \"{{ value }}\"",
+        "twitter_image_fallback": "Используется og:image как запасной вариант",
+        "handle_at": "Хэндл должен начинаться с @",
+        "image_not_accessible": "Изображение недоступно",
+        "image_timeout": "Время загрузки изображения истекло",
+        "image_too_small": "Изображение слишком маленькое: {{ w }}×{{ h }}px (мин. 200×200)",
+        "image_below_recommended": "Меньше рекомендованного размера для большого превью ({{ w }}×{{ h }}px)",
+        "image_aspect_ratio": "Соотношение сторон {{ ratio }}:1 — может быть обрезано (ожидается ~1.91:1)",
+        "image_too_large": "Размер файла превышает 8 МБ (лимит Facebook)",
+        "duplicate_conflict": "Дублирующийся тег с конфликтующим значением"
+      }
+    },
+    "simulator": {
+      "title": "Симулятор превью",
+      "disclaimer": "Приблизительный предпросмотр — платформы могут отображать иначе",
+      "no_title": "Нет заголовка",
+      "no_image": "Нет изображения",
+      "image_not_accessible": "Изображение недоступно"
+    },
+    "status": {
+      "ok": "OK",
+      "warning": "Предупреждение",
+      "missing": "Отсутствует",
+      "invalid": "Невалидно"
+    }
+  },
   "nav": {
     "main": "Основные",
-    "social": "Соцсети",
+    "og": "OG и соцсети",
+    "schema": "Schema",
     "language": "Язык",
     "current_site": "Текущий сайт",
     "seo_audit": "SEO Аудит",

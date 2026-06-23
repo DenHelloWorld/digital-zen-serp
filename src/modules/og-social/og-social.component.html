@@ -1,0 +1,102 @@
+<ng-container *transloco="let t">
+  <!-- Title + block status badge -->
+  <div class="flex items-center justify-between">
+    <span class="text-sm font-bold text-slate-800 font-mono">{{ t('social.og.title') }}</span>
+    @if (!isLoading() && !error()) {
+      <span
+        class="text-[9px] font-semibold px-1.5 py-0.5 rounded-full leading-none"
+        [class]="blockBadge.cls"
+      >
+        {{ t(blockBadge.labelKey) }}
+      </span>
+    }
+  </div>
+
+  <dz-loading-bar [visible]="isLoading()" />
+
+  @if (error(); as err) {
+    @if (err === 'INVALID_PAGE_PROTOCOL' || err === 'CHROME_RUNTIME_NOT_FOUND') {
+      <div class="flex flex-col items-center gap-2 py-8 text-slate-400">
+        <span class="text-3xl">🚫</span>
+        <span class="text-sm text-center">{{ t('social.og.not_available') }}</span>
+      </div>
+    } @else {
+      <div
+        class="flex flex-col items-center gap-2 p-4 border border-red-200 bg-red-50 rounded-lg text-sm text-red-600"
+      >
+        <span class="font-medium">{{ t('social.og.error') }}</span>
+        <span class="text-xs text-red-400">{{ err }}</span>
+      </div>
+    }
+  }
+
+  @if (!isLoading() && !error()) {
+    <!-- No tags at all -->
+    @if (!tags().length) {
+      <div class="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-gray-100 bg-white">
+        <span class="w-2 h-2 rounded-full shrink-0 bg-red-400"></span>
+        <span class="text-[11px] text-gray-700 flex-1">{{ t('social.og.not_found') }}</span>
+        <span
+          class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0 bg-red-100 text-red-600"
+          >{{ t('social.status.missing') }}</span
+        >
+      </div>
+    }
+
+    <!-- Link Preview Simulator -->
+    @if (tags().length) {
+      <div class="flex flex-col gap-[var(--spacing)]">
+        <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{
+          t('social.simulator.title')
+        }}</span>
+        <dz-link-preview-simulator [tags]="tags()" />
+      </div>
+    }
+
+    <!-- Grouped tag rows -->
+    @for (group of groups(); track group.group) {
+      <div class="flex flex-col gap-1">
+        <span class="text-[10px] font-semibold text-gray-500 uppercase tracking-wide">{{
+          t(group.labelKey)
+        }}</span>
+        @for (tag of group.tags; track tag.key) {
+          <div class="flex flex-col rounded-lg border border-gray-100 bg-white overflow-hidden">
+            <div class="flex items-center gap-2 px-2 py-1.5">
+              <span class="w-2 h-2 rounded-full shrink-0" [class]="dotClass(tag.status)"></span>
+              <span
+                class="text-[11px] text-gray-700 shrink-0 w-[110px] truncate font-mono"
+                [title]="tag.key"
+                >{{ tag.key }}</span
+              >
+              <span
+                class="text-[10px] text-gray-400 flex-1 min-w-0 truncate"
+                [title]="tag.value ?? ''"
+              >
+                {{ tag.value ?? '—' }}
+                @if (imageInfo(tag.value); as info) {
+                  <span class="text-[9px] text-slate-400 ml-1">({{ info }})</span>
+                }
+              </span>
+              <span
+                class="text-[9px] font-semibold px-1 py-0.5 rounded-full leading-none shrink-0"
+                [class]="badgeClass(tag.status)"
+              >
+                {{ t(badgeLabelKey(tag.status)) }}
+              </span>
+            </div>
+            @if (tag.statusMessage && tag.status !== 'ok') {
+              <div class="px-[26px] pb-1.5 flex flex-wrap gap-1">
+                <span
+                  class="text-[9px] rounded-full px-1.5 py-0.5 leading-none"
+                  [class]="badgeClass(tag.status)"
+                >
+                  {{ t(tag.statusMessage.key, tag.statusMessage.params) }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</ng-container>

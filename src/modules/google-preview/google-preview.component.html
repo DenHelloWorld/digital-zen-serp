@@ -112,20 +112,10 @@
       [style.max-width.px]="selectedDevice() === 'desktop' ? 712 : 375"
     >
       <div class="flex items-center gap-3 mb-1.5">
-        @if (mode() === 'live' && iconUrl()) {
-          <div class="dz-icon-box dz-icon-box--nm round">
-            <img
-              class="dz-icon dz-icon--shadow round"
-              [src]="iconUrl()!"
-              (error)="onIconError()"
-              alt=""
-            />
-          </div>
-        } @else {
-          <div class="w-7 h-7 bg-gray-100 rounded-full flex items-center justify-center shrink-0">
-            <span class="text-[10px] font-bold text-slate-400">G</span>
-          </div>
-        }
+        <dz-favicon
+          class="w-[var(--btn-size-nm)] h-[var(--btn-size-nm)] bg-white border border-gray-200 rounded-full shrink-0"
+          [url]="mode() === 'live' ? (activeTab()?.url ?? '') : ''"
+        />
         <div class="flex flex-col min-w-0">
           <span
             class="text-[14px] text-[#202124] leading-tight overflow-hidden whitespace-nowrap text-ellipsis block"

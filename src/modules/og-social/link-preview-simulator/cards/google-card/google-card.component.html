@@ -10,7 +10,13 @@
     } @else {
       <div class="w-5 h-5 rounded-full bg-slate-200 shrink-0"></div>
     }
-    <span class="text-sm text-slate-700 leading-none">{{ data().domain.toLowerCase() }}</span>
+    <span class="text-sm text-slate-700 leading-none">
+      {{
+        data().siteName
+          ? data().siteName + ' › ' + data().domain.toLowerCase()
+          : data().domain.toLowerCase()
+      }}
+    </span>
   </div>
   <a class="text-[18px] text-[#1a0dab] font-normal leading-snug cursor-default select-none">
     {{ truncate(data().title, 60) || '—' }}

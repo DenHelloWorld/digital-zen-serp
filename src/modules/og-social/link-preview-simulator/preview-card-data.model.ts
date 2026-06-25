@@ -3,4 +3,5 @@ export interface PreviewCardData {
   description: string | null;
   image: string | null;
   domain: string;
+  siteName: string | null;
 }

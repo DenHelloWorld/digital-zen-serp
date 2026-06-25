@@ -20,7 +20,9 @@
       }
     </div>
     <div class="px-3 py-2.5 border-t border-slate-200 bg-[#f2f3f5]">
-      <p class="text-[11px] text-[#65676b] uppercase tracking-wider mb-0.5">{{ data().domain }}</p>
+      <p class="text-[11px] text-[#65676b] uppercase tracking-wider mb-0.5">
+        {{ data().siteName || data().domain }}
+      </p>
       <p class="text-[15px] font-semibold text-[#1c1e21] leading-tight">
         {{ truncate(data().title, 88) || t('social.simulator.no_title') }}
       </p>

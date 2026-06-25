@@ -1,5 +1,23 @@
 <ng-container *transloco="let t">
-  <p class="text-[9px] text-slate-400 italic">{{ t('social.simulator.disclaimer') }}</p>
+  <div class="flex items-center gap-1.5">
+    <p class="text-[9px] text-slate-400 italic">{{ t('social.simulator.disclaimer') }}</p>
+    @if (microlinkStatus() === 'loading') {
+      <span
+        class="inline-block w-2 h-2 rounded-full bg-yellow-400 animate-pulse shrink-0"
+        title="Fetching bot preview..."
+      ></span>
+    } @else if (microlinkStatus() === 'ok') {
+      <span
+        class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0"
+        title="Bot preview (Microlink)"
+      ></span>
+    } @else if (microlinkStatus() === 'error') {
+      <span
+        class="inline-block w-2 h-2 rounded-full bg-yellow-400 shrink-0"
+        title="Bot preview unavailable — showing DOM data"
+      ></span>
+    }
+  </div>
 
   <div class="flex flex-col gap-1">
     <div class="flex items-center gap-2">

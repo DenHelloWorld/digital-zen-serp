@@ -1,30 +1,21 @@
 <ng-container *transloco="let t">
-  <div class="rounded-lg overflow-hidden bg-white border border-slate-200">
-    <div class="flex">
-      <div class="w-1 bg-[#2AABEE] shrink-0 rounded-l-lg"></div>
-      <div class="flex flex-col flex-1 min-w-0">
-        @if (data().image && !imgError()) {
-          <div class="w-full h-[160px] overflow-hidden">
-            <img
-              class="w-full h-full object-cover"
-              [src]="data().image!"
-              (error)="onImgError()"
-              alt=""
-            />
-          </div>
-        }
-        <div class="px-3 py-2.5">
-          <p class="text-[13px] font-semibold text-[#2AABEE] leading-tight">
-            {{ data().domain.toLowerCase() }}
-          </p>
-          <p class="text-[15px] font-medium text-slate-900 leading-tight mt-0.5">
-            {{ truncate(data().title, 80) || t('social.simulator.no_title') }}
-          </p>
-          <p class="text-[13px] text-slate-500 mt-0.5 leading-snug">
-            {{ truncate(data().description, 100) }}
-          </p>
-        </div>
+  <div class="rounded-lg overflow-hidden bg-white border border-slate-200 flex">
+    <div class="w-0.5 bg-[#2AABEE] shrink-0"></div>
+    <div class="flex flex-col flex-1 min-w-0">
+      <div class="px-3 py-2.5">
+        <p class="text-[13px] font-semibold text-[#2AABEE] leading-tight">
+          {{ data().siteName || data().domain.toLowerCase() }}
+        </p>
+        <p class="text-[15px] font-medium text-slate-900 leading-tight mt-0.5">
+          {{ truncate(data().title, 80) || t('social.simulator.no_title') }}
+        </p>
+        <p class="text-[13px] text-slate-500 mt-0.5 leading-snug">
+          {{ truncate(data().description, 100) }}
+        </p>
       </div>
+      @if (data().image && !imgError()) {
+        <img class="w-full object-cover" [src]="data().image!" (error)="onImgError()" alt="" />
+      }
     </div>
   </div>
 </ng-container>

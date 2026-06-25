@@ -3,7 +3,6 @@ import type { MetaTag } from '../../../shared/models/og-data.model';
 import { SchemaOgStore } from '../../comon/stores/schema-og.store';
 import { SocialIconComponent } from '../../ui/social-icon/social-icon.component';
 import { FacebookCardComponent } from './cards/facebook-card/facebook-card.component';
-import { GoogleCardComponent } from './cards/google-card/google-card.component';
 import { LinkedinCardComponent } from './cards/linkedin-card/linkedin-card.component';
 import { PinterestCardComponent } from './cards/pinterest-card/pinterest-card.component';
 import { SlackCardComponent } from './cards/slack-card/slack-card.component';
@@ -23,7 +22,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
     TelegramCardComponent,
     LinkedinCardComponent,
     SlackCardComponent,
-    GoogleCardComponent,
     PinterestCardComponent,
   ],
   templateUrl: './link-preview-simulator.component.html',

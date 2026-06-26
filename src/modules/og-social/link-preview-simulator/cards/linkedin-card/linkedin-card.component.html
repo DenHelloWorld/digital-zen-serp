@@ -23,7 +23,9 @@
       <p class="text-[15px] font-semibold text-[#000000e6] leading-tight">
         {{ truncate(data().title, 88) || t('social.simulator.no_title') }}
       </p>
-      <p class="text-[13px] text-[#00000099] mt-0.5">{{ data().domain.toLowerCase() }}</p>
+      <p class="text-[13px] text-[#00000099] mt-0.5">
+        {{ data().siteName || data().domain.toLowerCase() }}
+      </p>
     </div>
   </div>
 </ng-container>

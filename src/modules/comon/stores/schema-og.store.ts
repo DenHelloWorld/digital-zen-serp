@@ -12,6 +12,16 @@ import { Injectable, signal, effect, inject, computed } from '@angular/core';
 
 const IMAGE_TIMEOUT_MS = 5000;
 
+export type MicrolinkStatus = 'idle' | 'loading' | 'ok' | 'error';
+
+export interface MicrolinkData {
+  title: string | null;
+  description: string | null;
+  url: string | null;
+  image: { url: string } | null;
+  publisher: string | null;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SchemaOgStore {
   readonly #schemaBlocks = signal<SchemaBlock[]>([]);
@@ -19,12 +29,16 @@ export class SchemaOgStore {
   readonly #imageChecks = signal<Map<string, ImageCheckResult>>(new Map());
   readonly #loading = signal(false);
   readonly #error = signal<string | null>(null);
+  readonly #microlinkData = signal<MicrolinkData | null>(null);
+  readonly #microlinkStatus = signal<MicrolinkStatus>('idle');
 
   readonly schemaBlocks = this.#schemaBlocks.asReadonly();
   readonly metaTags = this.#metaTags.asReadonly();
   readonly imageChecks = this.#imageChecks.asReadonly();
   readonly loading = this.#loading.asReadonly();
   readonly error = this.#error.asReadonly();
+  readonly microlinkData = this.#microlinkData.asReadonly();
+  readonly microlinkStatus = this.#microlinkStatus.asReadonly();
 
   readonly ogBlockStatus = computed<OgBlockStatus>(() => computeOgBlockStatus(this.#metaTags()));
 
@@ -36,6 +50,29 @@ export class SchemaOgStore {
       this.#tabActivity.activeTab();
       this.load();
     });
+  }
+
+  /**
+   * Fetches OG data via Microlink API (bot-side fetch, no cookies).
+   * Free tier: 50 req/day/IP, no key required.
+   *
+   * @todo Consider replacing with a self-hosted bot to remove the rate limit,
+   * support custom User-Agent (e.g. `facebookexternalhit`), and avoid third-party dependency.
+   * @todo Cache results in `chrome.storage.session` keyed by URL (move fetch to background handler)
+   * so repeated panel opens on the same page don't consume the daily quota.
+   */
+  async fetchMicrolink(url: string): Promise<void> {
+    this.#microlinkStatus.set('loading');
+    this.#microlinkData.set(null);
+    try {
+      const res = await fetch(`https://api.microlink.io?url=${encodeURIComponent(url)}`);
+      const json = (await res.json()) as { status: string; data: MicrolinkData };
+      if (json.status !== 'success') throw new Error(json.status);
+      this.#microlinkData.set(json.data);
+      this.#microlinkStatus.set('ok');
+    } catch {
+      this.#microlinkStatus.set('error');
+    }
   }
 
   async load(): Promise<void> {
@@ -57,6 +94,8 @@ export class SchemaOgStore {
         this.#schemaBlocks.set(response.data.schemaBlocks ?? []);
         this.#metaTags.set(response.data.metaTags ?? []);
         this.#checkImages(response.data.metaTags ?? []);
+        const pageUrl: string = response.data.pageUrl;
+        if (pageUrl) this.fetchMicrolink(pageUrl);
       } else {
         this.#error.set(response?.error ?? 'UNKNOWN_ERROR');
       }
@@ -205,6 +244,8 @@ export class SchemaOgStore {
     this.#schemaBlocks.set([]);
     this.#metaTags.set([]);
     this.#imageChecks.set(new Map());
+    this.#microlinkData.set(null);
+    this.#microlinkStatus.set('idle');
     this.#loading.set(false);
     this.#error.set(null);
   }

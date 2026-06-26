@@ -1,10 +1,11 @@
+import { FaviconComponent } from '../../../../ui/favicon/favicon.component';
 import type { PreviewCardData } from '../../preview-card-data.model';
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-slack-card',
-  imports: [TranslocoDirective],
+  imports: [TranslocoDirective, FaviconComponent],
   templateUrl: './slack-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col w-full max-w-[400px]' },

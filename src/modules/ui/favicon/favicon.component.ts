@@ -17,7 +17,7 @@ import {
   template: `
     @if (src()) {
       <img
-        class="w-full h-full object-contain"
+        class="w-full h-full object-contain dz-icon--shadow round"
         [src]="src()!"
         [attr.alt]="null"
         (error)="onError()"
@@ -28,8 +28,7 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class:
-      'inline-flex items-center justify-center rounded-sm bg-white border border-gray-200 overflow-hidden',
+    class: 'inline-flex items-center justify-center rounded-full overflow-hidden',
   },
 })
 export class FaviconComponent {

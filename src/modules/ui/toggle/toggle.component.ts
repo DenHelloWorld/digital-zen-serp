@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'dz-toggle',
@@ -20,7 +20,6 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       ></div>
     </label>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },
 })
 export class ToggleComponent {

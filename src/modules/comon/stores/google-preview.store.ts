@@ -2,9 +2,9 @@ import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { GooglePreviewData } from '../../../shared/models/google-preview-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, effect, inject } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class GooglePreviewStore {
   readonly #activeTab = signal<chrome.tabs.Tab | null>(null);
   readonly #currentTabPreview = signal<GooglePreviewData | null>(null);
@@ -85,14 +85,5 @@ export class GooglePreviewStore {
     } finally {
       this.#isTabLoading.set(false);
     }
-  }
-
-  reset(): void {
-    this.#activeTab.set(null);
-    this.#currentTabPreview.set(null);
-    this.#isTabLoading.set(false);
-    this.#isPreviewLoading.set(false);
-    this.#tabError.set(null);
-    this.#previewError.set(null);
   }
 }

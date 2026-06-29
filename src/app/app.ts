@@ -1,6 +1,6 @@
 import { ROUTES } from '../modules/comon/constants/routes.const';
 import { TitleIfTruncatedDirective } from '../modules/comon/directives/title-if-truncated.directive';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
@@ -9,7 +9,6 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   imports: [RouterOutlet, RouterLink, TranslocoDirective, TitleIfTruncatedDirective],
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   readonly #router = inject(Router);
@@ -31,6 +30,7 @@ export class App {
     { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance', emoji: '⚡' },
     { route: ROUTES.OG, labelKey: 'nav.og', emoji: '🔗' },
     { route: ROUTES.SCHEMA, labelKey: 'nav.schema', emoji: '🧩' },
+    { route: ROUTES.CONTENT, labelKey: 'nav.content', emoji: '📝' },
   ] as const;
 
   constructor() {

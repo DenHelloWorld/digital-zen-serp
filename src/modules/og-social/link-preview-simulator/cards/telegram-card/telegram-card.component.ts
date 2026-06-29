@@ -1,12 +1,11 @@
 import type { PreviewCardData } from '../../preview-card-data.model';
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-telegram-card',
   imports: [TranslocoDirective],
   templateUrl: './telegram-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col w-full max-w-[360px]' },
 })
 export class TelegramCardComponent {

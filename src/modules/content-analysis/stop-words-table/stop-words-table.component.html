@@ -1,0 +1,79 @@
+<ng-container *transloco="let t">
+  @if (stopWords() === null) {
+    <div class="w-full flex flex-col rounded-lg border border-slate-200 overflow-hidden">
+      <div
+        class="grid grid-cols-[1fr_auto_auto] gap-x-3 px-3 py-1.5 bg-slate-50 border-b border-slate-200"
+      >
+        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
+          t('content.col_word')
+        }}</span>
+        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide text-right">{{
+          t('content.col_count')
+        }}</span>
+        <span
+          class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide w-12 text-right"
+          >{{ t('content.col_percent') }}</span
+        >
+      </div>
+      <div class="overflow-y-auto max-h-[300px] scrollbar-thin">
+        @for (i of [1, 2, 3, 4, 5]; track i; let last = $last) {
+          <div
+            class="grid grid-cols-[1fr_auto_auto] gap-x-3 px-3 py-1.5 bg-white border-b border-slate-100"
+            [class.border-b-0]="last"
+          >
+            <span
+              class="inline-block h-2.5 bg-slate-200 rounded animate-pulse"
+              [style.width.%]="25 + ((i * 11) % 35)"
+            ></span>
+            <span class="inline-block w-6 h-2.5 bg-slate-200 rounded animate-pulse"></span>
+            <span class="inline-block w-10 h-2.5 bg-slate-200 rounded animate-pulse"></span>
+          </div>
+        }
+      </div>
+    </div>
+  } @else if (stopWords()!.length === 0) {
+    <div class="px-3 py-4 text-xs text-slate-400 text-center border border-slate-200 rounded-lg">
+      {{ t('content.stop_words_empty') }}
+    </div>
+  } @else {
+    <div class="w-full flex flex-col rounded-lg border border-slate-200 overflow-hidden">
+      <!-- Header -->
+      <div
+        class="grid grid-cols-[1fr_auto_auto] gap-x-3 px-3 py-1.5 bg-slate-50 border-b border-slate-200"
+      >
+        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
+          t('content.col_word')
+        }}</span>
+        <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide text-right">{{
+          t('content.col_count')
+        }}</span>
+        <span
+          class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide w-12 text-right"
+          >{{ t('content.col_percent') }}</span
+        >
+      </div>
+
+      <!-- Rows -->
+      <div class="overflow-y-auto max-h-[300px] scrollbar-thin">
+        @for (entry of stopWords()!; track entry.word; let last = $last) {
+          <div
+            class="grid grid-cols-[1fr_auto_auto] gap-x-3 px-3 py-1.5 bg-white border-b border-slate-100"
+            [class.border-b-0]="last"
+          >
+            <span class="text-[11px] text-slate-700 font-mono flex items-center gap-1">
+              @if (entry.isNumber) {
+                <span
+                  class="text-[9px] font-bold text-slate-400 bg-slate-100 px-1 rounded leading-none"
+                  >#</span
+                >
+              }
+              {{ entry.word }}
+            </span>
+            <span class="text-[11px] text-slate-800 font-medium text-right">{{ entry.count }}</span>
+            <span class="text-[10px] text-slate-400 w-12 text-right">{{ entry.percent }}%</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</ng-container>

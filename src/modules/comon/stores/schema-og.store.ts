@@ -8,13 +8,13 @@ import type {
 import type { SchemaBlock } from '../../../shared/models/schema-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, effect, inject, computed } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 
 const IMAGE_TIMEOUT_MS = 5000;
 
-export type MicrolinkStatus = 'idle' | 'loading' | 'ok' | 'error';
+type MicrolinkStatus = 'idle' | 'loading' | 'ok' | 'error';
 
-export interface MicrolinkData {
+interface MicrolinkData {
   title: string | null;
   description: string | null;
   url: string | null;
@@ -22,7 +22,7 @@ export interface MicrolinkData {
   publisher: string | null;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SchemaOgStore {
   readonly #schemaBlocks = signal<SchemaBlock[]>([]);
   readonly #metaTags = signal<MetaTag[]>([]);
@@ -52,15 +52,8 @@ export class SchemaOgStore {
     });
   }
 
-  /**
-   * Fetches OG data via Microlink API (bot-side fetch, no cookies).
-   * Free tier: 50 req/day/IP, no key required.
-   *
-   * @todo Consider replacing with a self-hosted bot to remove the rate limit,
-   * support custom User-Agent (e.g. `facebookexternalhit`), and avoid third-party dependency.
-   * @todo Cache results in `chrome.storage.session` keyed by URL (move fetch to background handler)
-   * so repeated panel opens on the same page don't consume the daily quota.
-   */
+  // TODO: cache in chrome.storage.session by URL — repeated opens drain 50 req/day/IP free quota
+  // TODO: replace with self-hosted bot for custom User-Agent and no rate limit
   async fetchMicrolink(url: string): Promise<void> {
     this.#microlinkStatus.set('loading');
     this.#microlinkData.set(null);
@@ -238,15 +231,5 @@ export class SchemaOgStore {
     });
 
     return loadPromise;
-  }
-
-  reset(): void {
-    this.#schemaBlocks.set([]);
-    this.#metaTags.set([]);
-    this.#imageChecks.set(new Map());
-    this.#microlinkData.set(null);
-    this.#microlinkStatus.set('idle');
-    this.#loading.set(false);
-    this.#error.set(null);
   }
 }

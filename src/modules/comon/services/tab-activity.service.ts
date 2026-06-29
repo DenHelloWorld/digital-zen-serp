@@ -1,13 +1,13 @@
 import type { TabInfo } from '../../../shared/models/tab-info.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { Injectable, signal, inject } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
 /**
  * Fetches the current tab once on init.
  * No tab-switch listeners needed — the panel lives inside the page
  * and is destroyed on navigation along with it.
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TabActivityService {
   readonly #activeTab = signal<TabInfo | null>(null);
   readonly activeTab = this.#activeTab.asReadonly();

@@ -1,7 +1,7 @@
 <ng-container *transloco="let t">
   <div class="flex items-center gap-1.5">
     <p class="text-[9px] text-slate-400 italic">{{ t('social.simulator.disclaimer') }}</p>
-    @if (microlinkStatus() === 'loading') {
+    @if (microlinkStatus() === 'idle' || microlinkStatus() === 'loading') {
       <span
         class="inline-block w-2 h-2 rounded-full bg-yellow-400 animate-pulse shrink-0"
         title="Fetching bot preview..."

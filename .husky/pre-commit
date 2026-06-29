@@ -1,2 +1,3 @@
 # Run tests before commit
 npx lint-staged
+npm run check:cycles

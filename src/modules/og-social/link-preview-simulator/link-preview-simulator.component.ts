@@ -9,7 +9,7 @@ import { SlackCardComponent } from './cards/slack-card/slack-card.component';
 import { TelegramCardComponent } from './cards/telegram-card/telegram-card.component';
 import { TwitterCardComponent } from './cards/twitter-card/twitter-card.component';
 import type { PreviewCardData } from './preview-card-data.model';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
@@ -25,7 +25,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
     PinterestCardComponent,
   ],
   templateUrl: './link-preview-simulator.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-4 w-full' },
 })
 export class LinkPreviewSimulatorComponent {

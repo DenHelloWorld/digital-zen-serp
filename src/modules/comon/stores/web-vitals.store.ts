@@ -2,9 +2,9 @@ import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { WebVitalsData, WebVitalsStrategy } from '../../../shared/models/web-vitals-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, computed, effect, untracked, inject } from '@angular/core';
+import { computed, effect, inject, Service, signal, untracked } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class WebVitalsStore {
   /** Only successful (non-error) results — keyed by `${url}|${strategy}` */
   readonly #cache = signal<Record<string, WebVitalsData>>({});

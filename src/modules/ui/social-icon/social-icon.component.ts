@@ -1,6 +1,6 @@
 import { SocialPlatform } from '../../../shared/enums/social-platform.enum';
 import { ICONS } from '../../comon/constants/icons.const';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 
 const BRAND_COLORS: Record<SocialPlatform, string> = {
   [SocialPlatform.Facebook]: '#1877F2',
@@ -35,7 +35,6 @@ const BRAND_ICONS: Record<SocialPlatform, string> = {
       <use [attr.href]="href()" />
     </svg>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex shrink-0' },
 })
 export class SocialIconComponent {

@@ -12,6 +12,7 @@ import {
   scrollToHeading,
 } from '../shared/helpers/page-heading-highlighter';
 import type { HeadingData } from '../shared/models/heading-data.model';
+import { ContentAnalysisService } from './content-analysis.service';
 import { GooglePreviewService } from './google-preview.service';
 import { SchemaOgService } from './schema-og.service';
 import { SeoAuditService } from './seo-audit.service';
@@ -36,6 +37,7 @@ type MessageHandler = (
 ) => Promise<HandlerResult>;
 
 export class BackgroundService {
+  readonly #contentAnalysis = new ContentAnalysisService();
   readonly #googlePreview = new GooglePreviewService();
   readonly #schemaOg = new SchemaOgService();
   readonly #seoAudit = new SeoAuditService();
@@ -54,6 +56,7 @@ export class BackgroundService {
     [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS, msg => this.#handleCollectWebVitals(msg)],
     [CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS_BOTH, () => this.#handleCollectWebVitalsBoth()],
     [CHROME_COMMAND_ENUM.COLLECT_SCHEMA_OG, () => this.#handleCollectSchemaOg()],
+    [CHROME_COMMAND_ENUM.ANALYZE_CONTENT, msg => this.#handleAnalyzeContent(msg)],
   ]);
 
   constructor() {
@@ -277,6 +280,16 @@ export class BackgroundService {
     if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
 
     const data = await this.#schemaOg.collect(tab.id, tab.url);
+    return { success: true, data };
+  }
+
+  async #handleAnalyzeContent(message: Record<string, unknown>): Promise<HandlerResult> {
+    const tab = await this.#requireActiveTab();
+    if (!tab?.id || !tab.url) return { success: false, error: 'NO_ACTIVE_TAB' };
+    if (!isHttpUrl(tab.url)) return { success: false, error: 'INVALID_PAGE_PROTOCOL' };
+
+    const mode = message['mode'] === 'main' ? 'main' : 'full';
+    const data = await this.#contentAnalysis.analyze(tab.id, mode);
     return { success: true, data };
   }
 

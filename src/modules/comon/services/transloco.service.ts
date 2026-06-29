@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Translation, TranslocoLoader } from '@jsverse/transloco';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TranslocoHttpLoader implements TranslocoLoader {
   private cache = new Map<string, Promise<Translation>>();
 

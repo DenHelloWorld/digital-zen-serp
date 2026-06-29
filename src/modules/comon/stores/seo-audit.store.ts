@@ -2,9 +2,9 @@ import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { SeoAuditData } from '../../../shared/models/seo-audit-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, effect, inject } from '@angular/core';
+import { effect, inject, Service, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SeoAuditStore {
   readonly #auditData = signal<SeoAuditData | null>(null);
   readonly #isLoading = signal(false);
@@ -50,11 +50,5 @@ export class SeoAuditStore {
     } finally {
       this.#isLoading.set(false);
     }
-  }
-
-  reset(): void {
-    this.#auditData.set(null);
-    this.#isLoading.set(false);
-    this.#error.set(null);
   }
 }

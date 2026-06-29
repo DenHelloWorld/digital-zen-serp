@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 
 @Component({
   selector: 'dz-copy-button',
@@ -15,7 +15,6 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
       <span class="text-base leading-none">{{ copied() ? '✅' : '📋' }}</span>
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },
 })
 export class CopyButtonComponent {

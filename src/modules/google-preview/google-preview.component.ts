@@ -13,16 +13,7 @@ import { cleanProtocol, cleanUrl } from '../comon/helpers/url.helper';
 import { GooglePreviewStore } from '../comon/stores/google-preview.store';
 import { CopyButtonComponent } from '../ui/copy-button/copy-button.component';
 import { FaviconComponent } from '../ui/favicon/favicon.component';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  DestroyRef,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
 
@@ -30,7 +21,6 @@ import { TranslocoDirective, TranslocoService } from '@jsverse/transloco';
   selector: 'dz-google-preview',
   imports: [TranslocoDirective, FormsModule, CopyButtonComponent, FaviconComponent],
   templateUrl: './google-preview.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
       'dz-google-preview p-[var(--spacing)] flex flex-col items-center gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',

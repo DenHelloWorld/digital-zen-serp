@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'dz-loading-bar',
@@ -27,7 +27,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block w-full' },
 })
 export class LoadingBarComponent {

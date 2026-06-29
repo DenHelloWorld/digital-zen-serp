@@ -5,20 +5,15 @@ import {
 } from '../../../shared/helpers/heading-highlighter.helper';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 
 function defaultSelectedTags(): Record<string, boolean> {
   return Object.fromEntries(HEADING_TAGS.map(t => [t, true]));
 }
 
-export interface HeadingHighlighterState {
-  enabled: boolean;
-  selectedTags: Record<string, boolean>;
-}
-
 export type HighlighterStatus = 'idle' | 'ok' | 'warning' | 'error';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HeadingHighlighterStore {
   readonly #isEnabled = signal(false);
   readonly #selectedTags = signal<Record<string, boolean>>(defaultSelectedTags());
@@ -92,30 +87,13 @@ export class HeadingHighlighterStore {
       [tag]: !tags[tag],
     }));
 
-    /** Apply changes immediately if the feature is enabled */
     if (this.#isEnabled()) {
       this.#applyConfig();
     }
   }
 
-  /** Re-apply highlights on tab switch or page update */
   async reapply(): Promise<void> {
     if (!this.#isEnabled()) return;
     this.#applyConfig();
-  }
-
-  /** Disable highlights — delegates to toggleHighlighter for consistency */
-  turnOff(): void {
-    if (this.#isEnabled()) {
-      this.toggleHighlighter();
-    }
-  }
-
-  reset(): void {
-    this.#isEnabled.set(false);
-    this.#selectedTags.set(defaultSelectedTags());
-    this.#isLoading.set(false);
-    this.#headingsFound.set(null);
-    this.#error.set(null);
   }
 }

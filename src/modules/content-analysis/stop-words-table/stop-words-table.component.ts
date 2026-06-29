@@ -1,4 +1,4 @@
-﻿import type { StopWordEntry } from '../../../shared/models/content-analysis-data.model';
+import type { StopWordEntry } from '../../../shared/models/content-analysis-data.model';
 import { Component, input } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 

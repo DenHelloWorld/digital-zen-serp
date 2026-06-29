@@ -1,4 +1,4 @@
-﻿import { WebVitalsCrux } from '../../shared/models/web-vitals-data.model';
+import { WebVitalsCrux } from '../../shared/models/web-vitals-data.model';
 import { TabActivityService } from '../comon/services/tab-activity.service';
 import { WebVitalsStore } from '../comon/stores/web-vitals.store';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';

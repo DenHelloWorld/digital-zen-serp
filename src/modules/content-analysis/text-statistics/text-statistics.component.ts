@@ -1,4 +1,4 @@
-﻿import type { ContentStats } from '../../../shared/models/content-analysis-data.model';
+import type { ContentStats } from '../../../shared/models/content-analysis-data.model';
 import { SpeedometerComponent } from '../../ui/speedometer/speedometer.component';
 import { Component, computed, input } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';

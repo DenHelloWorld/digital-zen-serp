@@ -1,4 +1,4 @@
-﻿import { WebVitalsComponent } from '../../web-vitals/web-vitals.component';
+import { WebVitalsComponent } from '../../web-vitals/web-vitals.component';
 import { Component } from '@angular/core';
 
 @Component({

@@ -1,4 +1,4 @@
-﻿import { CopyButtonComponent } from '../copy-button/copy-button.component';
+import { CopyButtonComponent } from '../copy-button/copy-button.component';
 import { FaviconComponent } from '../favicon/favicon.component';
 import { Component, input } from '@angular/core';
 

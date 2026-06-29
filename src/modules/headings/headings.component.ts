@@ -1,4 +1,4 @@
-﻿import { CHROME_COMMAND_ENUM } from '../../shared/enums/chrome-command.enum';
+import { CHROME_COMMAND_ENUM } from '../../shared/enums/chrome-command.enum';
 import { HEADING_TAGS, TAG_COLORS } from '../../shared/helpers/heading-highlighter.helper';
 import { IS_CHROME_EXTENSION } from '../comon/constants/chrome-runtime.token';
 import { HeadingsStore } from '../comon/stores/headings.store';

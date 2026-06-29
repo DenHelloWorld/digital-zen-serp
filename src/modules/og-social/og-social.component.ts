@@ -1,4 +1,4 @@
-﻿import type { MetaTag, OgBlockStatus, ImageCheckResult } from '../../shared/models/og-data.model';
+import type { MetaTag, OgBlockStatus, ImageCheckResult } from '../../shared/models/og-data.model';
 import { SchemaOgStore } from '../comon/stores/schema-og.store';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { LinkPreviewSimulatorComponent } from './link-preview-simulator/link-preview-simulator.component';

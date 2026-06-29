@@ -1,4 +1,4 @@
-﻿import type { SchemaBlock } from '../../shared/models/schema-data.model';
+import type { SchemaBlock } from '../../shared/models/schema-data.model';
 import { SchemaOgStore } from '../comon/stores/schema-og.store';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { SchemaBlockComponent } from './schema-block/schema-block.component';

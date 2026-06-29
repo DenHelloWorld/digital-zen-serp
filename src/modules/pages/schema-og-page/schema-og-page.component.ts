@@ -1,4 +1,4 @@
-﻿import { SchemaMarkupComponent } from '../../schema-markup/schema-markup.component';
+import { SchemaMarkupComponent } from '../../schema-markup/schema-markup.component';
 import { Component } from '@angular/core';
 
 @Component({

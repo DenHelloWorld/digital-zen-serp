@@ -1,4 +1,4 @@
-﻿import { BaseSeoAuditComponent } from '../../base-seo-audit/base-seo-audit.component';
+import { BaseSeoAuditComponent } from '../../base-seo-audit/base-seo-audit.component';
 import { SeoIndexabilityComponent } from '../../seo-indexability/seo-indexability.component';
 import { Component } from '@angular/core';
 

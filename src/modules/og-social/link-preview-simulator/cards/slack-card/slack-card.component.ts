@@ -1,4 +1,4 @@
-﻿import { FaviconComponent } from '../../../../ui/favicon/favicon.component';
+import { FaviconComponent } from '../../../../ui/favicon/favicon.component';
 import type { PreviewCardData } from '../../preview-card-data.model';
 import { Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';

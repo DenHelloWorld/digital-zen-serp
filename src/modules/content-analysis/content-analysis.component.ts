@@ -1,4 +1,4 @@
-﻿import type { ContentExtractionMode } from '../../shared/models/content-analysis-data.model';
+import type { ContentExtractionMode } from '../../shared/models/content-analysis-data.model';
 import { ContentAnalysisStore } from '../comon/stores/content-analysis.store';
 import { StopWordsTableComponent } from './stop-words-table/stop-words-table.component';
 import { TextStatisticsComponent } from './text-statistics/text-statistics.component';

@@ -1,4 +1,4 @@
-﻿import type { TopPhrase, TopWordsTab } from '../../../shared/models/content-analysis-data.model';
+import type { TopPhrase, TopWordsTab } from '../../../shared/models/content-analysis-data.model';
 import { Component, computed, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 

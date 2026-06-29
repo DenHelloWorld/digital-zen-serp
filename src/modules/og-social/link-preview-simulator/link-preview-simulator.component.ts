@@ -1,4 +1,4 @@
-﻿import { SocialPlatform } from '../../../shared/enums/social-platform.enum';
+import { SocialPlatform } from '../../../shared/enums/social-platform.enum';
 import type { MetaTag } from '../../../shared/models/og-data.model';
 import { SchemaOgStore } from '../../comon/stores/schema-og.store';
 import { SocialIconComponent } from '../../ui/social-icon/social-icon.component';

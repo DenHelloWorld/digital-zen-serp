@@ -1,4 +1,4 @@
-﻿import { ContentAnalysisComponent } from '../../content-analysis/content-analysis.component';
+import { ContentAnalysisComponent } from '../../content-analysis/content-analysis.component';
 import { Component } from '@angular/core';
 
 @Component({

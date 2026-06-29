@@ -1,4 +1,4 @@
-﻿import { ROUTES } from '../modules/comon/constants/routes.const';
+import { ROUTES } from '../modules/comon/constants/routes.const';
 import { TitleIfTruncatedDirective } from '../modules/comon/directives/title-if-truncated.directive';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';

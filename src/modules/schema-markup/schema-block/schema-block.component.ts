@@ -1,4 +1,4 @@
-﻿import type { SchemaBlock } from '../../../shared/models/schema-data.model';
+import type { SchemaBlock } from '../../../shared/models/schema-data.model';
 import { CopyButtonComponent } from '../../ui/copy-button/copy-button.component';
 import { Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';

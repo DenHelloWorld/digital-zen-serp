@@ -1,4 +1,4 @@
-﻿import { HeadingsComponent } from '../../headings/headings.component';
+import { HeadingsComponent } from '../../headings/headings.component';
 import { Component } from '@angular/core';
 
 @Component({

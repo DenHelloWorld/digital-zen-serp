@@ -1,4 +1,4 @@
-﻿import { SeoAuditData, SeoAuditStatus } from '../../shared/models/seo-audit-data.model';
+import { SeoAuditData, SeoAuditStatus } from '../../shared/models/seo-audit-data.model';
 import { SeoAuditStore } from '../comon/stores/seo-audit.store';
 import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';

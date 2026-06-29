@@ -1,4 +1,4 @@
-﻿import { Component, input, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 
 @Component({
   selector: 'dz-copy-button',

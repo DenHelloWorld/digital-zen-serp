@@ -1,4 +1,4 @@
-﻿import { DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 
 const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33

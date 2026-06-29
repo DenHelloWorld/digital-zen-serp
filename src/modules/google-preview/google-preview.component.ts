@@ -1,4 +1,4 @@
-﻿import { isHttpUrl } from '../../shared/helpers/is-http-url.helper';
+import { isHttpUrl } from '../../shared/helpers/is-http-url.helper';
 import {
   truncateText,
   getBarCount,

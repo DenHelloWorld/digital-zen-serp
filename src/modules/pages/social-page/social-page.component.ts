@@ -1,4 +1,4 @@
-﻿import { OgSocialComponent } from '../../og-social/og-social.component';
+import { OgSocialComponent } from '../../og-social/og-social.component';
 import { Component } from '@angular/core';
 
 @Component({

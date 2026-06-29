@@ -1,4 +1,4 @@
-﻿import { isHttpUrl } from '../../../shared/helpers/is-http-url.helper';
+import { isHttpUrl } from '../../../shared/helpers/is-http-url.helper';
 import { FaviconHelper } from '../../comon/helpers/favicon.helper';
 import { TabActivityService } from '../../comon/services/tab-activity.service';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';

@@ -1,4 +1,4 @@
-﻿import { SocialPlatform } from '../../../shared/enums/social-platform.enum';
+import { SocialPlatform } from '../../../shared/enums/social-platform.enum';
 import { ICONS } from '../../comon/constants/icons.const';
 import { Component, computed, input } from '@angular/core';
 

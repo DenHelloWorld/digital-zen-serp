@@ -1,4 +1,4 @@
-﻿import { GooglePreviewComponent } from '../../google-preview/google-preview.component';
+import { GooglePreviewComponent } from '../../google-preview/google-preview.component';
 import { Component } from '@angular/core';
 
 @Component({

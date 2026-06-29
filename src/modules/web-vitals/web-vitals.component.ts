@@ -1,11 +1,11 @@
-import { WebVitalsCrux } from '../../shared/models/web-vitals-data.model';
+﻿import { WebVitalsCrux } from '../../shared/models/web-vitals-data.model';
 import { TabActivityService } from '../comon/services/tab-activity.service';
 import { WebVitalsStore } from '../comon/stores/web-vitals.store';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { SpeedometerComponent } from '../ui/speedometer/speedometer.component';
 import { UrlBarComponent } from '../ui/url-bar/url-bar.component';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 interface MetricDef {
@@ -187,7 +187,6 @@ const METRICS: MetricDef[] = [
     DecimalPipe,
   ],
   templateUrl: './web-vitals.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
       'dz-web-vitals p-[var(--spacing)] flex flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',

@@ -1,12 +1,11 @@
-import type { PreviewCardData } from '../../preview-card-data.model';
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+﻿import type { PreviewCardData } from '../../preview-card-data.model';
+import { Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-facebook-card',
   imports: [TranslocoDirective],
   templateUrl: './facebook-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col w-full max-w-[400px]' },
 })
 export class FacebookCardComponent {

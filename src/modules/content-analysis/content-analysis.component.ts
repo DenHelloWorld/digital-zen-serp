@@ -1,9 +1,9 @@
-import type { ContentExtractionMode } from '../../shared/models/content-analysis-data.model';
+﻿import type { ContentExtractionMode } from '../../shared/models/content-analysis-data.model';
 import { ContentAnalysisStore } from '../comon/stores/content-analysis.store';
 import { StopWordsTableComponent } from './stop-words-table/stop-words-table.component';
 import { TextStatisticsComponent } from './text-statistics/text-statistics.component';
 import { TopWordsComponent } from './top-words/top-words.component';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
@@ -15,7 +15,6 @@ import { TranslocoDirective } from '@jsverse/transloco';
     StopWordsTableComponent,
   ],
   templateUrl: './content-analysis.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'w-full flex flex-col gap-4 p-[var(--spacing)]' },
 })
 export class ContentAnalysisComponent implements OnInit {

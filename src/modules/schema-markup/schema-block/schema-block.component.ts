@@ -1,13 +1,12 @@
-import type { SchemaBlock } from '../../../shared/models/schema-data.model';
+﻿import type { SchemaBlock } from '../../../shared/models/schema-data.model';
 import { CopyButtonComponent } from '../../ui/copy-button/copy-button.component';
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-schema-block',
   imports: [CopyButtonComponent, TranslocoDirective],
   templateUrl: './schema-block.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col w-full' },
 })
 export class SchemaBlockComponent {

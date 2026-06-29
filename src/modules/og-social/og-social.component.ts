@@ -1,8 +1,8 @@
-import type { MetaTag, OgBlockStatus, ImageCheckResult } from '../../shared/models/og-data.model';
+﻿import type { MetaTag, OgBlockStatus, ImageCheckResult } from '../../shared/models/og-data.model';
 import { SchemaOgStore } from '../comon/stores/schema-og.store';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
 import { LinkPreviewSimulatorComponent } from './link-preview-simulator/link-preview-simulator.component';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 type MetaTagGroup = 'og' | 'twitter' | 'facebook' | 'article' | 'basic';
@@ -20,7 +20,6 @@ const GROUP_LABEL_KEYS: Record<MetaTagGroup, string> = {
   selector: 'dz-og-social',
   imports: [TranslocoDirective, LoadingBarComponent, LinkPreviewSimulatorComponent],
   templateUrl: './og-social.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
       'dz-og-social p-[var(--spacing)] flex flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',

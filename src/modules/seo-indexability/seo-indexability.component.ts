@@ -1,6 +1,6 @@
-import { SeoAuditData, SeoAuditStatus } from '../../shared/models/seo-audit-data.model';
+﻿import { SeoAuditData, SeoAuditStatus } from '../../shared/models/seo-audit-data.model';
 import { SeoAuditStore } from '../comon/stores/seo-audit.store';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 export interface IndexRow {
@@ -14,7 +14,6 @@ export interface IndexRow {
   selector: 'dz-seo-indexability',
   imports: [TranslocoDirective],
   templateUrl: './seo-indexability.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'flex flex-col gap-[var(--spacing)] w-full' },
 })
 export class SeoIndexabilityComponent {

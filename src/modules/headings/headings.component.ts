@@ -1,17 +1,16 @@
-import { CHROME_COMMAND_ENUM } from '../../shared/enums/chrome-command.enum';
+﻿import { CHROME_COMMAND_ENUM } from '../../shared/enums/chrome-command.enum';
 import { HEADING_TAGS, TAG_COLORS } from '../../shared/helpers/heading-highlighter.helper';
 import { IS_CHROME_EXTENSION } from '../comon/constants/chrome-runtime.token';
 import { HeadingsStore } from '../comon/stores/headings.store';
 import { HeadingHighlighterComponent } from '../heading-highlighter/heading-highlighter.component';
 import { LoadingBarComponent } from '../ui/loading-bar/loading-bar.component';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-headings',
   imports: [TranslocoDirective, HeadingHighlighterComponent, LoadingBarComponent],
   templateUrl: './headings.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class:
       'dz-headings p-[var(--spacing)] flex flex-col gap-[var(--spacing)] w-full max-w-[calc(var(--google-container-width)+var(--spacing)*2)]',

@@ -1,6 +1,6 @@
-import { CopyButtonComponent } from '../copy-button/copy-button.component';
+﻿import { CopyButtonComponent } from '../copy-button/copy-button.component';
 import { FaviconComponent } from '../favicon/favicon.component';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'dz-url-bar',
@@ -17,7 +17,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'block w-full' },
 })
 export class UrlBarComponent {

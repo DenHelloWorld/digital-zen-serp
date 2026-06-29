@@ -1,6 +1,6 @@
-import type { ContentStats } from '../../../shared/models/content-analysis-data.model';
+﻿import type { ContentStats } from '../../../shared/models/content-analysis-data.model';
 import { SpeedometerComponent } from '../../ui/speedometer/speedometer.component';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 interface StatRow {
@@ -75,7 +75,6 @@ const STAT_ROWS: StatRow[] = [
   selector: 'dz-text-statistics',
   imports: [TranslocoDirective, SpeedometerComponent],
   templateUrl: './text-statistics.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'w-full flex flex-col gap-3' },
 })
 export class TextStatisticsComponent {

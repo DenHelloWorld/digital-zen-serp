@@ -1,15 +1,7 @@
-import { isHttpUrl } from '../../../shared/helpers/is-http-url.helper';
+﻿import { isHttpUrl } from '../../../shared/helpers/is-http-url.helper';
 import { FaviconHelper } from '../../comon/helpers/favicon.helper';
 import { TabActivityService } from '../../comon/services/tab-activity.service';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 
 /** Resolves favicon with 4-stage fallback: /favicon.ico → tab → Google S2 → emoji */
 @Component({
@@ -26,7 +18,6 @@ import {
       <span class="text-base leading-none">🔗</span>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'inline-flex items-center justify-center rounded-full overflow-hidden',
   },

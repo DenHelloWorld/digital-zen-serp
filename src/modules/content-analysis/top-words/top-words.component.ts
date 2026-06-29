@@ -1,12 +1,11 @@
-import type { TopPhrase, TopWordsTab } from '../../../shared/models/content-analysis-data.model';
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+﻿import type { TopPhrase, TopWordsTab } from '../../../shared/models/content-analysis-data.model';
+import { Component, computed, input, signal } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
 @Component({
   selector: 'dz-top-words',
   imports: [TranslocoDirective],
   templateUrl: './top-words.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'w-full flex flex-col gap-2' },
 })
 export class TopWordsComponent {

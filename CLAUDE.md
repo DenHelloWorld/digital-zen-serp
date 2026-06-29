@@ -1,10 +1,10 @@
 # Digital Zen SERP
 
-Angular 21 Chrome Extension (MV3) injected panel for SEO/SERP analysis — heading tree, Google preview, SEO audit, Web Vitals.
+Angular 22 Chrome Extension (MV3) injected panel for SEO/SERP analysis — heading tree, Google preview, SEO audit, Web Vitals.
 
 Panel is injected into pages as a Shadow DOM iframe triggered by clicking the extension action icon. The Angular app runs inside the iframe at `chrome-extension://` origin, preserving full `chrome.*` API access.
 
-**Stack:** Angular 21, zoneless + signals, Tailwind CSS v4, esbuild, linkedom, Transloco.
+**Stack:** Angular 22, zoneless + signals, Tailwind CSS v4, esbuild, linkedom, Transloco.
 
 ## Commands
 
@@ -42,7 +42,6 @@ src/
 
 **Angular (zoneless + signals)**
 
-- All components: `ChangeDetectionStrategy.OnPush`
 - Stores: private writable signals (`#field`), public readonly signals exposed via `.asReadonly()`
 - RxJS only where Angular forces it (`Router.events`, `Transloco.langChanges$`)
 - Two-way binding: `[ngModel]="sig()" (ngModelChange)="sig.set($event)"` — not `[(ngModel)]="sig()"`

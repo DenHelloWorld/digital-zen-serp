@@ -1,5 +1,5 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+﻿import { DecimalPipe } from '@angular/common';
+import { Component, computed, input } from '@angular/core';
 
 const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33
 
@@ -91,7 +91,6 @@ const CIRCUMFERENCE = 2 * Math.PI * 40; // ~251.33
       }
     `,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'inline-flex' },
 })
 export class SpeedometerComponent {

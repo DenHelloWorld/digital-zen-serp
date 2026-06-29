@@ -59,7 +59,8 @@ export const fleschReadingEase = (
   if (totalWords === 0 || totalSentences === 0) return 0;
   const asl = totalWords / totalSentences;
   const asw = totalSyllables / totalWords;
-  return Math.round((206.835 - 1.015 * asl - 84.6 * asw) * 100) / 100;
+  const raw = 206.835 - 1.015 * asl - 84.6 * asw;
+  return Math.round(Math.min(100, Math.max(0, raw)) * 100) / 100;
 };
 
 export const fleschKincaidGrade = (

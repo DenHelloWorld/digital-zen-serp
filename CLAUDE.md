@@ -1,6 +1,6 @@
 # Digital Zen SERP
 
-Angular 22 Chrome Extension (MV3) injected panel for SEO/SERP analysis — heading tree, Google preview, SEO audit, Web Vitals.
+Angular 22 Chrome Extension (MV3) injected panel for SEO/SERP analysis — heading tree, Google preview, SEO audit, Web Vitals, Content Analysis.
 
 Panel is injected into pages as a Shadow DOM iframe triggered by clicking the extension action icon. The Angular app runs inside the iframe at `chrome-extension://` origin, preserving full `chrome.*` API access.
 
@@ -13,6 +13,7 @@ npm start              # dev server
 npm run build:prod     # production dual build → dist/SERP/
 npm run lint
 npm run format
+npm run check:cycles   # circular dependency check (also runs in pre-commit)
 ```
 
 ## Architecture
@@ -42,6 +43,7 @@ src/
 
 **Angular (zoneless + signals)**
 
+- Services/stores: `@Service()` decorator (Angular 22) — defaults to `providedIn: 'root'`
 - Stores: private writable signals (`#field`), public readonly signals exposed via `.asReadonly()`
 - RxJS only where Angular forces it (`Router.events`, `Transloco.langChanges$`)
 - Two-way binding: `[ngModel]="sig()" (ngModelChange)="sig.set($event)"` — not `[(ngModel)]="sig()"`
@@ -68,7 +70,15 @@ PAGESPEED_API_KEY=AIzaSy...
 
 `COLLECT_WEB_VITALS_BOTH` command fetches mobile + desktop sequentially in one background handler → single `chrome.runtime.sendMessage` round-trip. Results keyed by `${url}|${strategy}` in `WebVitalsStore`. Error results go to `#latest` (display-only, not cached) so the next panel open auto-retries.
 
+## Content Analysis
+
+`ANALYZE_CONTENT` command runs `executeScript` to extract page text, then computes metrics in the background worker via `ContentAnalysisService`:
+
+- **Two modes**: `full` (entire body text) / `main` (main-content heuristic with fallback)
+- **Stop words**: EN/RU/ES/UK word lists loaded from `public/assets/stop-words/*.json`, cached in-memory after first load
+- **Metrics**: word count, unique words, water %, Flesch Reading Ease (clamped 0–100), Flesch-Kincaid, Gunning Fog, n-gram top words (1/2/3)
+- **Skeleton loading**: `#data.set(null)` before fetch + `Promise.all([request, setTimeout(500)])` ensures minimum 500 ms skeleton; child components accept `null` inputs and render pulse rows
+
 ## Known issues
 
 - `manual-serp` / `current-tab-serp` have duplicated bar/color/truncation logic → belongs in `shared/helpers/serp-bar.helper.ts`
-- `ChromeStorageService` uses callback API in an async-first codebase

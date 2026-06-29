@@ -16,11 +16,7 @@ export class ContentAnalysisService {
 
     const base = chrome.runtime.getURL('assets/stop-words/');
     const lists = await Promise.all(
-      LANGUAGES.map(lang =>
-        fetch(`${base}${lang}.json`)
-          .then(r => r.json() as Promise<string[]>)
-          .catch(() => [] as string[])
-      )
+      LANGUAGES.map(lang => fetch(`${base}${lang}.json`).then(r => r.json() as Promise<string[]>))
     );
 
     this.#stopWordSet = new Set(lists.flat().map(w => w.toLowerCase()));
@@ -35,10 +31,10 @@ export class ContentAnalysisService {
     if (!extracted) throw new Error('INJECTION_FAILED');
 
     const stopWordSet = await this.#loadStopWords();
-    const computed = computeContentMetrics({ text: extracted.text, stopWordSet });
+    const metrics = computeContentMetrics({ text: extracted.text, stopWordSet });
 
     return {
-      ...computed,
+      ...metrics,
       mode,
       mainContentFallback: extracted.mainContentFallback,
     };

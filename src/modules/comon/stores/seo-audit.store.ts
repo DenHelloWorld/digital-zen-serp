@@ -1,4 +1,4 @@
-﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { SeoAuditData } from '../../../shared/models/seo-audit-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';

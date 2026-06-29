@@ -1,4 +1,4 @@
-﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { computeOgBlockStatus } from '../../../shared/helpers/og-validator.helper';
 import type {
   ImageCheckResult,

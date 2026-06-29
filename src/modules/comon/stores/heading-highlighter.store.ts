@@ -1,4 +1,4 @@
-﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import {
   HEADING_TAGS,
   HIGHLIGHTER_STATUS_CONFIG,

@@ -1,12 +1,12 @@
-import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import type {
   ContentAnalysisData,
   ContentExtractionMode,
 } from '../../../shared/models/content-analysis-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
-import { Injectable, signal, inject } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ContentAnalysisStore {
   readonly #data = signal<ContentAnalysisData | null>(null);
   readonly #isLoading = signal(false);

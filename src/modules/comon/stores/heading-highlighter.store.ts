@@ -1,11 +1,11 @@
-import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import {
   HEADING_TAGS,
   HIGHLIGHTER_STATUS_CONFIG,
 } from '../../../shared/helpers/heading-highlighter.helper';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 
 function defaultSelectedTags(): Record<string, boolean> {
   return Object.fromEntries(HEADING_TAGS.map(t => [t, true]));
@@ -18,7 +18,7 @@ export interface HeadingHighlighterState {
 
 export type HighlighterStatus = 'idle' | 'ok' | 'warning' | 'error';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HeadingHighlighterStore {
   readonly #isEnabled = signal(false);
   readonly #selectedTags = signal<Record<string, boolean>>(defaultSelectedTags());

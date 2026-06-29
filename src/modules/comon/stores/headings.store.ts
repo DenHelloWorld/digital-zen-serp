@@ -1,11 +1,11 @@
-import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { validateHeadings } from '../../../shared/helpers/heading-parser.helper';
 import type { HeadingData } from '../../../shared/models/heading-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class HeadingsStore {
   readonly #headingsData = signal<HeadingData[] | null>(null);
   readonly #isLoading = signal(false);

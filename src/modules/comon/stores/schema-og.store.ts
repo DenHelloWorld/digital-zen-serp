@@ -1,4 +1,4 @@
-import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
+﻿import { CHROME_COMMAND_ENUM } from '../../../shared/enums/chrome-command.enum';
 import { computeOgBlockStatus } from '../../../shared/helpers/og-validator.helper';
 import type {
   ImageCheckResult,
@@ -8,7 +8,7 @@ import type {
 import type { SchemaBlock } from '../../../shared/models/schema-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { Injectable, signal, effect, inject, computed } from '@angular/core';
+import { computed, effect, inject, Service, signal } from '@angular/core';
 
 const IMAGE_TIMEOUT_MS = 5000;
 
@@ -22,7 +22,7 @@ export interface MicrolinkData {
   publisher: string | null;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class SchemaOgStore {
   readonly #schemaBlocks = signal<SchemaBlock[]>([]);
   readonly #metaTags = signal<MetaTag[]>([]);

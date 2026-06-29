@@ -1,0 +1,128 @@
+<ng-container *transloco="let t">
+  <!-- Sticky header: mode toggle + refresh -->
+  <div class="flex flex-col gap-1">
+    <div class="flex items-center gap-2">
+      <div class="flex rounded border border-slate-200 overflow-hidden flex-1">
+        <button
+          class="flex-1 py-1.5 px-2 flex flex-col items-center transition-colors"
+          [class.bg-cyan-600]="store.mode() === 'full'"
+          [class.text-white]="store.mode() === 'full'"
+          [class.text-slate-500]="store.mode() !== 'full'"
+          [class.hover:bg-slate-50]="store.mode() !== 'full'"
+          [disabled]="store.isLoading()"
+          (click)="setMode('full')"
+          type="button"
+        >
+          <span class="text-xs font-medium">{{ t('content.mode_full') }}</span>
+          <span
+            class="text-[9px] font-normal leading-tight"
+            [class.text-cyan-100]="store.mode() === 'full'"
+            [class.text-slate-400]="store.mode() !== 'full'"
+            >{{ t('content.mode_full_sub') }}</span
+          >
+        </button>
+        <button
+          class="flex-1 py-1.5 px-2 flex flex-col items-center transition-colors"
+          [class.bg-cyan-600]="store.mode() === 'main'"
+          [class.text-white]="store.mode() === 'main'"
+          [class.text-slate-500]="store.mode() !== 'main'"
+          [class.hover:bg-slate-50]="store.mode() !== 'main'"
+          [disabled]="store.isLoading()"
+          (click)="setMode('main')"
+          type="button"
+        >
+          <span class="text-xs font-medium">{{ t('content.mode_main') }}</span>
+          <span
+            class="text-[9px] font-normal leading-tight"
+            [class.text-cyan-100]="store.mode() === 'main'"
+            [class.text-slate-400]="store.mode() !== 'main'"
+            >{{ t('content.mode_main_sub') }}</span
+          >
+        </button>
+      </div>
+      <button
+        class="flex items-center justify-center border border-slate-200 p-1.5 rounded bg-white transition-colors hover:bg-slate-50 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        [disabled]="store.isLoading()"
+        (click)="store.refresh()"
+        type="button"
+      >
+        🔄
+      </button>
+    </div>
+  </div>
+
+  <!-- Error -->
+  @if (store.error(); as err) {
+    <div
+      class="flex gap-1.5 items-start p-2 border border-red-200 bg-red-50 rounded-lg text-xs text-red-600"
+    >
+      <span>⚠️</span>
+      <span>{{ t('content.error') }} — {{ err }}</span>
+    </div>
+  }
+
+  @if (store.isLoading() || store.data()) {
+    <div class="flex flex-col gap-3">
+      @if (store.data(); as d) {
+        <!-- Fallback warning -->
+        @if (d.mainContentFallback) {
+          <div
+            class="flex gap-1.5 items-start p-2 border border-amber-200 bg-amber-50 rounded-lg text-xs text-amber-700"
+          >
+            <span>⚠️</span>
+            <span>{{ t('content.fallback_warning') }}</span>
+          </div>
+        }
+
+        <!-- Empty state -->
+        @if (d.stats.totalWords === 0) {
+          <div
+            class="flex flex-col items-center gap-2 p-6 border border-slate-200 rounded-lg text-sm text-slate-400"
+          >
+            {{ t('content.empty') }}
+          </div>
+        }
+
+        <!-- Low confidence warning -->
+        @if (d.stats.lowConfidence) {
+          <div
+            class="flex gap-1.5 items-start p-2 border border-amber-200 bg-amber-50 rounded-lg text-xs text-amber-700"
+          >
+            <span>⚠️</span>
+            <span>{{ t('content.low_confidence_warning') }}</span>
+          </div>
+        }
+      }
+
+      <!-- Block 1: Text Statistics (shows loading state when data is null) -->
+      @if (!store.data() || store.data()!.stats.totalWords !== 0) {
+        <div class="flex flex-col gap-2">
+          <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
+            t('content.stats_title')
+          }}</span>
+          <dz-text-statistics [stats]="store.data()?.stats ?? null" />
+        </div>
+
+        <!-- Block 2: Top Words -->
+        <div class="flex flex-col gap-2">
+          <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
+            t('content.top_words_title')
+          }}</span>
+          <dz-top-words
+            [top1]="store.data()?.top1 ?? null"
+            [top2]="store.data()?.top2 ?? null"
+            [top3]="store.data()?.top3 ?? null"
+          />
+        </div>
+
+        <!-- Block 3: Stop Words -->
+        <div class="flex flex-col gap-2">
+          <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
+            t('content.stop_words_title')
+          }}</span>
+          <dz-stop-words-table [stopWords]="store.data()?.stopWords ?? null" />
+        </div>
+      }
+    </div>
+  }
+</ng-container>

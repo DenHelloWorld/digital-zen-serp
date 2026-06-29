@@ -9,7 +9,8 @@
     "lint": "ng lint",
     "format": "npx prettier --write .",
     "prepare": "husky",
-    "build:prod": "node scripts/build-dual.js --all"
+    "build:prod": "node scripts/build-dual.js --all",
+    "check:cycles": "npx dpdm --no-warning --no-tree --exit-code circular:1 \"src/**/*.ts\""
   },
   "private": true,
   "packageManager": "npm@11.7.0",

@@ -1,5 +1,4 @@
 <ng-container *transloco="let t">
-  <!-- Sticky header: mode toggle + refresh -->
   <div class="flex flex-col gap-1">
     <div class="flex items-center gap-2">
       <div class="flex rounded border border-slate-200 overflow-hidden flex-1">
@@ -94,7 +93,6 @@
         }
       }
 
-      <!-- Block 1: Text Statistics (shows loading state when data is null) -->
       @if (!store.data() || store.data()!.stats.totalWords !== 0) {
         <div class="flex flex-col gap-2">
           <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
@@ -103,7 +101,6 @@
           <dz-text-statistics [stats]="store.data()?.stats ?? null" />
         </div>
 
-        <!-- Block 2: Top Words -->
         <div class="flex flex-col gap-2">
           <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
             t('content.top_words_title')
@@ -115,7 +112,6 @@
           />
         </div>
 
-        <!-- Block 3: Stop Words -->
         <div class="flex flex-col gap-2">
           <span class="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">{{
             t('content.stop_words_title')

@@ -86,13 +86,4 @@ export class GooglePreviewStore {
       this.#isTabLoading.set(false);
     }
   }
-
-  reset(): void {
-    this.#activeTab.set(null);
-    this.#currentTabPreview.set(null);
-    this.#isTabLoading.set(false);
-    this.#isPreviewLoading.set(false);
-    this.#tabError.set(null);
-    this.#previewError.set(null);
-  }
 }

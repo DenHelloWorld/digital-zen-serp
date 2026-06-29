@@ -3,7 +3,7 @@
  * NO imports allowed — all constants must be inlined.
  */
 
-export interface ExtractedText {
+interface ExtractedText {
   text: string;
   /** True when "main content" heuristic failed and fell back to full page */
   mainContentFallback: boolean;

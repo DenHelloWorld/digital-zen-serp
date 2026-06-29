@@ -8,7 +8,4 @@ export const ROUTES = Object.freeze({
   CONTENT: 'content',
 } as const);
 
-/**
- * Type representing all available route paths
- */
 export type RoutePath = (typeof ROUTES)[keyof typeof ROUTES];

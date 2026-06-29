@@ -51,10 +51,4 @@ export class SeoAuditStore {
       this.#isLoading.set(false);
     }
   }
-
-  reset(): void {
-    this.#auditData.set(null);
-    this.#isLoading.set(false);
-    this.#error.set(null);
-  }
 }

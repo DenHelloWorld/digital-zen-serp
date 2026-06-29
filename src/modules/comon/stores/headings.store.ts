@@ -3,7 +3,7 @@ import { validateHeadings } from '../../../shared/helpers/heading-parser.helper'
 import type { HeadingData } from '../../../shared/models/heading-data.model';
 import { IS_CHROME_EXTENSION } from '../constants/chrome-runtime.token';
 import { TabActivityService } from '../services/tab-activity.service';
-import { computed, effect, inject, Service, signal } from '@angular/core';
+import { effect, inject, Service, signal, computed } from '@angular/core';
 
 @Service()
 export class HeadingsStore {
@@ -14,8 +14,6 @@ export class HeadingsStore {
   readonly headingsData = this.#headingsData.asReadonly();
   readonly isLoading = this.#isLoading.asReadonly();
   readonly error = this.#error.asReadonly();
-
-  readonly headingsCount = computed(() => this.#headingsData()?.length ?? null);
 
   readonly hasErrors = computed(() => {
     const data = this.#headingsData();
@@ -59,11 +57,5 @@ export class HeadingsStore {
     } finally {
       this.#isLoading.set(false);
     }
-  }
-
-  reset(): void {
-    this.#headingsData.set(null);
-    this.#isLoading.set(false);
-    this.#error.set(null);
   }
 }

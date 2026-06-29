@@ -1,12 +1,3 @@
-/**
- * Icon identifiers used throughout the application.
- * All icons are defined as SVG symbols in index.html and referenced by their ID.
- *
- * @example
- * ```html
- * <svg><use [attr.href]="ICONS.GLOBE"></use></svg>
- * ```
- */
 export const ICONS = Object.freeze({
   // Lucide — stroke-based UI icons
   GLOBE: '#icon-globe',

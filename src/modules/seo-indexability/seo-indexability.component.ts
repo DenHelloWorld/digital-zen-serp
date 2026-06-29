@@ -3,7 +3,7 @@ import { SeoAuditStore } from '../comon/stores/seo-audit.store';
 import { Component, computed, inject } from '@angular/core';
 import { TranslocoDirective } from '@jsverse/transloco';
 
-export interface IndexRow {
+interface IndexRow {
   labelKey: string;
   value: string | null;
   status: SeoAuditStatus;

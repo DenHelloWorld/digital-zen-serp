@@ -11,11 +11,6 @@ function defaultSelectedTags(): Record<string, boolean> {
   return Object.fromEntries(HEADING_TAGS.map(t => [t, true]));
 }
 
-export interface HeadingHighlighterState {
-  enabled: boolean;
-  selectedTags: Record<string, boolean>;
-}
-
 export type HighlighterStatus = 'idle' | 'ok' | 'warning' | 'error';
 
 @Service()
@@ -92,30 +87,13 @@ export class HeadingHighlighterStore {
       [tag]: !tags[tag],
     }));
 
-    /** Apply changes immediately if the feature is enabled */
     if (this.#isEnabled()) {
       this.#applyConfig();
     }
   }
 
-  /** Re-apply highlights on tab switch or page update */
   async reapply(): Promise<void> {
     if (!this.#isEnabled()) return;
     this.#applyConfig();
-  }
-
-  /** Disable highlights — delegates to toggleHighlighter for consistency */
-  turnOff(): void {
-    if (this.#isEnabled()) {
-      this.toggleHighlighter();
-    }
-  }
-
-  reset(): void {
-    this.#isEnabled.set(false);
-    this.#selectedTags.set(defaultSelectedTags());
-    this.#isLoading.set(false);
-    this.#headingsFound.set(null);
-    this.#error.set(null);
   }
 }

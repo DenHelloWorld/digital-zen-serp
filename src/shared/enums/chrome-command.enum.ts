@@ -9,6 +9,7 @@ export enum CHROME_COMMAND_ENUM {
   COLLECT_WEB_VITALS_BOTH = 'collectWebVitalsBoth',
   CLOSE_PANEL = 'closePanel',
   COLLECT_SCHEMA_OG = 'collectSchemaOg',
+  ANALYZE_CONTENT = 'analyzeContent',
 }
 
 export type ChromeCommandType =
@@ -20,7 +21,8 @@ export type ChromeCommandType =
   | CHROME_COMMAND_ENUM.SCROLL_TO_HEADING
   | CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS
   | CHROME_COMMAND_ENUM.COLLECT_WEB_VITALS_BOTH
-  | CHROME_COMMAND_ENUM.COLLECT_SCHEMA_OG;
+  | CHROME_COMMAND_ENUM.COLLECT_SCHEMA_OG
+  | CHROME_COMMAND_ENUM.ANALYZE_CONTENT;
 
 /** Keepalive port name between panel iframe and background */
 export const CHROME_KEEPALIVE_PORT = 'dz-keepalive';

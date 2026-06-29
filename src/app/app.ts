@@ -31,6 +31,7 @@ export class App {
     { route: ROUTES.PERFORMANCE, labelKey: 'nav.performance', emoji: '⚡' },
     { route: ROUTES.OG, labelKey: 'nav.og', emoji: '🔗' },
     { route: ROUTES.SCHEMA, labelKey: 'nav.schema', emoji: '🧩' },
+    { route: ROUTES.CONTENT, labelKey: 'nav.content', emoji: '📝' },
   ] as const;
 
   constructor() {

@@ -43,6 +43,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: ROUTES.CONTENT,
+    loadComponent: () =>
+      import('../modules/pages/content-page/content-page.component').then(
+        m => m.ContentPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: ROUTES.CURRENT_SITE,
   },

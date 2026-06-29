@@ -5,6 +5,7 @@ export const ROUTES = Object.freeze({
   SEO_AUDIT: 'seo-audit',
   HEADINGS: 'headings',
   PERFORMANCE: 'performance',
+  CONTENT: 'content',
 } as const);
 
 /**

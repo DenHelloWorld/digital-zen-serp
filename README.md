@@ -1,6 +1,6 @@
 # Digital Zen SERP
 
-Chrome Extension (MV3) for SEO professionals — injected side panel with heading tree, Google SERP preview, SEO audit, and Web Vitals powered by PageSpeed Insights API.
+Chrome Extension (MV3) for SEO professionals — injected side panel with heading tree, Google SERP preview, SEO audit, Web Vitals, OG/Social preview, Schema Markup validation, and Content Analysis.
 
 ## Features
 
@@ -8,10 +8,13 @@ Chrome Extension (MV3) for SEO professionals — injected side panel with headin
 - **SEO Audit** — meta tags, Open Graph, structured data, canonical, robots
 - **Heading Tree** — H1–H6 hierarchy with validation and in-page highlight toggle
 - **Web Vitals** — Lighthouse score, CrUX field data, opportunities, page screenshot (mobile + desktop)
+- **OG & Social** — Open Graph / Twitter Card tags; link preview simulator (Google, Facebook, Twitter, Telegram, LinkedIn, Slack, Pinterest); bot-side fetch via Microlink API
+- **Schema Markup** — JSON-LD / Microdata / RDFa extraction; per-field validation for 10+ schema.org types; collapsible raw JSON viewer
+- **Content Analysis** — word count, unique words, water %, readability scores (Flesch RE, Flesch-Kincaid, Gunning Fog); top 1/2/3-gram frequency table; stop-word breakdown (EN/RU/ES/UK); full-page or main-content extraction mode
 
 ## Stack
 
-Angular 21 · zoneless + signals · Tailwind CSS v4 · esbuild · Chrome MV3 · Transloco (en/ru)
+Angular 22 · zoneless + signals · Tailwind CSS v4 · esbuild · Chrome MV3 · Transloco (en/ru)
 
 ## Getting started
 
@@ -54,6 +57,9 @@ src/
     base-seo-audit/ # SEO Audit tab component
     headings/       # Headings tab component
     google-preview/ # Google Preview tab component
+    og-social/      # OG & Social tab — link preview simulator, microlink bot fetch
+    schema-markup/  # Schema Markup tab — JSON-LD/Microdata/RDFa validator
+    content-analysis/ # Content Analysis tab — text stats, top words, stop words
     ui/             # shared UI components (speedometer, loading-bar, favicon, url-bar)
   shared/           # pure TS, no Angular deps — enums, models, helpers
 scripts/
@@ -67,8 +73,9 @@ Clicking the extension icon injects `content.js` into the page once. A Shadow DO
 ## Commands
 
 ```bash
-npm run build:prod   # production build → dist/SERP/
-npm run lint         # ESLint (0 warnings enforced)
-npm run format       # Prettier
-ng test              # Vitest unit tests
+npm run build:prod     # production build → dist/SERP/
+npm run lint           # ESLint (0 warnings enforced)
+npm run format         # Prettier
+npm run check:cycles   # circular dependency check
+ng test                # Vitest unit tests
 ```
